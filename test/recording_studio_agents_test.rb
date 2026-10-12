@@ -51,7 +51,7 @@ class RecordingStudioAgentsTest < Minitest::Test
     development_gemfile = File.read(File.expand_path("../Gemfile", __dir__))
 
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v4.5.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.13.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.15.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_admin", tag: "v2.1.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_AI", tag: "v0.8.0"'
     assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_AI", tag: "v0.8.0"'
