@@ -3,6 +3,5 @@
 en:
   recording_studio:
     agents:
-      admin:
-        section:
-          title: "HOST Agents admin"
+      flashes:
+        agent_on: "HOST turn-on notice for %{name}."

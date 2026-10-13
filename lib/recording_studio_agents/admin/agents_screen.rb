@@ -5,8 +5,7 @@ module RecordingStudioAgents
     class AgentsScreen < RecordingStudioAdmin::Screen
       key "registered_agents"
       icon :sparkles
-      title { Copy.t("admin.screens.agents.title") }
-      # Keep as a literal: Admin search reads screen subtitle raw (not evaluate).
+      title "Agents"
       subtitle "Including agents that have not run yet."
 
       query do |_context|

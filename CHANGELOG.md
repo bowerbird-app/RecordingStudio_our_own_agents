@@ -11,37 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- English Rails I18n keys for Admin DSL chrome and enablement flashes under
-  `recording_studio.agents` (`admin.*`, `flashes.*`) in `config/locales/en.yml`
+- English Rails I18n keys for Agents enablement flashes under
+  `recording_studio.agents.flashes.*` in `config/locales/en.yml`
 - `RecordingStudioAgents::Copy` for render-time lookups (English comes only from
   `config/locales/en.yml`; no English `default:` fallback)
 - Boot-order host override fixture under
   `test/dummy/config/locales/recording_studio_agents_boot_override.en.yml` for the
-  rarely shown failed-runs widget info key, plus a `lib/**/*.rb` regression
-  guard that refutes `i18n.load_path` / `I18n.load_path`
+  rarely shown turn-off flash key, plus a `lib/**/*.rb` regression guard that
+  refutes `i18n.load_path` / `I18n.load_path`
 
 ### Changed
 
-- Admin section title, screen titles, resource title, action labels and
-  confirms, show-screen buttons, summary label, chart title/series, and widget
-  titles/info/period labels resolve through `Copy.t` (English output unchanged)
-- `Section.title`, section `links[].text`, screen and resource `title`, and the
-  `turn_on` / `turn_off` action `text` now return callables that Admin evaluates
-  at render. Hosts that read those fields directly must evaluate them
-  (for example with `evaluate`) instead of treating them as String literals.
 - Agents enablement controller flashes resolve through `Copy.t` (English output
-  unchanged)
+  unchanged outside the dummy boot-order host override on `flashes.agent_off`)
 - Version `0.6.0` → `0.7.0`
 
 ### Upgrade notes
 
 - Pin `v0.7.0`. There is no migration. English hosts need no change.
-- To override or add another language, set keys under `recording_studio.agents`
-  in the host's `config/locales`. There is no dependency on
-  `recording_studio_internationalization`.
-- Admin section, screen, and resource subtitles stay English string literals
-  (Admin search reads those fields raw). Table titles, column headers, header
-  tooltips, filter titles, and Admin cell values stay English literals.
+- To override or add another language for enablement flashes, set keys under
+  `recording_studio.agents.flashes` in the host's `config/locales`. There is no
+  dependency on `recording_studio_internationalization`.
+- Admin DSL values (section/screen/resource titles and subtitles, link text,
+  action text, confirms, column titles, widget titles/info, chart labels) stay
+  English string literals. They are not I18n keys and do not return callables.
 - Model validation messages, Progress labels, status badge text, Queries detail
   rows, developer errors, logs, generator CLI, and stored data stay English.
 - See [UPGRADING.md](UPGRADING.md#070).

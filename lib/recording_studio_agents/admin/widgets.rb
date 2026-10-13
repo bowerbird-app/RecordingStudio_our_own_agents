@@ -5,10 +5,8 @@ module RecordingStudioAgents
     module Widgets
       FAILED_RUNS = RecordingStudioAdmin::Widget.new("widgets.agents.failed_runs") do
         type :list
-        title { Copy.t("admin.widgets.failed_runs.title") }
-        info do
-          Copy.t("admin.widgets.failed_runs.info")
-        end
+        title "Failed runs"
+        info "The last attempts that did not finish. Open Runs if you need to retry from the host."
         hide_change
         hide_period
         items do |context|
@@ -23,11 +21,9 @@ module RecordingStudioAgents
 
       ATTEMPTS_THIS_PERIOD = RecordingStudioAdmin::Widget.new("widgets.agents.attempts_this_period") do
         type :number
-        title { Copy.t("admin.widgets.attempts_this_period.title") }
-        info do
-          Copy.t("admin.widgets.attempts_this_period.info")
-        end
-        metadata { { period_label: Copy.t("admin.widgets.period_label") } }
+        title "Attempts this period"
+        info "How many times an agent started in the last 4 weeks, versus the 4 weeks before that."
+        metadata { { period_label: "Last 4 weeks" } }
         value do |context|
           root_ids = Queries.visible_root_ids(context)
           Queries.delimited_number(
@@ -47,11 +43,9 @@ module RecordingStudioAgents
 
       TOKENS_THIS_PERIOD = RecordingStudioAdmin::Widget.new("widgets.agents.tokens_this_period") do
         type :number
-        title { Copy.t("admin.widgets.tokens_this_period.title") }
-        info do
-          Copy.t("admin.widgets.tokens_this_period.info")
-        end
-        metadata { { period_label: Copy.t("admin.widgets.period_label") } }
+        title "Tokens this period"
+        info "Model-call tokens for those attempts. Shows blank if AI history was cleaned."
+        metadata { { period_label: "Last 4 weeks" } }
         value do |context|
           root_ids = Queries.visible_root_ids(context)
           Queries.delimited_number(
@@ -71,12 +65,10 @@ module RecordingStudioAgents
 
       HUNGRY_AGENTS = RecordingStudioAdmin::Widget.new("widgets.agents.hungry_agents") do
         type :list
-        title { Copy.t("admin.widgets.hungry_agents.title") }
-        info do
-          Copy.t("admin.widgets.hungry_agents.info")
-        end
+        title "Hungry agents"
+        info "Who used the most model-call tokens in the last 4 weeks."
         hide_change
-        metadata { { period_label: Copy.t("admin.widgets.period_label") } }
+        metadata { { period_label: "Last 4 weeks" } }
         items do |context|
           root_ids = Queries.visible_root_ids(context)
           Queries.hungry_agents(root_ids: root_ids, range: Queries.current_period).map do |row|

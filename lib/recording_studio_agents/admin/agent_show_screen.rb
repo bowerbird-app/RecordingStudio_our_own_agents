@@ -9,7 +9,7 @@ module RecordingStudioAgents
       subtitle { |context| Queries.agent_show_subtitle(context) }
 
       button :runs,
-             text: ->(_context) { Copy.t("admin.buttons.runs") },
+             text: "Runs",
              url: lambda { |context|
                Queries.screen_href(context, "agent_runs", agent_key: Queries.selected_agent_key(context))
              },

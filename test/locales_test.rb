@@ -25,7 +25,6 @@ class LocalesTest < ActiveSupport::TestCase
     flatten.call(tree).freeze
   end
 
-  ADMIN_KEYS = ENGINE_ENGLISH.select { |key, _| key.start_with?("admin.") }.freeze
   FLASH_KEYS = ENGINE_ENGLISH.select { |key, _| key.start_with?("flashes.") }.freeze
 
   test "engine ships only english locale files" do
@@ -57,6 +56,17 @@ class LocalesTest < ActiveSupport::TestCase
     end
   end
 
+  test "en.yml ships flash keys only under recording_studio.agents" do
+    tree = locale_tree(File.join(engine_locales_dir, "en.yml"), "en")
+           .fetch("recording_studio")
+           .fetch("agents")
+
+    assert_equal %w[flashes], tree.keys.sort
+    assert_equal %w[agent_off agent_on], tree.fetch("flashes").keys.map(&:to_s).sort
+    assert_equal FLASH_KEYS.fetch("flashes.agent_on"), tree.fetch("flashes").fetch("agent_on")
+    assert_equal FLASH_KEYS.fetch("flashes.agent_off"), tree.fetch("flashes").fetch("agent_off")
+  end
+
   test "copy and controller call sites never pass english default" do
     roots = [
       File.expand_path("../lib", __dir__),
@@ -78,40 +88,28 @@ class LocalesTest < ActiveSupport::TestCase
     end
   end
 
-  test "english keys resolve from en.yml without defaults" do
+  test "admin dsl sources never call copy or i18n" do
+    admin_root = File.expand_path("../lib/recording_studio_agents/admin", __dir__)
+    sources = Dir[File.join(admin_root, "**", "*.rb")]
+    assert_predicate sources, :any?
+
+    sources.each do |path|
+      source = File.read(path)
+      refute_includes source, "Copy.t", "#{path} must keep Admin DSL values as literals"
+      refute_match(/\bI18n\.t\b/, source, "#{path} must keep Admin DSL values as literals")
+    end
+  end
+
+  test "english flash keys resolve from en.yml without defaults" do
     with_engine_locales_loaded do
       I18n.with_locale(:en) do
-        ADMIN_KEYS.each do |key, english|
+        FLASH_KEYS.each do |key, english|
           full_key = "recording_studio.agents.#{key}"
 
           assert_equal english, I18n.t(full_key, raise: true),
                        "#{full_key} should resolve to #{english.inspect}"
           assert_equal english, RecordingStudioAgents::Copy.t(key)
         end
-
-        FLASH_KEYS.each do |key, english|
-          full_key = "recording_studio.agents.#{key}"
-
-          assert_equal english, I18n.t(full_key, raise: true),
-                       "#{full_key} should resolve to #{english.inspect}"
-        end
-      end
-    end
-  end
-
-  test "en.yml nests keys under recording_studio.agents" do
-    tree = locale_tree(File.join(engine_locales_dir, "en.yml"), "en")
-           .fetch("recording_studio")
-           .fetch("agents")
-
-    assert_equal FLASH_KEYS.fetch("flashes.agent_on"), tree.fetch("flashes").fetch("agent_on")
-    assert_equal ADMIN_KEYS.fetch("admin.section.title"), tree.fetch("admin").fetch("section").fetch("title")
-  end
-
-  test "copy helper resolves english from en.yml" do
-    with_engine_locales_loaded do
-      I18n.with_locale(:en) do
-        assert_equal "Agents admin", RecordingStudioAgents::Copy.t("admin.section.title")
       end
     end
   end
@@ -130,7 +128,7 @@ class LocalesTest < ActiveSupport::TestCase
   test "missing keys follow normal i18n missing behavior" do
     with_engine_locales_loaded do
       I18n.with_locale(:en) do
-        missing = RecordingStudioAgents::Copy.t("admin.section.missing_key_for_test")
+        missing = RecordingStudioAgents::Copy.t("flashes.missing_key_for_test")
         assert_match(/translation missing/i, missing.to_s)
       end
     end

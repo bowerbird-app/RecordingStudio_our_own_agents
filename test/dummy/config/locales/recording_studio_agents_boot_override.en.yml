@@ -1,12 +1,10 @@
 # Always-loaded host override for a rarely shown gem key. Proves Rails boot
 # order lets host config/locales win over the gem without a test-time load_path
 # append. Keep HostLocaleOverrideTest's test-only fixture alongside this file.
-# Common visible labels (section title, screen titles, link text) stay on gem
-# English so the default dummy UI is unchanged.
+# Only the turn-off flash is overridden so the default Admin hub UI stays on
+# gem English.
 en:
   recording_studio:
     agents:
-      admin:
-        widgets:
-          failed_runs:
-            info: "HOST last attempts that did not finish."
+      flashes:
+        agent_off: "HOST turn-off notice for %{name}."
