@@ -13,7 +13,7 @@ literals. Enablement flashes resolve through I18n with English in
   `config/locales/en.yml`.
 - Admin DSL values (section/screen/resource titles and subtitles, link text,
   action text, confirms, column titles, widget titles/info, chart labels) stay
-  English string literals. They are not I18n keys and do not return callables.
+  English string literals and are not I18n keys.
 - Boot-order host override under
   `test/dummy/config/locales/recording_studio_agents_boot_override.en.yml`
   covers the rarely shown turn-off flash key.

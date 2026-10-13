@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dependency on `recording_studio_internationalization`.
 - Admin DSL values (section/screen/resource titles and subtitles, link text,
   action text, confirms, column titles, widget titles/info, chart labels) stay
-  English string literals. They are not I18n keys and do not return callables.
+  English string literals and are not I18n keys.
 - Model validation messages, Progress labels, status badge text, Queries detail
   rows, developer errors, logs, generator CLI, and stored data stay English.
 - See [UPGRADING.md](UPGRADING.md#070).
