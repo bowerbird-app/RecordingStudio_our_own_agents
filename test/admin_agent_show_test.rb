@@ -24,11 +24,11 @@ class AdminAgentShowTest < Minitest::Test
 
   def test_hub_keeps_agent_details_off_the_catalog
     links = RecordingStudioAgents::Admin::Section.links_value
-    catalog = links.select { |link| link.visible_if.nil? }.map(&:text)
+    catalog = links.select { |link| link.visible_if.nil? }.map { |link| resolve_admin_copy(link.text) }
     agent = links.find { |link| link.name == :agent }
 
     assert_equal ["Agents", "Runs", "Tasks", "Usage by agent", "Evaluations"], catalog
-    assert_equal "Agent", agent.text
+    assert_equal "Agent", resolve_admin_copy(agent.text)
     refute agent.visible?(FakeContext.new(params: {}))
     assert agent.visible?(FakeContext.new(params: { agent_key: "librarian" }))
     skill = links.find { |link| link.name == :skill }
@@ -153,5 +153,16 @@ class AdminAgentShowTest < Minitest::Test
     rows = RecordingStudioAgents::Admin::AgentShowScreen.query_value.call(context)
 
     assert_equal [], rows
+  end
+
+  private
+
+  def resolve_admin_copy(value, *args)
+    return value unless value.respond_to?(:call)
+
+    needed = value.arity
+    needed = needed.abs if needed.negative?
+    fillers = Array.new([needed - args.length, 0].max)
+    value.call(*(args + fillers).first(needed))
   end
 end

@@ -9,7 +9,7 @@ class AdminRegistrationTest < Minitest::Test
     RecordingStudioAgents::Admin.register!
 
     refute_nil RecordingStudioAdmin.section_for("agents")
-    assert_equal "Agents admin", RecordingStudioAdmin.section_for("agents").title
+    assert_equal "Agents admin", resolve_admin_copy(RecordingStudioAdmin.section_for("agents").title)
     refute_nil RecordingStudioAdmin.screen_for("registered_agents")
     refute_nil RecordingStudioAdmin.screen_for("registered_agent")
     refute_nil RecordingStudioAdmin.screen_for("registered_skill")
@@ -111,7 +111,7 @@ class AdminRegistrationTest < Minitest::Test
     RecordingStudioAgents::Admin.register!
 
     texts = RecordingStudioAgents::Admin::Section.links_value.filter_map do |link|
-      link.text if link.visible_if.nil?
+      resolve_admin_copy(link.text) if link.visible_if.nil?
     end
 
     assert_equal ["Agents", "Runs", "Tasks", "Usage by agent", "Evaluations"], texts
@@ -127,7 +127,7 @@ class AdminRegistrationTest < Minitest::Test
 
     screen = RecordingStudioAdmin.screen_for("agent_usage")
 
-    assert_equal "Usage by agent", screen.title
+    assert_equal "Usage by agent", resolve_admin_copy(screen.title)
     assert_equal "Attempts, outcomes, and average tokens.", screen.subtitle
     assert_equal "agent_usage", screen.key
   end
@@ -139,7 +139,7 @@ class AdminRegistrationTest < Minitest::Test
     columns = screen.table_value.columns
     titles = columns.map(&:title)
 
-    assert_equal "Agents", screen.title
+    assert_equal "Agents", resolve_admin_copy(screen.title)
     assert_equal "Including agents that have not run yet.", screen.subtitle
     assert_equal "Name", titles.first
     assert_equal %i[name version enabled], screen.table_value.default_column_keys
@@ -223,10 +223,21 @@ class AdminRegistrationTest < Minitest::Test
     agent = RecordingStudioAgents.agents.fetch(:librarian, version: 1)
     context = Struct.new(:params, :controller).new({}, nil)
 
-    assert_equal "Turn off", resource.action_for(:turn_off).text
-    assert_equal "Turn on", resource.action_for(:turn_on).text
+    assert_equal "Turn off", resolve_admin_copy(resource.action_for(:turn_off).text, agent, context)
+    assert_equal "Turn on", resolve_admin_copy(resource.action_for(:turn_on).text, agent, context)
     assert_equal :post, resource.action_for(:turn_off).method
     assert resource.action_for(:turn_off).visible?(agent, context)
     refute resource.action_for(:turn_on).visible?(agent, context)
+  end
+
+  private
+
+  def resolve_admin_copy(value, *args)
+    return value unless value.respond_to?(:call)
+
+    needed = value.arity
+    needed = needed.abs if needed.negative?
+    fillers = Array.new([needed - args.length, 0].max)
+    value.call(*(args + fillers).first(needed))
   end
 end
