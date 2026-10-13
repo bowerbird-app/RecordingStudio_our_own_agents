@@ -54,3 +54,8 @@ pkg/
 
 # Rename script state
 .rename_state.yml
+
+# Tailwind gem source symlinks from rake link tasks (local only)
+test/dummy/vendor/flat_pack
+test/dummy/vendor/recording_studio
+test/dummy/vendor/recording_studio_*
