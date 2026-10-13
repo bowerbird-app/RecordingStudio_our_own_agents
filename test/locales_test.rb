@@ -67,6 +67,25 @@ class LocalesTest < ActiveSupport::TestCase
     assert_equal FLASH_KEYS.fetch("flashes.agent_off"), tree.fetch("flashes").fetch("agent_off")
   end
 
+  # Wave-wide: probe / test-only keys stay under test/dummy (not gemspec-packaged
+  # config/locales). Boot override targets real flashes.agent_off instead.
+  test "packaged config/locales never ship probe or test-only keys" do
+    locale_files = Dir[File.join(engine_locales_dir, "**", "*.{yml,yaml}")]
+    assert_predicate locale_files, :any?
+
+    locale_files.each do |path|
+      source = File.read(path)
+      refute_match(/\bHOST\b/, source,
+                   "#{path} must not ship HOST probe English; use test/dummy locales")
+      refute_match(/\b(probe|test[_-]only|for_test)\b/i, source,
+                   "#{path} must not ship probe/test-only keys")
+    end
+
+    gemspec = File.read(File.expand_path("../recording_studio_agents.gemspec", __dir__))
+    refute_match(%r{test/dummy}, gemspec,
+                 "gemspec must not package test/dummy locale probes")
+  end
+
   test "copy and controller call sites never pass english default" do
     roots = [
       File.expand_path("../lib", __dir__),

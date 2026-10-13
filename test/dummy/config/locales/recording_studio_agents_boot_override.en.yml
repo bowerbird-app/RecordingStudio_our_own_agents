@@ -1,8 +1,9 @@
-# Always-loaded host override for a rarely shown gem key. Proves Rails boot
-# order lets host config/locales win over the gem without a test-time load_path
-# append. Keep HostLocaleOverrideTest's test-only fixture alongside this file.
-# Only the turn-off flash is overridden so the default Admin hub UI stays on
-# gem English.
+# Always-loaded host override for a real, rarely shown gem key
+# (recording_studio.agents.flashes.agent_off). Proves Rails boot order lets host
+# config/locales win over the gem without a test-time load_path append. Keep
+# HostLocaleOverrideTest's test-only fixture alongside this file. Do not add
+# probe keys to the gem's packaged config/locales — override a real key here
+# (under test/dummy only; not shipped by the gemspec).
 en:
   recording_studio:
     agents:
