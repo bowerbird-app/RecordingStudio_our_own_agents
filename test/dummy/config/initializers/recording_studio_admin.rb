@@ -10,7 +10,9 @@ RecordingStudioAdmin.configure do |config|
     admin_root = AdminRoot.find_by(name: "Admin")
     next unless admin_root
 
-    RecordingStudio::Recording.find_by(recordable: admin_root, trashed_at: nil)
+    RecordingStudio::Recording.where(
+      RecordingStudio::Recording.recording_studio_trashable_kept_sql
+    ).find_by(recordable: admin_root)
   end
   config.site_admin_recording_resolver = config.access_recording_resolver
 end
@@ -23,7 +25,9 @@ module RecordingStudioAdminWorkspaceRuns
     root_ids = []
     root_ids << context.root_recording.id if context&.root_recording
     root_ids.concat(
-      RecordingStudio::Recording.where(recordable_type: "Workspace", trashed_at: nil).pluck(:id)
+      RecordingStudio::Recording.where(
+        RecordingStudio::Recording.recording_studio_trashable_kept_sql
+      ).where(recordable_type: "Workspace").pluck(:id)
     )
     root_ids.uniq!
     return RecordingStudioAI::Run.none if root_ids.empty?
