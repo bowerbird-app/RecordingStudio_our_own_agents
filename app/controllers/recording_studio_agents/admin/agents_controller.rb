@@ -37,9 +37,9 @@ module RecordingStudioAgents
 
       def enablement_notice(agent, enabled)
         if enabled
-          Copy.t("flashes.agent_on", name: agent.name, default: "%{name} is on.")
+          Copy.t("flashes.agent_on", name: agent.name)
         else
-          Copy.t("flashes.agent_off", name: agent.name, default: "%{name} is off.")
+          Copy.t("flashes.agent_off", name: agent.name)
         end
       end
 

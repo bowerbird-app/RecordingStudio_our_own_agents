@@ -11,7 +11,8 @@ Admin now returns (see below).
 - Admin DSL chrome (section title, screen titles, resource title, action labels
   and confirms, show-screen buttons, summary label, chart title/series, widget
   titles/info/period labels) resolves through
-  `RecordingStudioAgents::Copy.t(..., default: …)`.
+  `RecordingStudioAgents::Copy.t(...)`. English comes only from
+  `config/locales/en.yml`; call sites do not pass English `default:`.
 - `Section.title`, section `links[].text`, the screen and resource `title`, and
   the `turn_on` / `turn_off` action `text` now return callables that Admin
   evaluates at render. Hosts reading those fields directly must evaluate them

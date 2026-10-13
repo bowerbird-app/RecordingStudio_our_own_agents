@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - English Rails I18n keys for Admin DSL chrome and enablement flashes under
   `recording_studio.agents` (`admin.*`, `flashes.*`) in `config/locales/en.yml`
-- `RecordingStudioAgents::Copy` for render-time lookups with English `default:`
+- `RecordingStudioAgents::Copy` for render-time lookups (English comes only from
+  `config/locales/en.yml`; no English `default:` fallback)
 - Boot-order host override fixture under
   `test/dummy/config/locales/recording_studio_agents_boot_override.en.yml` for the
   rarely shown failed-runs widget info key, plus a `lib/**/*.rb` regression

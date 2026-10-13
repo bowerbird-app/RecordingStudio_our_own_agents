@@ -3,9 +3,9 @@
 require "i18n"
 
 module RecordingStudioAgents
-  # Rails I18n lookups for Agents user-facing copy. Every call passes
-  # `default:` English so a host locale without a fallback never shows
-  # "translation missing".
+  # Rails I18n lookups for Agents user-facing copy. English comes only from
+  # `config/locales/en.yml`. Missing keys follow normal I18n behavior
+  # (translation missing / raise-on-missing); there is no English `default:`.
   module Copy
     PREFIX = "recording_studio.agents"
 

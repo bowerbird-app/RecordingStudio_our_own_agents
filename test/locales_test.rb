@@ -77,24 +77,43 @@ class LocalesTest < ActiveSupport::TestCase
     end
   end
 
-  test "english keys resolve without missing translations" do
+  test "copy and controller call sites never pass english default" do
+    roots = [
+      File.expand_path("../lib", __dir__),
+      File.expand_path("../app", __dir__)
+    ]
+    sources = roots.flat_map { |root| Dir[File.join(root, "**", "*.rb")] }
+    assert_predicate sources, :any?
+
+    sources.each do |path|
+      source = File.read(path)
+      next unless source.include?("Copy.t") || source.match?(/\bI18n\.t\b/)
+
+      source.lines.each_with_index do |line, index|
+        next unless line.include?("Copy.t") || line.include?("I18n.t")
+
+        refute_match(/\bdefault:\s*["']/, line,
+                     "#{path}:#{index + 1} must not pass English default: to Copy.t/I18n.t")
+      end
+    end
+  end
+
+  test "english keys resolve from en.yml without defaults" do
     with_engine_locales_loaded do
       I18n.with_locale(:en) do
         ADMIN_KEYS.each do |key, english|
           full_key = "recording_studio.agents.#{key}"
-          translation = I18n.t(full_key, default: nil)
 
-          assert_equal english, translation, "#{full_key} should resolve to #{english.inspect}"
-          assert_equal english, I18n.t(full_key, raise: true)
-          assert_equal english, RecordingStudioAgents::Copy.t(key, default: english)
+          assert_equal english, I18n.t(full_key, raise: true),
+                       "#{full_key} should resolve to #{english.inspect}"
+          assert_equal english, RecordingStudioAgents::Copy.t(key)
         end
 
         FLASH_KEYS.each do |key, english|
           full_key = "recording_studio.agents.#{key}"
-          translation = I18n.t(full_key, default: nil)
 
-          assert_equal english, translation, "#{full_key} should resolve to #{english.inspect}"
-          assert_equal english, I18n.t(full_key, raise: true)
+          assert_equal english, I18n.t(full_key, raise: true),
+                       "#{full_key} should resolve to #{english.inspect}"
         end
       end
     end
@@ -109,11 +128,10 @@ class LocalesTest < ActiveSupport::TestCase
     assert_equal ADMIN_KEYS.fetch("admin.section.title"), tree.fetch("admin").fetch("section").fetch("title")
   end
 
-  test "copy helper passes english default" do
+  test "copy helper resolves english from en.yml" do
     with_engine_locales_loaded do
       I18n.with_locale(:en) do
-        assert_equal "Agents admin",
-                     RecordingStudioAgents::Copy.t("admin.section.title", default: "Agents admin")
+        assert_equal "Agents admin", RecordingStudioAgents::Copy.t("admin.section.title")
       end
     end
   end
@@ -122,17 +140,18 @@ class LocalesTest < ActiveSupport::TestCase
     with_engine_locales_loaded do
       I18n.with_locale(:en) do
         assert_equal "Page librarian is on.",
-                     RecordingStudioAgents::Copy.t(
-                       "flashes.agent_on",
-                       name: "Page librarian",
-                       default: "%{name} is on."
-                     )
+                     RecordingStudioAgents::Copy.t("flashes.agent_on", name: "Page librarian")
         assert_equal "Page librarian is off.",
-                     RecordingStudioAgents::Copy.t(
-                       "flashes.agent_off",
-                       name: "Page librarian",
-                       default: "%{name} is off."
-                     )
+                     RecordingStudioAgents::Copy.t("flashes.agent_off", name: "Page librarian")
+      end
+    end
+  end
+
+  test "missing keys follow normal i18n missing behavior" do
+    with_engine_locales_loaded do
+      I18n.with_locale(:en) do
+        missing = RecordingStudioAgents::Copy.t("admin.section.missing_key_for_test")
+        assert_match(/translation missing/i, missing.to_s)
       end
     end
   end

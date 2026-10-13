@@ -9,7 +9,7 @@ module RecordingStudioAgents
       subtitle { |context| Queries.tool_show_subtitle(context) }
 
       button :calls,
-             text: ->(_context) { Copy.t("admin.buttons.calls", default: "Calls") },
+             text: ->(_context) { Copy.t("admin.buttons.calls") },
              url: lambda { |context|
                Queries.screen_href(context, "tool_calls", tool_key: Queries.selected_tool_key(context))
              },
