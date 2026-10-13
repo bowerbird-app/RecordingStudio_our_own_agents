@@ -1,0 +1,6 @@
+en:
+  recording_studio:
+    agents:
+      flashes:
+        agent_on: "%{name} is on."
+        agent_off: "%{name} is off."

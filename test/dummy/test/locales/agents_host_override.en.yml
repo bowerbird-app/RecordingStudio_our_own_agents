@@ -1,0 +1,7 @@
+# Test-only host override. Appended last to I18n.load_path inside one test.
+# Not under config/locales, so Rails does not load it at boot.
+en:
+  recording_studio:
+    agents:
+      flashes:
+        agent_on: "HOST turn-on notice for %{name}."
