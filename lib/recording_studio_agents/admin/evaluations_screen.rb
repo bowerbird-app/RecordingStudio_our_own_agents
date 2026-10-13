@@ -5,7 +5,8 @@ module RecordingStudioAgents
     class EvaluationsScreen < RecordingStudioAdmin::Screen
       key "agent_evaluations"
       icon :check_badge
-      title "Evaluations"
+      title { Copy.t("admin.screens.evaluations.title", default: "Evaluations") }
+      # Keep as a literal: Admin search reads screen subtitle raw (not evaluate).
       subtitle "Pass, fail, or still deciding."
 
       query do |context|

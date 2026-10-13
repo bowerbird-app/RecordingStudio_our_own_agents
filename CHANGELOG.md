@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-13
+
+### Added
+
+- English Rails I18n keys for Admin DSL chrome and enablement flashes under
+  `recording_studio.agents` (`admin.*`, `flashes.*`) in `config/locales/en.yml`
+- `RecordingStudioAgents::Copy` for render-time lookups with English `default:`
+- Boot-order host override fixture under
+  `test/dummy/config/locales/recording_studio_agents_boot_override.en.yml` for the
+  rarely shown failed-runs widget info key, plus a `lib/**/*.rb` regression
+  guard that refutes `i18n.load_path` / `I18n.load_path`
+
+### Changed
+
+- Admin section title/subtitle, screen titles, resource title, action labels and
+  confirms, show-screen buttons, summary label, chart title/series, and widget
+  titles/info/period labels resolve through `Copy.t` (English output unchanged)
+- Agents enablement controller flashes resolve through `Copy.t` (English output
+  unchanged)
+- Version `0.6.0` → `0.7.0`
+
+### Upgrade notes
+
+- Pin `v0.7.0`. There is no migration. English hosts need no change.
+- To override or add another language, set keys under `recording_studio.agents`
+  in the host's `config/locales`. There is no dependency on
+  `recording_studio_internationalization`.
+- Admin screen/resource subtitles, table titles, column headers, header
+  tooltips, filter titles, and Admin cell values stay English literals.
+- Model validation messages, Progress labels, status badge text, Queries detail
+  rows, developer errors, logs, generator CLI, and stored data stay English.
+- See [UPGRADING.md](UPGRADING.md#070).
+
 ## [0.6.0] - 2026-10-09
 
 Site-wide Agents metrics register with Recording Studio Metrics for the operations API.
@@ -314,6 +347,10 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.7.0
+[0.6.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.6.0
+[0.5.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.5.0
 [0.4.6]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.6
 [0.4.5]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.5
 [0.4.4]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.4

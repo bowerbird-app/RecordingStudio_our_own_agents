@@ -5,7 +5,8 @@ module RecordingStudioAgents
     class TasksScreen < RecordingStudioAdmin::Screen
       key "agent_tasks"
       icon :clipboard_document_list
-      title "Tasks"
+      title { Copy.t("admin.screens.tasks.title", default: "Tasks") }
+      # Keep as a literal: Admin search reads screen subtitle raw (not evaluate).
       subtitle "Goals given to an agent."
 
       query do |context|

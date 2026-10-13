@@ -5,7 +5,8 @@ module RecordingStudioAgents
     class UsageScreen < RecordingStudioAdmin::Screen
       key "agent_usage"
       icon :chart_bar
-      title "Usage by agent"
+      title { Copy.t("admin.screens.usage.title", default: "Usage by agent") }
+      # Keep as a literal: Admin search reads screen subtitle raw (not evaluate).
       subtitle "Attempts, outcomes, and average tokens."
 
       query do |context|
@@ -20,7 +21,7 @@ module RecordingStudioAgents
 
       summary do
         hide_change
-        label "Agents"
+        label ->(_context) { Copy.t("admin.summary.agents", default: "Agents") }
       end
 
       table do

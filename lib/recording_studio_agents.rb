@@ -10,6 +10,7 @@ require "recording_studio_admin"
 require "recording_studio_accessible"
 
 require "recording_studio_agents/version"
+require "recording_studio_agents/copy"
 require "recording_studio_agents/errors"
 require "recording_studio_agents/root_boundary"
 require "recording_studio_agents/digests"

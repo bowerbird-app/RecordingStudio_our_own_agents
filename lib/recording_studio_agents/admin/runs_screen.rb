@@ -5,7 +5,8 @@ module RecordingStudioAgents
     class RunsScreen < RecordingStudioAdmin::Screen
       key "agent_runs"
       icon :play
-      title "Runs"
+      title { Copy.t("admin.screens.runs.title", default: "Runs") }
+      # Keep as a literal: Admin search reads screen subtitle raw (not evaluate).
       subtitle "One attempt each. Steps lists the work in order."
 
       query do |context|
@@ -28,12 +29,13 @@ module RecordingStudioAgents
       end
 
       chart do
-        title "Attempts"
+        title { Copy.t("admin.chart.attempts_title", default: "Attempts") }
+        # Keep as a literal: chart subtitle may be read raw by Admin resolvers.
         subtitle "How many attempts landed over time."
         type :line
         series do |context|
           [{
-            name: "Attempts",
+            name: Copy.t("admin.chart.attempts_series", default: "Attempts"),
             data: RecordingStudioAdmin::AdminActivityLogsSupport.date_series(
               context.query_result.relation.reorder(nil),
               field: "recording_studio_agents_agent_runs.created_at",

@@ -5,8 +5,13 @@ module RecordingStudioAgents
     module Widgets
       FAILED_RUNS = RecordingStudioAdmin::Widget.new("widgets.agents.failed_runs") do
         type :list
-        title "Failed runs"
-        info "The last attempts that did not finish. Open Runs if you need to retry from the host."
+        title { Copy.t("admin.widgets.failed_runs.title", default: "Failed runs") }
+        info do
+          Copy.t(
+            "admin.widgets.failed_runs.info",
+            default: "The last attempts that did not finish. Open Runs if you need to retry from the host."
+          )
+        end
         hide_change
         hide_period
         items do |context|
@@ -21,9 +26,14 @@ module RecordingStudioAgents
 
       ATTEMPTS_THIS_PERIOD = RecordingStudioAdmin::Widget.new("widgets.agents.attempts_this_period") do
         type :number
-        title "Attempts this period"
-        info "How many times an agent started in the last 4 weeks, versus the 4 weeks before that."
-        metadata { { period_label: "Last 4 weeks" } }
+        title { Copy.t("admin.widgets.attempts_this_period.title", default: "Attempts this period") }
+        info do
+          Copy.t(
+            "admin.widgets.attempts_this_period.info",
+            default: "How many times an agent started in the last 4 weeks, versus the 4 weeks before that."
+          )
+        end
+        metadata { { period_label: Copy.t("admin.widgets.period_label", default: "Last 4 weeks") } }
         value do |context|
           root_ids = Queries.visible_root_ids(context)
           Queries.delimited_number(
@@ -43,9 +53,14 @@ module RecordingStudioAgents
 
       TOKENS_THIS_PERIOD = RecordingStudioAdmin::Widget.new("widgets.agents.tokens_this_period") do
         type :number
-        title "Tokens this period"
-        info "Model-call tokens for those attempts. Shows blank if AI history was cleaned."
-        metadata { { period_label: "Last 4 weeks" } }
+        title { Copy.t("admin.widgets.tokens_this_period.title", default: "Tokens this period") }
+        info do
+          Copy.t(
+            "admin.widgets.tokens_this_period.info",
+            default: "Model-call tokens for those attempts. Shows blank if AI history was cleaned."
+          )
+        end
+        metadata { { period_label: Copy.t("admin.widgets.period_label", default: "Last 4 weeks") } }
         value do |context|
           root_ids = Queries.visible_root_ids(context)
           Queries.delimited_number(
@@ -65,10 +80,15 @@ module RecordingStudioAgents
 
       HUNGRY_AGENTS = RecordingStudioAdmin::Widget.new("widgets.agents.hungry_agents") do
         type :list
-        title "Hungry agents"
-        info "Who used the most model-call tokens in the last 4 weeks."
+        title { Copy.t("admin.widgets.hungry_agents.title", default: "Hungry agents") }
+        info do
+          Copy.t(
+            "admin.widgets.hungry_agents.info",
+            default: "Who used the most model-call tokens in the last 4 weeks."
+          )
+        end
         hide_change
-        metadata { { period_label: "Last 4 weeks" } }
+        metadata { { period_label: Copy.t("admin.widgets.period_label", default: "Last 4 weeks") } }
         items do |context|
           root_ids = Queries.visible_root_ids(context)
           Queries.hungry_agents(root_ids: root_ids, range: Queries.current_period).map do |row|

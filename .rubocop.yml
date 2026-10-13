@@ -13,6 +13,9 @@ Style/StringLiterals:
   Enabled: true
   EnforcedStyle: double_quotes
 
+Style/FormatStringToken:
+  EnforcedStyle: template
+
 Layout/LineLength:
   Max: 120
   Exclude:

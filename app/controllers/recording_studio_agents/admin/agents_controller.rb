@@ -22,7 +22,7 @@ module RecordingStudioAgents
         end
 
         redirect_to recording_studio_admin_context.admin_screen_path("registered_agents"),
-                    notice: enabled ? "#{agent.name} is on." : "#{agent.name} is off."
+                    notice: enablement_notice(agent, enabled)
       rescue RecordingStudioAdmin::AuthorizationFailed, RecordingStudioAdmin::DefinitionNotFound
         head :forbidden
       rescue ConfigurationError
@@ -33,6 +33,14 @@ module RecordingStudioAgents
         RecordingStudioAgents.agents.fetch(params[:agent_key], version: params[:version])
       rescue ConfigurationError
         raise ActiveRecord::RecordNotFound
+      end
+
+      def enablement_notice(agent, enabled)
+        if enabled
+          Copy.t("flashes.agent_on", name: agent.name, default: "%{name} is on.")
+        else
+          Copy.t("flashes.agent_off", name: agent.name, default: "%{name} is off.")
+        end
       end
 
       def recording_studio_admin_context

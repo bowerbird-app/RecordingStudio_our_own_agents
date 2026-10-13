@@ -353,6 +353,17 @@ A failed run is retryable for timeouts and connection resets, and when Recording
 
 Each step has a label and a badge: Done, Working, Waiting, or Failed. Tool labels use the tool name (for example "Find page"), not the registry key. The dummy home lists steps after a librarian run. Admin run rows show the labels in a Steps column. Token totals add the model calls linked from those steps, and fall back to the single AI run id on older rows. Optional columns show the current objective, plan count, check-in count, replan count, and whether the run looks stuck.
 
+## Interface text
+
+Admin section chrome, screen titles, resource action labels and confirms, widget
+titles and info, chart labels, and enablement flashes use Rails I18n keys under
+`recording_studio.agents` in `config/locales/en.yml`. The gem ships English only.
+Hosts override or add languages by defining the same keys in their own
+`config/locales`. Lookups go through `RecordingStudioAgents::Copy.t` with an
+English `default:` so a host locale without a fallback never shows "translation
+missing". Admin screen/resource subtitles, column headers, cell values, Progress
+labels, validation messages, and stored data stay English literals.
+
 ## Admin
 
 The `agents` section is staff operations for this gem. The hub title is **Agents admin**. Widgets cover Failed runs, Attempts this period, Tokens this period, and Hungry agents, using Last 4 weeks (today through 27 days back). Links open Agents, Runs, Tasks, Usage by agent, and Evaluations.

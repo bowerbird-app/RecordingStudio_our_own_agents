@@ -6,22 +6,27 @@ module RecordingStudioAgents
       key "registered_agents"
       section "agents"
       icon :sparkles
-      title "Agents"
+      title { Copy.t("admin.resource.agents.title", default: "Agents") }
+      # Keep as a literal: Admin search / resolvers may read resource subtitle raw.
       subtitle "Turn an agent on or off."
 
       action :turn_off,
-             text: "Turn off",
+             text: ->(_row, _context) { Copy.t("admin.resource.agents.turn_off", default: "Turn off") },
              icon: "pause",
              method: :post,
-             confirm: ->(row, _context) { "Turn off #{row.name}?" },
+             confirm: lambda { |row, _context|
+               Copy.t("admin.resource.agents.confirm_turn_off", name: row.name, default: "Turn off %{name}?")
+             },
              url: ->(row, context) { Queries.agent_enablement_href(row, :turn_off, context) },
              visible_if: ->(row, _context) { Enablement.enabled?(row) }
 
       action :turn_on,
-             text: "Turn on",
+             text: ->(_row, _context) { Copy.t("admin.resource.agents.turn_on", default: "Turn on") },
              icon: "play",
              method: :post,
-             confirm: ->(row, _context) { "Turn on #{row.name}?" },
+             confirm: lambda { |row, _context|
+               Copy.t("admin.resource.agents.confirm_turn_on", name: row.name, default: "Turn on %{name}?")
+             },
              url: ->(row, context) { Queries.agent_enablement_href(row, :turn_on, context) },
              visible_if: ->(row, _context) { !Enablement.enabled?(row) }
     end
