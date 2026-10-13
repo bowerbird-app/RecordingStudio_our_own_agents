@@ -17,6 +17,7 @@ require "rails"
 require "active_support/time"
 Time.zone ||= "UTC"
 require "recording_studio_agents"
+require_relative "support/i18n_helpers"
 require_relative "support/registry_helpers"
 require_relative "support/persistence"
 
