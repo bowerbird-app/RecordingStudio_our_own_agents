@@ -51,7 +51,7 @@ Success criteria now stay for the run. A later plan adds an open criterion and k
 - Rails 8.1 or newer
 - Recording Studio `~> 4.2` (dummy GitHub tag `v4.2.2`)
 - Recording Studio AI `~> 0.3` (dummy and development tag `v0.10.0`)
-- Recording Studio Admin `~> 2.0` (dummy tag `v2.0.6`)
+- Recording Studio Admin `~> 2.0` (dummy tag `v2.2.0`)
 - Accessible `~> 0.11` (dummy tag `v0.15.0`)
 - Root Switchable dummy tag `v0.8.0`
 - Web Search dummy tag `v0.5.0`
