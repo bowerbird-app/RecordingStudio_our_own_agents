@@ -1,20 +1,22 @@
 # frozen_string_literal: true
 
-require "yaml"
-
 # Gem unit tests do not boot a host Rails app, so Engine locale paths are not
-# on I18n.load_path. Load English from config/locales/en.yml into the backend
-# without appending I18n.load_path (forbidden in test_helper).
+# registered. Put config/locales/en.yml on I18n.load_path here (not in
+# test_helper) so I18n.reload! keeps English available for Copy.t.
 module I18nHelpers
   module_function
 
-  def load_engine_english!
-    return if @engine_english_loaded
+  def engine_locale_path
+    File.expand_path("../../config/locales/en.yml", __dir__)
+  end
 
-    path = File.expand_path("../../config/locales/en.yml", __dir__)
-    tree = YAML.safe_load_file(path, aliases: true).fetch("en")
-    I18n.backend.store_translations(:en, tree)
-    @engine_english_loaded = true
+  def load_engine_english!
+    path = File.expand_path(engine_locale_path)
+    expanded = I18n.load_path.map { |entry| File.expand_path(entry) }
+    return if expanded.include?(path)
+
+    I18n.load_path << path
+    I18n.reload!
   end
 end
 

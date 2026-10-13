@@ -4,49 +4,29 @@ require "test_helper"
 require "yaml"
 
 class LocalesTest < ActiveSupport::TestCase
-  ADMIN_KEYS = {
-    "admin.section.title" => "Agents admin",
-    "admin.links.agents" => "Agents",
-    "admin.links.runs" => "Runs",
-    "admin.links.tasks" => "Tasks",
-    "admin.links.usage" => "Usage by agent",
-    "admin.links.evaluations" => "Evaluations",
-    "admin.links.agent" => "Agent",
-    "admin.links.skill" => "Skill",
-    "admin.links.tool" => "Tool",
-    "admin.screens.agents.title" => "Agents",
-    "admin.screens.runs.title" => "Runs",
-    "admin.screens.tasks.title" => "Tasks",
-    "admin.screens.usage.title" => "Usage by agent",
-    "admin.screens.evaluations.title" => "Evaluations",
-    "admin.resource.agents.title" => "Agents",
-    "admin.resource.agents.turn_off" => "Turn off",
-    "admin.resource.agents.turn_on" => "Turn on",
-    "admin.resource.agents.confirm_turn_off" => "Turn off %{name}?",
-    "admin.resource.agents.confirm_turn_on" => "Turn on %{name}?",
-    "admin.buttons.runs" => "Runs",
-    "admin.buttons.calls" => "Calls",
-    "admin.summary.agents" => "Agents",
-    "admin.chart.attempts_title" => "Attempts",
-    "admin.chart.attempts_series" => "Attempts",
-    "admin.widgets.failed_runs.title" => "Failed runs",
-    "admin.widgets.failed_runs.info" =>
-      "The last attempts that did not finish. Open Runs if you need to retry from the host.",
-    "admin.widgets.attempts_this_period.title" => "Attempts this period",
-    "admin.widgets.attempts_this_period.info" =>
-      "How many times an agent started in the last 4 weeks, versus the 4 weeks before that.",
-    "admin.widgets.tokens_this_period.title" => "Tokens this period",
-    "admin.widgets.tokens_this_period.info" =>
-      "Model-call tokens for those attempts. Shows blank if AI history was cleaned.",
-    "admin.widgets.hungry_agents.title" => "Hungry agents",
-    "admin.widgets.hungry_agents.info" => "Who used the most model-call tokens in the last 4 weeks.",
-    "admin.widgets.period_label" => "Last 4 weeks"
-  }.freeze
+  # Expected English values come from en.yml (no hardcoded %{...} tokens in Ruby).
+  ENGINE_ENGLISH = begin
+    tree = YAML.safe_load_file(
+      File.expand_path("../config/locales/en.yml", __dir__),
+      aliases: true
+    ).fetch("en").fetch("recording_studio").fetch("agents")
 
-  FLASH_KEYS = {
-    "flashes.agent_on" => "%{name} is on.",
-    "flashes.agent_off" => "%{name} is off."
-  }.freeze
+    flatten = lambda do |node, prefix = ""|
+      node.each_with_object({}) do |(key, value), memo|
+        path = prefix.empty? ? key.to_s : "#{prefix}.#{key}"
+        if value.is_a?(Hash)
+          memo.merge!(flatten.call(value, path))
+        else
+          memo[path] = value
+        end
+      end
+    end
+
+    flatten.call(tree).freeze
+  end
+
+  ADMIN_KEYS = ENGINE_ENGLISH.select { |key, _| key.start_with?("admin.") }.freeze
+  FLASH_KEYS = ENGINE_ENGLISH.select { |key, _| key.start_with?("flashes.") }.freeze
 
   test "engine ships only english locale files" do
     files = Dir[File.join(engine_locales_dir, "*")].map { |path| File.basename(path) }
@@ -178,5 +158,6 @@ class LocalesTest < ActiveSupport::TestCase
     I18n.backend = original_backend
     I18n.load_path.replace(original_load_path)
     I18n.reload!
+    I18nHelpers.load_engine_english!
   end
 end
