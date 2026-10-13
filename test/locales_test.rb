@@ -56,6 +56,18 @@ class LocalesTest < ActiveSupport::TestCase
     end
   end
 
+  test "test_helper never loads gem locales onto I18n.load_path" do
+    helper = File.read(File.expand_path("test_helper.rb", __dir__))
+    refute_includes helper, "i18n_helpers",
+                    "test_helper must not require support/i18n_helpers"
+    refute_includes helper, "i18n.load_path",
+                    "test_helper must not append app.config.i18n.load_path"
+    refute_includes helper, "I18n.load_path",
+                    "test_helper must not append I18n.load_path"
+    refute_path_exists File.expand_path("support/i18n_helpers.rb", __dir__),
+                       "support/i18n_helpers.rb must be removed (no suite-wide locale load)"
+  end
+
   test "en.yml ships flash keys only under recording_studio.agents" do
     tree = locale_tree(File.join(engine_locales_dir, "en.yml"), "en")
            .fetch("recording_studio")
@@ -192,6 +204,8 @@ class LocalesTest < ActiveSupport::TestCase
     YAML.safe_load_file(path, aliases: true).fetch(locale)
   end
 
+  # Scoped only to tests that assert Copy.t / I18n.t against gem en.yml.
+  # Restores load_path and backend so the root suite stays order-independent.
   def with_engine_locales_loaded
     locale_path = File.expand_path(File.join(engine_locales_dir, "en.yml"))
     original_load_path = I18n.load_path.dup
@@ -204,6 +218,5 @@ class LocalesTest < ActiveSupport::TestCase
     I18n.backend = original_backend
     I18n.load_path.replace(original_load_path)
     I18n.reload!
-    I18nHelpers.load_engine_english!
   end
 end
