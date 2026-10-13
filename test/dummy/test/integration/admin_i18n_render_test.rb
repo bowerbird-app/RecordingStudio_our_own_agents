@@ -53,7 +53,9 @@ class AdminI18nRenderTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "#<Proc"
   end
 
-  test "admin dsl keeps screen and resource subtitles as english string literals" do
+  test "admin dsl keeps section screen and resource subtitles as english string literals" do
+    assert_equal "Who ran, what they tried, and how heavy the model calls were.",
+                 RecordingStudioAgents::Admin::Section.subtitle
     assert_equal "Including agents that have not run yet.",
                  RecordingStudioAgents::Admin::AgentsScreen.subtitle
     assert_equal "One attempt each. Steps lists the work in order.",
@@ -68,6 +70,7 @@ class AdminI18nRenderTest < ActionDispatch::IntegrationTest
                  RecordingStudioAgents::Admin::AgentsResource.subtitle
 
     [
+      RecordingStudioAgents::Admin::Section.subtitle,
       RecordingStudioAgents::Admin::AgentsScreen.subtitle,
       RecordingStudioAgents::Admin::RunsScreen.subtitle,
       RecordingStudioAgents::Admin::AgentsResource.subtitle
@@ -87,8 +90,6 @@ class AdminI18nRenderTest < ActionDispatch::IntegrationTest
 
     section = RecordingStudioAgents::Admin::Section
     assert_equal "Agents admin", section.evaluate(section.title, context)
-    assert_equal "Who ran, what they tried, and how heavy the model calls were.",
-                 section.evaluate(section.subtitle, context)
 
     agents = RecordingStudioAgents::Admin::AgentsScreen
     assert_equal "Agents", agents.evaluate(agents.title, context)

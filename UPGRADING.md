@@ -2,15 +2,22 @@
 
 ## 0.7.0
 
-This is a non-breaking upgrade. Rendered English interface text stays
-byte-identical to `0.6.0`.
+Rendered English interface text stays byte-identical to `0.6.0`. Hosts that read
+Admin DSL title/link/action fields as String values must evaluate the callables
+Admin now returns (see below).
 
 ### What Changed
 
-- Admin DSL chrome (section title/subtitle, screen titles, resource title,
-  action labels and confirms, show-screen buttons, summary label, chart
-  title/series, widget titles/info/period labels) resolves through
+- Admin DSL chrome (section title, screen titles, resource title, action labels
+  and confirms, show-screen buttons, summary label, chart title/series, widget
+  titles/info/period labels) resolves through
   `RecordingStudioAgents::Copy.t(..., default: …)`.
+- `Section.title`, section `links[].text`, the screen and resource `title`, and
+  the `turn_on` / `turn_off` action `text` now return callables that Admin
+  evaluates at render. Hosts reading those fields directly must evaluate them
+  (for example with `evaluate`) instead of treating them as String literals.
+- Section, screen, and resource `subtitle` stay English string literals (Admin
+  search reads those fields raw).
 - Enablement flashes (`%{name} is on.` / `%{name} is off.`) resolve through
   `Copy.t`.
 - Boot-order host override under
@@ -24,7 +31,6 @@ Keys added (under `recording_studio.agents`):
 | `flashes.agent_on` | `%{name} is on.` |
 | `flashes.agent_off` | `%{name} is off.` |
 | `admin.section.title` | Agents admin |
-| `admin.section.subtitle` | Who ran, what they tried, and how heavy the model calls were. |
 | `admin.links.agents` | Agents |
 | `admin.links.runs` | Runs |
 | `admin.links.tasks` | Tasks |
@@ -58,13 +64,15 @@ Keys added (under `recording_studio.agents`):
 | `admin.widgets.hungry_agents.info` | Who used the most model-call tokens in the last 4 weeks. |
 | `admin.widgets.period_label` | Last 4 weeks |
 
-Left untranslated on purpose: Admin screen and resource subtitles (Admin search
-reads those fields raw), Admin column headers / header tooltips / filter titles,
-Admin cell values (status badges, On/Off, detail-row labels, Progress labels,
-`None`), model validation messages, developer errors, logs, generator CLI, and
-stored or user-authored data.
+Left untranslated on purpose: Admin section, screen, and resource subtitles
+(Admin search reads those fields raw), Admin column headers / header tooltips /
+filter titles, Admin cell values (status badges, On/Off, detail-row labels,
+Progress labels, `None`), model validation messages, developer errors, logs,
+generator CLI, and stored or user-authored data.
 
 ### Host Action Required
 
-None for English hosts. Override keys under `recording_studio.agents` in the
-host's `config/locales` when translating.
+English hosts that only render through Admin need no change. Hosts that read
+`Section.title`, `links[].text`, screen/resource `title`, or turn on/off action
+`text` directly must evaluate those callables. Override keys under
+`recording_studio.agents` in the host's `config/locales` when translating.

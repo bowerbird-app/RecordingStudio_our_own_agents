@@ -21,9 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Admin section title/subtitle, screen titles, resource title, action labels and
+- Admin section title, screen titles, resource title, action labels and
   confirms, show-screen buttons, summary label, chart title/series, and widget
   titles/info/period labels resolve through `Copy.t` (English output unchanged)
+- `Section.title`, section `links[].text`, screen and resource `title`, and the
+  `turn_on` / `turn_off` action `text` now return callables that Admin evaluates
+  at render. Hosts that read those fields directly must evaluate them
+  (for example with `evaluate`) instead of treating them as String literals.
 - Agents enablement controller flashes resolve through `Copy.t` (English output
   unchanged)
 - Version `0.6.0` → `0.7.0`
@@ -34,7 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - To override or add another language, set keys under `recording_studio.agents`
   in the host's `config/locales`. There is no dependency on
   `recording_studio_internationalization`.
-- Admin screen/resource subtitles, table titles, column headers, header
+- Admin section, screen, and resource subtitles stay English string literals
+  (Admin search reads those fields raw). Table titles, column headers, header
   tooltips, filter titles, and Admin cell values stay English literals.
 - Model validation messages, Progress labels, status badge text, Queries detail
   rows, developer errors, logs, generator CLI, and stored data stay English.

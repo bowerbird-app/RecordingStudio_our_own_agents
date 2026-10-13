@@ -6,7 +6,6 @@ require "yaml"
 class LocalesTest < ActiveSupport::TestCase
   ADMIN_KEYS = {
     "admin.section.title" => "Agents admin",
-    "admin.section.subtitle" => "Who ran, what they tried, and how heavy the model calls were.",
     "admin.links.agents" => "Agents",
     "admin.links.runs" => "Runs",
     "admin.links.tasks" => "Tasks",

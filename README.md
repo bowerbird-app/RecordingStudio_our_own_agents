@@ -355,14 +355,17 @@ Each step has a label and a badge: Done, Working, Waiting, or Failed. Tool label
 
 ## Interface text
 
-Admin section chrome, screen titles, resource action labels and confirms, widget
+Admin section title, screen titles, resource action labels and confirms, widget
 titles and info, chart labels, and enablement flashes use Rails I18n keys under
 `recording_studio.agents` in `config/locales/en.yml`. The gem ships English only.
 Hosts override or add languages by defining the same keys in their own
 `config/locales`. Lookups go through `RecordingStudioAgents::Copy.t` with an
 English `default:` so a host locale without a fallback never shows "translation
-missing". Admin screen/resource subtitles, column headers, cell values, Progress
-labels, validation messages, and stored data stay English literals.
+missing". Several Admin DSL fields (`Section.title`, section `links[].text`,
+screen and resource `title`, turn on/off action `text`) return callables that
+Admin evaluates at render. Admin section, screen, and resource subtitles, column
+headers, cell values, Progress labels, validation messages, and stored data stay
+English literals.
 
 ## Admin
 

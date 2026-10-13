@@ -6,12 +6,8 @@ module RecordingStudioAgents
       key "agents"
       icon :sparkles
       title { Copy.t("admin.section.title", default: "Agents admin") }
-      subtitle do
-        Copy.t(
-          "admin.section.subtitle",
-          default: "Who ran, what they tried, and how heavy the model calls were."
-        )
-      end
+      # Keep as a literal: Admin search reads section subtitle raw (not evaluate).
+      subtitle "Who ran, what they tried, and how heavy the model calls were."
 
       link :agents,
            text: ->(_context) { Copy.t("admin.links.agents", default: "Agents") },

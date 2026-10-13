@@ -7,7 +7,6 @@ en:
       admin:
         section:
           title: "Agents admin"
-          subtitle: "Who ran, what they tried, and how heavy the model calls were."
         links:
           agents: "Agents"
           runs: "Runs"
