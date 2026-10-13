@@ -52,13 +52,25 @@ class HostLocaleOverrideTest < ActionDispatch::IntegrationTest
   # Real-boot-order guard: host file under config/locales must win without any
   # test-time load_path mutation.
   test "boot-loaded host locale override wins for the enablement off flash" do
+    gem_off = gem_flash_template("agent_off")
     host_off = flash_template(BOOT_HOST_LOCALE, "agent_off")
+
     assert File.exist?(BOOT_HOST_LOCALE), "expected boot host override at #{BOOT_HOST_LOCALE}"
     assert_equal host_off, YAML.safe_load_file(BOOT_HOST_LOCALE, aliases: true)
                                .dig("en", "recording_studio", "agents", "flashes", "agent_off")
-    assert_equal host_off, I18n.t(BOOT_OVERRIDE_KEY)
+    assert_includes host_off, "HOST",
+                    "boot override English must be a HOST probe string"
+    refute_equal gem_off, host_off
+
+    load_path = I18n.load_path.map { |path| File.expand_path(path) }
+    assert_includes load_path, File.expand_path(BOOT_HOST_LOCALE),
+                    "boot override must already be on I18n.load_path"
     assert_equal @original_load_path, I18n.load_path,
                  "boot-order test must not mutate I18n.load_path"
+
+    assert_equal host_off, I18n.t(BOOT_OVERRIDE_KEY)
+    refute_equal gem_off, I18n.t(BOOT_OVERRIDE_KEY),
+                 "I18n.t must return HOST override, not gem main English"
 
     sign_in @user
     post "/recording_studio_agents/admin/agents/page_librarian/turn_off", params: { version: 1 }
@@ -75,5 +87,10 @@ class HostLocaleOverrideTest < ActionDispatch::IntegrationTest
   def flash_template(path, key)
     YAML.safe_load_file(path, aliases: true)
         .fetch("en").fetch("recording_studio").fetch("agents").fetch("flashes").fetch(key)
+  end
+
+  def gem_flash_template(key)
+    engine_locale = RecordingStudioAgents::Engine.root.join("config/locales/en.yml")
+    flash_template(engine_locale, key)
   end
 end

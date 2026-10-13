@@ -100,6 +100,35 @@ class LocalesTest < ActiveSupport::TestCase
     end
   end
 
+  # Reverting any translated flash string to a controller literal must fail here
+  # (and fail the dummy boot-order / host-override render tests).
+  test "translated flash keys keep Copy.t call sites and never hardcode main English" do
+    controller_path = File.expand_path(
+      "../app/controllers/recording_studio_agents/admin/agents_controller.rb",
+      __dir__
+    )
+    source = File.read(controller_path)
+    assert_predicate FLASH_KEYS, :any?
+
+    FLASH_KEYS.each_key do |key|
+      assert_includes source, "Copy.t(\"#{key}\"",
+                      "#{controller_path} must call Copy.t(#{key.inspect}); " \
+                      "reverting that flash to a literal must fail this test"
+    end
+
+    FLASH_KEYS.each_value do |english|
+      refute_includes source, english.inspect,
+                      "#{controller_path} must not embed en.yml English #{english.inspect}"
+      refute_includes source, english,
+                      "#{controller_path} must not embed en.yml English #{english.inspect}"
+    end
+
+    refute_match(/#\{[^}]+\} is on\./, source,
+                 "#{controller_path} must not interpolate main's on-flash literal")
+    refute_match(/#\{[^}]+\} is off\./, source,
+                 "#{controller_path} must not interpolate main's off-flash literal")
+  end
+
   test "english flash keys resolve from en.yml without defaults" do
     with_engine_locales_loaded do
       I18n.with_locale(:en) do

@@ -347,7 +347,7 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
 [Unreleased]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.7.0...HEAD
-[0.7.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.7.0
+[0.7.0]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.6.2...v0.7.0
 [0.6.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.6.0
 [0.5.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.5.0
 [0.4.6]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.6
