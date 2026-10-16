@@ -49,10 +49,10 @@ Success criteria now stay for the run. A later plan adds an open criterion and k
 
 - Ruby 3.3 or newer
 - Rails 8.1 or newer
-- Recording Studio `~> 4.2` (dummy and development tag `v4.6.0`)
+- Recording Studio `~> 4.2` (dummy and development tag `v4.7.0`)
 - Recording Studio AI `~> 0.3` (dummy and development tag `v0.11.0`)
-- Recording Studio Admin `~> 2.0` (dummy tag `v2.3.0`; requires Trashable `v0.10.0` with `require: false`)
-- Accessible `~> 0.11` (dummy tag `v0.18.0`; requires Trashable `v0.10.0` with `require: false`)
+- Recording Studio Admin `~> 2.0` (dummy tag `v2.3.0`; requires Trashable `v0.11.0` with `require: false`)
+- Accessible `~> 0.11` (dummy tag `v0.18.0`; requires Trashable `v0.11.0` with `require: false`)
 - Root Switchable dummy tag `v0.9.0` (requires Cache dummy tag `v0.5.0`)
 - Web Search dummy tag `v0.5.0`
 - Metrics dummy and development tag `v0.2.0`
