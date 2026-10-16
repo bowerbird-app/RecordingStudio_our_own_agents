@@ -1,5 +1,28 @@
 # Upgrading
 
+## 0.8.0
+
+Pin `recording_studio_metrics` to `>= 0.3.0`, `< 0.4`. Development and dummy Gemfiles use GitHub tag `v0.3.1`.
+
+### What Changed
+
+- The metrics dependency allows `0.3.x` and stops before `0.4`.
+- Recording Studio MCP `v0.17.0` names one tool per metric by replacing the dot with a hyphen.
+- `agent_runs-over_time` takes `from`, `to`, and `interval`. `agent_runs-by_status`, `agent_runs-by_agent`, `agent_evaluations-by_verdict`, and `agent_evaluations-avg_score` do not take that window.
+- HTTP paths are unchanged. Registration and `api_authorize` are unchanged.
+
+### Host Action Required
+
+Pin the metrics gem. There is no migration.
+
+The host still registers Metrics HTTP once. This gem does not call `RecordingStudioMetrics::Api.register!`.
+
+```ruby
+RecordingStudioMetrics::Api.register!(api: :operations)
+```
+
+MCP builds its tools from the metrics already exposed on `:operations`. Staff with AdminRoot `:view` can read them. A public token or a non-admin operations token is denied.
+
 ## 0.7.0
 
 Rendered English Admin DSL chrome stays byte-identical to `0.6.0` as string

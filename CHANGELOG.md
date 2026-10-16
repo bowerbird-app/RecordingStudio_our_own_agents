@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-10-16
+
+### Added
+
+- MCP tool names for the site metrics. Recording Studio MCP `v0.17.0` builds one read-only tool per exposed metric and replaces the single dot in the identifier with a hyphen.
+- `agent_runs-over_time` takes `from`, `to`, and `interval`. `agent_runs-by_status`, `agent_runs-by_agent`, `agent_evaluations-by_verdict`, and `agent_evaluations-avg_score` do not take that window.
+
+### Changed
+
+- Runtime dependency `recording_studio_metrics` is `>= 0.3.0`, `< 0.4`. Development and dummy Gemfiles pin GitHub tag `v0.3.1`.
+
+### Upgrade notes
+
+- Pin `recording_studio_metrics` to `>= 0.3.0`, `< 0.4`. Use tag `v0.3.1` in development.
+- There is no migration.
+- Registration is unchanged. `api_authorize` still calls `RecordingStudioAgents::Api::Access.can_view?`.
+- This gem does not call `RecordingStudioMetrics::Api.register!`. The host still registers Metrics HTTP once:
+
+```ruby
+RecordingStudioMetrics::Api.register!(api: :operations)
+```
+
+- MCP generates the tools from metrics already exposed on `:operations`. This gem does not depend on MCP.
+- See [UPGRADING.md](UPGRADING.md#080).
+
 ## [0.7.0] - 2026-10-13
 
 ### Added
@@ -346,7 +371,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.7.3...v0.8.0
 [0.7.0]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.6.2...v0.7.0
 [0.6.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.6.0
 [0.5.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.5.0

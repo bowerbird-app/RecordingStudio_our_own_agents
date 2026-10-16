@@ -55,7 +55,7 @@ Success criteria now stay for the run. A later plan adds an open criterion and k
 - Accessible `~> 0.11` (dummy tag `v0.18.0`; requires Trashable `v0.10.0` with `require: false`)
 - Root Switchable dummy tag `v0.9.0` (requires Cache dummy tag `v0.5.0`)
 - Web Search dummy tag `v0.5.0`
-- Metrics dummy and development tag `v0.2.0`
+- Metrics `>= 0.3.0`, `< 0.4` (dummy and development tag `v0.3.1`). MCP tool names are in the README metrics table. `agent_runs-over_time` takes `from`, `to`, and `interval`. The other agent metric tools do not.
 - FlatPack dummy tag `v0.1.207`
 
 ## Verification
