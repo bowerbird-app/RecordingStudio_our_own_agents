@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.7.0", ::RecordingStudioAgents::VERSION
+    assert_equal "0.8.0", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -18,7 +18,9 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes gemspec, 'spec.add_dependency "recording_studio_ai", "~> 0.3"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_admin", "~> 2.0"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_accessible", "~> 0.11"'
-    assert_includes gemspec, 'spec.add_dependency "recording_studio_metrics", "~> 0.2"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_metrics", ">= 0.3.0", "< 0.4"'
+    refute_includes gemspec, 'spec.add_dependency "recording_studio_metrics", "~> 0.2"'
+    assert_metrics_requirement
     assert_includes gemspec, 'spec.homepage    = "https://github.com/bowerbird-app/RecordingStudio_agents"'
   end
 
@@ -63,8 +65,8 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.9.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_cache", tag: "v0.5.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_web_search", tag: "v0.5.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.2.0"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.2.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
     assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.207"'
   end
 
@@ -181,8 +183,13 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes readme, "root_section: :root"
     assert_includes readme, "/admin/sections/agents"
     assert_includes readme, "recording_studio_metrics"
-    assert_includes readme, "v0.2.0"
+    assert_includes readme, ">= 0.3.0"
+    assert_includes readme, "< 0.4"
+    assert_includes readme, "v0.3.1"
+    refute_includes readme, "v0.2.0"
+    assert_includes readme, "RecordingStudioMetrics::Api.register!(api: :operations)"
     assert_includes readme, "/recording_studio_api/apis/operations/v1/metrics/agent_runs/over_time"
+    assert_mcp_tool_names(readme)
     refute_includes readme, "ExampleService"
     refute_includes readme, "recordable"
     refute_includes readme, "\u2014"
@@ -228,5 +235,45 @@ class RecordingStudioAgentsTest < Minitest::Test
     view_path = File.expand_path("../app/views/recording_studio_agents/home/index.html.erb", __dir__)
 
     refute File.exist?(view_path)
+  end
+
+  private
+
+  def assert_metrics_requirement
+    spec = Gem::Specification.load(File.expand_path("../recording_studio_agents.gemspec", __dir__))
+    dependency = spec.dependencies.find { |entry| entry.name == "recording_studio_metrics" }
+    requirement = dependency.requirement
+
+    assert requirement.satisfied_by?(Gem::Version.new("0.3.0"))
+    assert requirement.satisfied_by?(Gem::Version.new("0.3.1"))
+    refute requirement.satisfied_by?(Gem::Version.new("0.2.9"))
+    refute requirement.satisfied_by?(Gem::Version.new("0.4.0"))
+  end
+
+  def assert_mcp_tool_names(readme)
+    tools = {
+      "agent_runs.over_time" => "agent_runs-over_time",
+      "agent_runs.by_status" => "agent_runs-by_status",
+      "agent_runs.by_agent" => "agent_runs-by_agent",
+      "agent_evaluations.by_verdict" => "agent_evaluations-by_verdict",
+      "agent_evaluations.avg_score" => "agent_evaluations-avg_score"
+    }
+
+    tools.each do |identifier, tool|
+      row = readme.each_line.find { |line| line.include?("| `#{tool}` |") }
+      assert row, "README metrics table is missing #{tool}"
+      assert_includes row, "`#{identifier}`"
+      if tool == "agent_runs-over_time"
+        assert_includes row, "`from`"
+        assert_includes row, "`to`"
+        assert_includes row, "`interval`"
+      else
+        refute_includes row, "`from`"
+        refute_includes row, "`to`"
+        refute_includes row, "`interval`"
+      end
+    end
+
+    assert_includes readme, "Breakdowns and the average do not take that window."
   end
 end

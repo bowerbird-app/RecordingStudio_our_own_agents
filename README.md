@@ -119,11 +119,23 @@ recording_studio_admin_sections do
 end
 ```
 
-Site-wide run and evaluation metrics register with `recording_studio_metrics` (`v0.2.0`). The host exposes them once:
+Site-wide run and evaluation metrics register with `recording_studio_metrics` (`>= 0.3.0`, `< 0.4`, development tag `v0.3.1`). The host exposes them once:
 
 ```ruby
 RecordingStudioMetrics::Api.register!(api: :operations)
 ```
+
+Recording Studio MCP `v0.17.0` builds one read-only tool per exposed metric. The tool name replaces the single dot in the identifier with a hyphen. This gem does not register those tools and does not depend on MCP.
+
+| Metric | MCP tool | Arguments |
+| --- | --- | --- |
+| `agent_runs.over_time` | `agent_runs-over_time` | `from`, `to`, `interval` |
+| `agent_runs.by_status` | `agent_runs-by_status` | none |
+| `agent_runs.by_agent` | `agent_runs-by_agent` | none |
+| `agent_evaluations.by_verdict` | `agent_evaluations-by_verdict` | none |
+| `agent_evaluations.avg_score` | `agent_evaluations-avg_score` | none |
+
+`from`, `to`, and `interval` are arguments of `agent_runs-over_time` only. Breakdowns and the average do not take that window.
 
 | Method | Path |
 | --- | --- |

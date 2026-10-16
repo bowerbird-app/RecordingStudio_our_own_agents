@@ -74,12 +74,14 @@ class AgentMetricsTest < ActiveSupport::TestCase
   end
 
   test "api_authorize allows AdminRoot staff and denies non-admins" do
-    authorize = RecordingStudioMetrics.registry.api_authorize_for(:agent_runs)
-    assert_equal RecordingStudioAgents::Metrics::AUTHORIZE, authorize
+    %i[agent_runs agent_evaluations].each do |resource|
+      authorize = RecordingStudioMetrics.registry.api_authorize_for(resource)
+      assert_equal RecordingStudioAgents::Metrics::AUTHORIZE, authorize
 
-    assert authorize.call(GrantContext.new(Grant.new(@staff)))
-    refute authorize.call(GrantContext.new(Grant.new(@outsider)))
-    refute authorize.call(GrantContext.new(Grant.new(nil)))
+      assert authorize.call(GrantContext.new(Grant.new(@staff))), resource
+      refute authorize.call(GrantContext.new(Grant.new(@outsider))), resource
+      refute authorize.call(GrantContext.new(Grant.new(nil))), resource
+    end
   end
 
   private
