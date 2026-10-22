@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.8.0", ::RecordingStudioAgents::VERSION
+    assert_equal "0.8.1", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -18,7 +18,7 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes gemspec, 'spec.add_dependency "recording_studio_ai", "~> 0.3"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_admin", "~> 2.0"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_accessible", "~> 0.11"'
-    assert_includes gemspec, 'spec.add_dependency "recording_studio_metrics", ">= 0.3.0", "< 0.4"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_metrics", ">= 0.3.0", "< 1.0"'
     refute_includes gemspec, 'spec.add_dependency "recording_studio_metrics", "~> 0.2"'
     assert_metrics_requirement
     assert_includes gemspec, 'spec.homepage    = "https://github.com/bowerbird-app/RecordingStudio_agents"'
@@ -184,7 +184,7 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes readme, "/admin/sections/agents"
     assert_includes readme, "recording_studio_metrics"
     assert_includes readme, ">= 0.3.0"
-    assert_includes readme, "< 0.4"
+    assert_includes readme, "< 1.0"
     assert_includes readme, "v0.3.1"
     refute_includes readme, "v0.2.0"
     assert_includes readme, "RecordingStudioMetrics::Api.register!(api: :operations)"
@@ -246,8 +246,9 @@ class RecordingStudioAgentsTest < Minitest::Test
 
     assert requirement.satisfied_by?(Gem::Version.new("0.3.0"))
     assert requirement.satisfied_by?(Gem::Version.new("0.3.1"))
+    assert requirement.satisfied_by?(Gem::Version.new("0.4.0"))
     refute requirement.satisfied_by?(Gem::Version.new("0.2.9"))
-    refute requirement.satisfied_by?(Gem::Version.new("0.4.0"))
+    refute requirement.satisfied_by?(Gem::Version.new("1.0.0"))
   end
 
   def assert_mcp_tool_names(readme)
