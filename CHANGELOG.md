@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-10-28
+
+### Removed
+
+- Stopgap FlatPack Button prepend that copied `url:` onto `href:`. Admin already passes `href:` into Button. Call Button with `href:` when this gem renders a link.
+
+### Upgrade notes
+
+- No host action and no migration. Do not copy a Button `url` prepend. Use `href:` on FlatPack Button.
+
 ## [0.8.1] - 2026-10-22
 
 ### Changed
