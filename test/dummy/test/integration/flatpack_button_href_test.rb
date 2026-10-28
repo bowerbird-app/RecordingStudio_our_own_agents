@@ -11,17 +11,18 @@ class FlatpackButtonHrefTest < ActionDispatch::IntegrationTest
       record.password = "Password123!"
       record.password_confirmation = "Password123!"
     end
-    @workspace = Workspace.find_or_create_by!(name: "Button Href Workspace")
-    @root = RecordingStudio.root_recording_for(@workspace)
-    grant_accessible!(recording: @root, actor: @user)
+    admin_root = AdminRoot.find_or_create_by!(name: "Admin")
+    grant_accessible!(recording: RecordingStudio.root_recording_for(admin_root), actor: @user)
     sign_in @user
   end
 
-  test "link-style button renders an anchor with href" do
-    get root_path
+  test "agents hub title buttons render as anchors with href" do
+    get "/admin/sections/agents"
 
     assert_response :success
-    assert_select "a[href=?]", destroy_user_session_path, text: "Sign out"
-    assert_select "button", text: "Sign out", count: 0
+    assert_select "a[href=?]", "/admin/screens/registered_agents", text: "Agents"
+    assert_select "a[href=?]", "/admin/screens/agent_runs", text: "Runs"
+    assert_select "button", text: "Agents", count: 0
+    assert_select "button", text: "Runs", count: 0
   end
 end
