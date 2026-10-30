@@ -1,5 +1,9 @@
 # Upgrading
 
+## 0.8.4
+
+The engine no longer draws `GET /recording_studio_agents`. `recording_studio_agents.root_path` is gone. Hosts that linked that path or health-checked the mount need another URL. There is no migration.
+
 ## 0.8.3
 
 Development and dummy apps pin FlatPack `v0.1.331` (`view_component` 4.20.0).
