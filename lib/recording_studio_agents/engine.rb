@@ -13,6 +13,18 @@ module RecordingStudioAgents
         apply_extensions(target, extensions_for(:controller, extension_keys_for(target)))
       end
 
+      def agents_config_yaml(app)
+        return unless app.respond_to?(:paths)
+
+        config_paths = app.paths["config"]
+        return unless config_paths.respond_to?(:existent)
+
+        root = Array(config_paths.existent).first
+        return if root.blank?
+
+        Pathname.new(root).join("recording_studio_agents.yml")
+      end
+
       private
 
       def extensions_for(kind, names)
@@ -49,18 +61,6 @@ module RecordingStudioAgents
       def identity_hash
         {}.compare_by_identity
       end
-
-      def agents_config_yaml(app)
-        return unless app.respond_to?(:paths)
-
-        config_paths = app.paths["config"]
-        return unless config_paths.respond_to?(:existent)
-
-        root = Array(config_paths.existent).first
-        return if root.blank?
-
-        Pathname.new(root).join("recording_studio_agents.yml")
-      end
     end
 
     initializer "recording_studio_agents.before_initialize", before: "recording_studio_agents.load_config" do |_app|
@@ -68,7 +68,7 @@ module RecordingStudioAgents
     end
 
     initializer "recording_studio_agents.load_config" do |app|
-      if RecordingStudioAgents::Engine.send(:agents_config_yaml, app)&.exist?
+      if RecordingStudioAgents::Engine.agents_config_yaml(app)&.exist?
         yaml = app.config_for(:recording_studio_agents)
         RecordingStudioAgents.configuration.merge!(yaml) if yaml.respond_to?(:each)
       end

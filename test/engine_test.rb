@@ -113,6 +113,24 @@ class EngineTest < Minitest::Test
     end
   end
 
+  def test_load_config_raises_yaml_syntax_errors
+    with_config_root do |paths|
+      File.write(File.join(paths["config"].existent.first, "recording_studio_agents.yml"), "lease_seconds: [\n")
+      app = Struct.new(:config, :paths) do
+        def config_for(name)
+          yaml = Pathname.new(paths["config"].existent.first).join("#{name}.yml")
+          ActiveSupport::ConfigurationFile.parse(yaml)
+        end
+      end.new(Object.new, paths)
+
+      error = assert_raises(RuntimeError) do
+        find_initializer("recording_studio_agents.load_config").block.call(app)
+      end
+
+      assert_includes error.message, "YAML syntax error"
+    end
+  end
+
   def test_load_config_is_noop_without_config_sources
     app = Struct.new(:config).new(Object.new)
 
