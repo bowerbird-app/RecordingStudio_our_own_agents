@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.3] - 2026-10-30
+
+### Changed
+
+- Gemspec homepage is `https://github.com/bowerbird-app/RecordingStudio_our_own_agents`.
+- `recording_studio_admin` stays `~> 2.0` and is capped at `< 2.6`, so a bundle update cannot pull Admin 2.6+ (that line depends on Logs).
+- Transitive `crass` is 1.0.8 (GHSA-pq4g-8rxf-4g29). `view_component` is unchanged.
+
+### Upgrade notes
+
+- No host action and no migration. Keep Admin on 2.5.x.
+
 ## [0.8.2] - 2026-10-30
 
 ### Removed
@@ -389,7 +401,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.2...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.3...HEAD
+[0.8.3]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.7.3...v0.8.0
