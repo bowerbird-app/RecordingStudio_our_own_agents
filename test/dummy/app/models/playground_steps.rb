@@ -302,7 +302,7 @@ class PlaygroundSteps
 
     payload = RecordingStudioAI.read_retained_response(response: response, initiator: initiator)
     payload[:content_text] if payload.is_a?(Hash)
-  rescue StandardError
+  rescue *RecordingStudioAgents.lookup_errors
     nil
   end
 

@@ -48,6 +48,8 @@ RecordingStudioAgents::Metrics.install!
 
 module RecordingStudioAgents
   class << self
+    attr_writer :configuration
+
     def configuration
       @configuration ||= Configuration.new
     end

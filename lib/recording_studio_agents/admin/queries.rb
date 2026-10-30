@@ -143,7 +143,7 @@ module RecordingStudioAgents
         return [] if root_ids.empty?
 
         AgentRun.where(root_recording_id: root_ids).distinct.order(:agent_key).pluck(:agent_key)
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         []
       end
 
@@ -153,7 +153,7 @@ module RecordingStudioAgents
         return false unless klass.respond_to?(:table_exists?)
 
         klass.table_exists?
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         false
       end
 
@@ -441,7 +441,7 @@ module RecordingStudioAgents
         return if row.working_state_json.blank?
 
         WorkingState.load(row.working_state_json)
-      rescue StandardError
+      rescue ContractError
         nil
       end
 
@@ -450,7 +450,7 @@ module RecordingStudioAgents
         return [] unless row.agent_steps.exists?
 
         row.agent_steps.pluck(:recording_studio_ai_run_id).compact
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         []
       end
 
@@ -628,7 +628,7 @@ module RecordingStudioAgents
         return unless defined?(::Current) && Current.respond_to?(:actor)
 
         Current.actor
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         nil
       end
       private_class_method :current_filter_actor

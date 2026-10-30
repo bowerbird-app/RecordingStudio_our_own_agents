@@ -163,7 +163,7 @@ class PersistenceTestCase < Minitest::Test
     return unless ActiveRecord::Base.connected?
 
     ActiveRecord::Base.remove_connection
-  rescue StandardError
+  rescue *RecordingStudioAgents.lookup_errors
     nil
   end
 

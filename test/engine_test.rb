@@ -4,13 +4,13 @@ require "test_helper"
 
 class EngineTest < Minitest::Test
   def setup
-    @original_configuration = RecordingStudioAgents.instance_variable_get(:@configuration)
-    RecordingStudioAgents.instance_variable_set(:@configuration, RecordingStudioAgents::Configuration.new)
+    @original_configuration = RecordingStudioAgents.configuration
+    RecordingStudioAgents.configuration = RecordingStudioAgents::Configuration.new
   end
 
   def teardown
     RecordingStudioAgents.configuration.hooks.clear!
-    RecordingStudioAgents.instance_variable_set(:@configuration, @original_configuration)
+    RecordingStudioAgents.configuration = @original_configuration
   end
 
   def test_before_and_after_initialize_initializers_run_hooks
@@ -62,7 +62,7 @@ class EngineTest < Minitest::Test
 
     app = Struct.new(:config) do
       def config_for(_name)
-        raise "missing file"
+        raise "Could not load configuration. No such file - config/recording_studio_agents.yml"
       end
     end.new(app_config)
 
@@ -71,7 +71,7 @@ class EngineTest < Minitest::Test
     assert_equal 15, RecordingStudioAgents.configuration.lease_seconds
   end
 
-  def test_load_config_swallow_each_pair_errors
+  def test_load_config_does_not_hide_each_pair_errors
     bad_pair_config = Class.new do
       def each_pair
         raise "bad pair"
@@ -86,9 +86,23 @@ class EngineTest < Minitest::Test
       end
     end.new(app_config)
 
-    find_initializer("recording_studio_agents.load_config").block.call(app)
+    error = assert_raises(RuntimeError) do
+      find_initializer("recording_studio_agents.load_config").block.call(app)
+    end
 
-    assert_equal 80, RecordingStudioAgents.configuration.lease_seconds
+    assert_equal "bad pair", error.message
+  end
+
+  def test_load_config_does_not_hide_no_method_error
+    app = Struct.new(:config) do
+      def config_for(_name)
+        raise NoMethodError, "config boom"
+      end
+    end.new(Object.new)
+
+    assert_raises(NoMethodError) do
+      find_initializer("recording_studio_agents.load_config").block.call(app)
+    end
   end
 
   def test_load_config_is_noop_without_config_sources
@@ -99,12 +113,8 @@ class EngineTest < Minitest::Test
     assert_equal 300, RecordingStudioAgents.configuration.lease_seconds
   end
 
-  def test_load_config_ignores_non_enumerable_yaml_and_merge_errors
-    yaml = Class.new do
-      def each
-        raise "bad yaml"
-      end
-    end.new
+  def test_load_config_ignores_non_enumerable_yaml
+    yaml = Object.new
 
     xcfg = Struct.new(:recording_studio_agents).new({ lease_seconds: 22 })
     app_config = Struct.new(:x).new(xcfg)

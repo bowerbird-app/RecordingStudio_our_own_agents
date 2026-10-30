@@ -664,7 +664,7 @@ module RecordingStudioAgents
       @ledger.note_activity!(run: run, lease_token: lease_token, kind: "compacted",
                              data: { "sequence" => run.agent_steps.maximum(:sequence).to_i })
       updated
-    rescue StandardError
+    rescue *RecordingStudioAgents.lookup_errors, ContractError
       StateDelta.apply(state, { "increment" => { "compactions" => 1 } }).first
     end
 
@@ -701,7 +701,7 @@ module RecordingStudioAgents
       accepted = ObservationReducer.accept(response.try(:structured_data), result)
       accepted["delta"] = accepted.fetch("delta").merge("increment" => { "observation_calls" => 1 })
       accepted
-    rescue StandardError
+    rescue *RecordingStudioAgents.lookup_errors, ContractError
       { "summary" => nil, "delta" => { "increment" => { "observation_calls" => 1 } } }
     end
 
@@ -762,7 +762,7 @@ module RecordingStudioAgents
 
     def tool_definition(candidate)
       RecordingStudioAI.tools.fetch(candidate.tool_key, version: candidate.tool_version)
-    rescue StandardError
+    rescue *RecordingStudioAgents.lookup_errors
       nil
     end
 
@@ -771,7 +771,7 @@ module RecordingStudioAgents
       return false unless definition
 
       definition.idempotent && !definition.destructive && !definition.requires_confirmation
-    rescue StandardError
+    rescue *RecordingStudioAgents.lookup_errors
       false
     end
 
