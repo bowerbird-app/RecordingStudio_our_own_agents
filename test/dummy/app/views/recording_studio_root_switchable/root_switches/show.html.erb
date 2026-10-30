@@ -1,5 +1,5 @@
 <%# Delete this override once Admin 2.5.2 and core 6.3 are pinned. %>
-<div class="mx-auto flex w-full max-w-3xl flex-col gap-6">
+<%= render FlatPack::Stack::Component.new(gap: :lg, class: "mx-auto w-full max-w-3xl") do %>
   <% if flash[:notice].present? %>
     <%= render FlatPack::Alert::Component.new(style: :success, title: flash[:notice]) %>
   <% end %>
@@ -79,4 +79,4 @@
       <% end %>
     <% end %>
   <% end %>
-</div>
+<% end %>
