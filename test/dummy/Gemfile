@@ -25,7 +25,7 @@ gem "jbuilder"
 
 gem "tailwindcss-rails"
 
-gem "flat_pack", github: "bowerbird-app/flatpack", tag: "v0.1.207"
+gem "flat_pack", github: "bowerbird-app/flatpack", tag: "v0.1.331"
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
