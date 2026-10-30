@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.4] - 2026-10-30
+
+### Removed
+
+- Template leftovers: `docs/gem_template/`, the Copilot instruction that told readers to keep it, the engine `HomeController` and its root route, the dummy hello controller, PWA views, `makeup_artist` keep file, and the nested dummy `.github` workflows.
+- Tracked SimpleCov output under `coverage/` and `test/dummy/coverage/`. Both paths are gitignored.
+
+### Changed
+
+- Dummy database defaults are `recording_studio_agents_development` and `recording_studio_agents_test` (audit item D4).
+- Credential tests no longer require the `gem_template` key. The encrypted dummy credentials file is unchanged.
+- UPGRADING.md records the 0.8.1 metrics ceiling (`>= 0.3.0`, `< 1.0`). The dummy README lists Web Search `v0.5.0`.
+
+### Upgrade notes
+
+- No migration. `GET /recording_studio_agents` is no longer a health route. Hosts that call `recording_studio_agents.root_path`, or that health-check the engine mount, need another URL.
+
 ## [0.8.3] - 2026-10-30
 
 ### Changed
@@ -405,7 +422,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.3...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.4...HEAD
+[0.8.4]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.0...v0.8.1

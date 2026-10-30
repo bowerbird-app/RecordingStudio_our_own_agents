@@ -1,5 +1,9 @@
 # Upgrading
 
+## 0.8.4
+
+The engine no longer draws `GET /recording_studio_agents`. `recording_studio_agents.root_path` is gone. Hosts that linked that path or health-checked the mount need another URL. There is no migration.
+
 ## 0.8.3
 
 Development and dummy apps pin FlatPack `v0.1.331` (`view_component` 4.20.0).
@@ -8,9 +12,15 @@ Admin 2.3 through 2.5 and core 4.6 break on FlatPack `v0.1.331`. Those gems pass
 
 `recording_studio_admin` is `>= 2.0.6`, `< 2.6`. There is no migration.
 
+## 0.8.1
+
+`recording_studio_metrics` is `>= 0.3.0`, `< 1.0`. Development and dummy Gemfiles still use GitHub tag `v0.3.1`.
+
+The 0.8.0 note below described the earlier `< 0.4` ceiling. 0.8.1 replaced that ceiling. There is no migration.
+
 ## 0.8.0
 
-Pin `recording_studio_metrics` to `>= 0.3.0`, `< 0.4`. Development and dummy Gemfiles use GitHub tag `v0.3.1`.
+0.8.0 pinned `recording_studio_metrics` to `>= 0.3.0`, `< 0.4`. Development and dummy Gemfiles used GitHub tag `v0.3.1`. 0.8.1 lifted the ceiling to `< 1.0`.
 
 ### What Changed
 
@@ -21,7 +31,7 @@ Pin `recording_studio_metrics` to `>= 0.3.0`, `< 0.4`. Development and dummy Gem
 
 ### Host Action Required
 
-Pin the metrics gem. There is no migration.
+0.8.1 replaced this pin. Use `>= 0.3.0`, `< 1.0`. There is no migration.
 
 The host still registers Metrics HTTP once. This gem does not call `RecordingStudioMetrics::Api.register!`.
 
