@@ -7,16 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.8.2] - 2026-10-28
-
-### Changed
-
-- Development and dummy FlatPack pin `v0.1.207` → `v0.1.329`.
+## [0.8.2] - 2026-10-30
 
 ### Removed
 
 - Stopgap FlatPack Button prepend that copied `url:` onto `href:`. Admin already passes `href:` into Button. Call Button with `href:` when this gem renders a link.
-- Needs Admin >= 2.0.6 (earlier Admin versions pass `url:` to Button, which the removed shim used to translate).
+- Hosts on Admin older than 2.0.6 still pass `url:` into Button. Those versions needed the removed shim. Admin 2.0.6 and later pass `href:`.
 
 ### Upgrade notes
 
