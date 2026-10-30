@@ -37,13 +37,15 @@ class EngineTest < Minitest::Test
 
     xcfg = Struct.new(:recording_studio_agents).new({ lease_seconds: 45 })
     app_config = Struct.new(:x).new(xcfg)
-    app = Struct.new(:config) do
-      def config_for(_name)
-        { lease_seconds: 12 }
-      end
-    end.new(app_config)
+    with_config_root do |paths|
+      app = Struct.new(:config, :paths) do
+        def config_for(_name)
+          { lease_seconds: 12 }
+        end
+      end.new(app_config, paths)
 
-    find_initializer("recording_studio_agents.load_config").block.call(app)
+      find_initializer("recording_studio_agents.load_config").block.call(app)
+    end
 
     assert hook_called
     assert_equal RecordingStudioAgents.configuration, hook_payload
@@ -60,13 +62,15 @@ class EngineTest < Minitest::Test
     xcfg = Struct.new(:recording_studio_agents).new(pair_config)
     app_config = Struct.new(:x).new(xcfg)
 
-    app = Struct.new(:config) do
-      def config_for(_name)
-        raise "Could not load configuration. No such file - config/recording_studio_agents.yml"
-      end
-    end.new(app_config)
+    with_config_root(write_yaml: false) do |paths|
+      app = Struct.new(:config, :paths) do
+        def config_for(_name)
+          raise "config_for should not run when the yaml file is missing"
+        end
+      end.new(app_config, paths)
 
-    find_initializer("recording_studio_agents.load_config").block.call(app)
+      find_initializer("recording_studio_agents.load_config").block.call(app)
+    end
 
     assert_equal 15, RecordingStudioAgents.configuration.lease_seconds
   end
@@ -80,28 +84,32 @@ class EngineTest < Minitest::Test
 
     xcfg = Struct.new(:recording_studio_agents).new(bad_pair_config)
     app_config = Struct.new(:x).new(xcfg)
-    app = Struct.new(:config) do
-      def config_for(_name)
-        { lease_seconds: 80 }
-      end
-    end.new(app_config)
+    error = with_config_root do |paths|
+      app = Struct.new(:config, :paths) do
+        def config_for(_name)
+          { lease_seconds: 80 }
+        end
+      end.new(app_config, paths)
 
-    error = assert_raises(RuntimeError) do
-      find_initializer("recording_studio_agents.load_config").block.call(app)
+      assert_raises(RuntimeError) do
+        find_initializer("recording_studio_agents.load_config").block.call(app)
+      end
     end
 
     assert_equal "bad pair", error.message
   end
 
   def test_load_config_does_not_hide_no_method_error
-    app = Struct.new(:config) do
-      def config_for(_name)
-        raise NoMethodError, "config boom"
-      end
-    end.new(Object.new)
+    with_config_root do |paths|
+      app = Struct.new(:config, :paths) do
+        def config_for(_name)
+          raise NoMethodError, "config boom"
+        end
+      end.new(Object.new, paths)
 
-    assert_raises(NoMethodError) do
-      find_initializer("recording_studio_agents.load_config").block.call(app)
+      assert_raises(NoMethodError) do
+        find_initializer("recording_studio_agents.load_config").block.call(app)
+      end
     end
   end
 
@@ -118,16 +126,18 @@ class EngineTest < Minitest::Test
 
     xcfg = Struct.new(:recording_studio_agents).new({ lease_seconds: 22 })
     app_config = Struct.new(:x).new(xcfg)
-    app = Struct.new(:config) do
-      attr_accessor :yaml
+    with_config_root do |paths|
+      app = Struct.new(:config, :paths) do
+        attr_accessor :yaml
 
-      def config_for(_name)
-        @yaml
-      end
-    end.new(app_config)
-    app.yaml = yaml
+        def config_for(_name)
+          @yaml
+        end
+      end.new(app_config, paths)
+      app.yaml = yaml
 
-    find_initializer("recording_studio_agents.load_config").block.call(app)
+      find_initializer("recording_studio_agents.load_config").block.call(app)
+    end
 
     assert_equal 22, RecordingStudioAgents.configuration.lease_seconds
   end
@@ -305,5 +315,13 @@ class EngineTest < Minitest::Test
 
   def find_initializer(name)
     RecordingStudioAgents::Engine.initializers.find { |initializer| initializer.name == name }
+  end
+
+  def with_config_root(write_yaml: true)
+    dir = Dir.mktmpdir
+    File.write(File.join(dir, "recording_studio_agents.yml"), "shared: {}\n") if write_yaml
+    yield({ "config" => Struct.new(:existent).new([dir]) })
+  ensure
+    FileUtils.rm_rf(dir) if dir
   end
 end
