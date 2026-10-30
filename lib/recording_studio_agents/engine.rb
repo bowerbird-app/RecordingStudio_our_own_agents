@@ -57,30 +57,28 @@ module RecordingStudioAgents
 
     initializer "recording_studio_agents.load_config" do |app|
       if app.respond_to?(:config_for)
-        begin
-          yaml = begin
-            app.config_for(:recording_studio_agents)
-          rescue StandardError
-            nil
-          end
-          RecordingStudioAgents.configuration.merge!(yaml) if yaml.respond_to?(:each)
-        rescue StandardError
+        yaml = begin
+          app.config_for(:recording_studio_agents)
+        rescue Psych::SyntaxError
+          nil
+        rescue RuntimeError => e
+          message = e.message.to_s
+          raise unless message.include?("Could not load configuration. No such file") ||
+                       message.include?("YAML syntax error occurred while parsing")
+
           nil
         end
+        RecordingStudioAgents.configuration.merge!(yaml) if yaml.respond_to?(:each)
       end
 
       if app.config.respond_to?(:x) && app.config.x.respond_to?(:recording_studio_agents)
         xcfg = app.config.x.recording_studio_agents
         if xcfg.respond_to?(:to_h)
           RecordingStudioAgents.configuration.merge!(xcfg.to_h)
-        else
-          begin
-            hash = {}
-            xcfg.each_pair { |k, v| hash[k] = v } if xcfg.respond_to?(:each_pair)
-            RecordingStudioAgents.configuration.merge!(hash) if hash&.any?
-          rescue StandardError
-            nil
-          end
+        elsif xcfg.respond_to?(:each_pair)
+          hash = {}
+          xcfg.each_pair { |k, v| hash[k] = v }
+          RecordingStudioAgents.configuration.merge!(hash) if hash.any?
         end
       end
 

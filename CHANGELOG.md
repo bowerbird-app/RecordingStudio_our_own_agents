@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.5] - 2026-10-30
+
+### Changed
+
+- Lookup and fallback rescues catch database and Recording Studio AI errors (`ActiveRecord::StatementInvalid`, connection failures, `RecordingStudioAI::Errors::*`, and `ActiveRecord::RecordNotFound`). `NoMethodError` is no longer hidden. A bad `working_state_json` still rescues `ContractError`. Compaction and observation also keep going when the model delta raises `ContractError`. Missing engine config still ignores Rails' "no such file" and YAML syntax errors.
+- `execution.rb` still records any other error as a failed run.
+- Engine tests replace configuration through `RecordingStudioAgents.configuration=`. The dummy generate-stub hook is a public method. `Object#stub` comes from the `minitest-mock` dev gem.
+
+### Upgrade notes
+
+- No host action and no migration. Boot and admin lookups now raise programming errors instead of returning a fallback.
+
 ## [0.8.4] - 2026-10-30
 
 ### Removed
@@ -422,7 +434,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.4...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.5...HEAD
+[0.8.5]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.4...v0.8.5
 [0.8.4]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.1...v0.8.2

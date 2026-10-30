@@ -29,7 +29,7 @@ module RecordingStudioAgents
       return false unless RecordingStudioAgents.const_defined?(:AgentEnablement)
 
       AgentEnablement.table_exists?
-    rescue StandardError
+    rescue *RecordingStudioAgents.lookup_errors
       false
     end
   end

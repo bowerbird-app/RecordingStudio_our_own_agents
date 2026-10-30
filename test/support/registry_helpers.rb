@@ -41,7 +41,7 @@ module RegistryHelpers
     return unless RecordingStudioAgents::Enablement.persistable?
 
     RecordingStudioAgents::AgentEnablement.delete_all
-  rescue StandardError
+  rescue *RecordingStudioAgents.lookup_errors
     nil
   end
 

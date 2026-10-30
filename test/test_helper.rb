@@ -12,7 +12,7 @@ ENV.delete("typesafe")
 
 require_relative "simplecov_helper"
 require "minitest/autorun"
-require_relative "support/minitest_stub"
+require "minitest/mock"
 require "rails"
 require "active_support/time"
 Time.zone ||= "UTC"
