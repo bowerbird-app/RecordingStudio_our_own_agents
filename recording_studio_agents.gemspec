@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name        = "recording_studio_agents"
   spec.version     = RecordingStudioAgents::VERSION
   spec.authors     = ["Bowerbird"]
-  spec.homepage    = "https://github.com/bowerbird-app/RecordingStudio_agents"
+  spec.homepage    = "https://github.com/bowerbird-app/RecordingStudio_our_own_agents"
   spec.summary     = "Reusable agents for Recording Studio, executed through Recording Studio AI"
   spec.description = "A Rails engine that registers skills, knowledge, and agents in code, then runs " \
                      "each task attempt through Recording Studio AI without copying model output."
@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rails", "~> 8.1.0"
   spec.add_dependency "recording_studio", "~> 4.2"
   spec.add_dependency "recording_studio_accessible", "~> 0.11"
-  spec.add_dependency "recording_studio_admin", "~> 2.0"
+  spec.add_dependency "recording_studio_admin", "~> 2.0", "< 2.6"
   spec.add_dependency "recording_studio_ai", "~> 0.3"
   spec.add_dependency "recording_studio_metrics", ">= 0.3.0", "< 1.0"
 end
