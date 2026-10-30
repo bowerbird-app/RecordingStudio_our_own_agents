@@ -30,7 +30,7 @@ class PlaygroundTest < ActionDispatch::IntegrationTest
     assert_select "[data-controller='flat-pack--collapse']", count: 0
     refute_includes response.body, "Run it to see the steps."
     assert_select "textarea[name='goal']"
-    assert_select "form .grid.grid-cols-1.gap-4"
+    assert_select "form .grid.grid-cols-1[class*='gap-[var(--stack-gap-md)]']"
     assert_select "[data-playground-skills] [data-flat-pack--select-searchable-value='true']"
     assert_select "[data-playground-skills] input[placeholder='Search...']"
     assert_select "[data-playground-skills] input[name='skills[]'][value='page_lookup@1']"

@@ -1,0 +1,26 @@
+<% back_label = content_for(:page_nav_back_label).presence || t("recording_studio.admin.navigation.go_back", default: "Go back") %>
+<% anchor_label = content_for(:page_nav_anchor_label).presence || t("recording_studio.admin.navigation.close", default: "Close") %>
+<% back_icon = content_for(:page_nav_back_icon).presence || "chevron-left" %>
+<% anchor_icon = content_for(:page_nav_anchor_icon).presence || "x-mark" %>
+<% back_style = (content_for(:page_nav_back_style).presence || "secondary").to_s.to_sym %>
+<% back_size = (content_for(:page_nav_back_size).presence || "md").to_s.to_sym %>
+<% back_url = content_for(:page_nav_back_url).presence %>
+<% anchor_url = content_for(:page_nav_anchor_url).presence %>
+
+<%= render FlatPack::PageNav::Component.new(class: "mb-4") do |page_nav| %>
+  <% page_nav.with_back(
+    href: back_url,
+    icon: back_icon,
+    tooltip: back_label,
+    style: back_style,
+    size: back_size
+  ) %>
+  <% if anchor_url.present? %>
+    <% page_nav.with_close(href: anchor_url, icon: anchor_icon, tooltip: anchor_label) %>
+  <% end %>
+  <% if content_for?(:page_nav_right) %>
+    <% page_nav.with_item do %>
+      <div class="ml-auto flex items-center gap-2"><%= yield :page_nav_right %></div>
+    <% end %>
+  <% end %>
+<% end %>
