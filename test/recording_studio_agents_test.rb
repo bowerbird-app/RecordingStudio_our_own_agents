@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.8.2", ::RecordingStudioAgents::VERSION
+    assert_equal "0.8.3", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -16,12 +16,12 @@ class RecordingStudioAgentsTest < Minitest::Test
 
     assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_ai", "~> 0.3"'
-    assert_includes gemspec, 'spec.add_dependency "recording_studio_admin", "~> 2.0"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_admin", ">= 2.0.6", "< 2.6"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_accessible", "~> 0.11"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_metrics", ">= 0.3.0", "< 1.0"'
     refute_includes gemspec, 'spec.add_dependency "recording_studio_metrics", "~> 0.2"'
     assert_metrics_requirement
-    assert_includes gemspec, 'spec.homepage    = "https://github.com/bowerbird-app/RecordingStudio_agents"'
+    assert_includes gemspec, 'spec.homepage    = "https://github.com/bowerbird-app/RecordingStudio_our_own_agents"'
   end
 
   def test_gemspec_excludes_cursor_config
@@ -67,8 +67,8 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_web_search", tag: "v0.5.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
     assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
-    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.207"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.207"'
+    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.331"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.331"'
   end
 
   def test_template_does_not_ship_copied_core_hooks_or_example_capability
