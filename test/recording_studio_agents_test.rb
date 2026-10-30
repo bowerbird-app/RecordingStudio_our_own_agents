@@ -67,7 +67,7 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_web_search", tag: "v0.5.0"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
     assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
-assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.331"'
+    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.331"'
     assert_includes development_gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.331"'
 
     database = File.read(File.expand_path("dummy/config/database.yml", __dir__))
