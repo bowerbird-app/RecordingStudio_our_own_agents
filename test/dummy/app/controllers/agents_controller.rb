@@ -32,13 +32,13 @@ class AgentsController < ApplicationController
     redirect_to root_path, notice: notice_for(result)
   end
 
+  private
+
   def with_generate_stub
     return yield if generative_provider_configured?
 
     DummyGenerateStub.with_hook(method(:stubbed_response)) { yield }
   end
-
-  private
 
   def generative_provider_configured?
     configuration = RecordingStudioAI.configuration
