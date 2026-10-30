@@ -16,13 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Dummy database defaults are `recording_studio_agents_development` and `recording_studio_agents_test`.
+- Dummy database defaults are `recording_studio_agents_development` and `recording_studio_agents_test` (audit item D4).
 - Credential tests no longer require the `gem_template` key. The encrypted dummy credentials file is unchanged.
 - UPGRADING.md records the 0.8.1 metrics ceiling (`>= 0.3.0`, `< 1.0`). The dummy README lists Web Search `v0.5.0`.
 
 ### Upgrade notes
 
-- No host action and no migration. `GET /recording_studio_agents` is no longer a health route.
+- No migration. `GET /recording_studio_agents` is no longer a health route. Hosts that call `recording_studio_agents.root_path`, or that health-check the engine mount, need another URL.
 
 ## [0.8.3] - 2026-10-30
 
