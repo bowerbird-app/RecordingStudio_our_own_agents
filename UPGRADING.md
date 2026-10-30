@@ -1,5 +1,13 @@
 # Upgrading
 
+## 0.8.3
+
+Development and dummy apps pin FlatPack `v0.1.331` (`view_component` 4.20.0).
+
+Admin 2.3 through 2.5 and core 4.6 break on FlatPack `v0.1.331`. Those gems pass Card `style:`, PageNav `back_icon` and `anchor_label`, and TopNav `always_display`. Hosts on those gems should keep FlatPack `v0.1.207`. FlatPack `v0.1.331` is the pin once Admin 2.5.2 and core 6.3 are pinned. This repo's dummy overrides hide the break until then.
+
+`recording_studio_admin` is `>= 2.0.6`, `< 2.6`. There is no migration.
+
 ## 0.8.0
 
 Pin `recording_studio_metrics` to `>= 0.3.0`, `< 0.4`. Development and dummy Gemfiles use GitHub tag `v0.3.1`.

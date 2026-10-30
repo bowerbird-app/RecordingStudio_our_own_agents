@@ -16,7 +16,7 @@ class RecordingStudioAgentsTest < Minitest::Test
 
     assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_ai", "~> 0.3"'
-    assert_includes gemspec, 'spec.add_dependency "recording_studio_admin", "~> 2.0", "< 2.6"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_admin", ">= 2.0.6", "< 2.6"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_accessible", "~> 0.11"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_metrics", ">= 0.3.0", "< 1.0"'
     refute_includes gemspec, 'spec.add_dependency "recording_studio_metrics", "~> 0.2"'
