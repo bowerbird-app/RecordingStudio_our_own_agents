@@ -335,7 +335,7 @@ module RecordingStudioAgents
       return unless defined?(RecordingStudioAI::Run)
 
       RecordingStudioAI::Run.find_by(request_id: request_id)
-    rescue StandardError
+    rescue *RecordingStudioAgents.lookup_errors
       nil
     end
 
@@ -347,7 +347,7 @@ module RecordingStudioAgents
       return if text.blank? && data.blank?
 
       { text: text, data: data }
-    rescue StandardError
+    rescue *RecordingStudioAgents.lookup_errors
       nil
     end
 
