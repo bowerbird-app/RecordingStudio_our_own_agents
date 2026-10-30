@@ -1,3 +1,4 @@
+<%# Delete this override once Admin 2.5.2 and core 6.3 are pinned. %>
 <div class="mx-auto flex w-full max-w-3xl flex-col gap-6">
   <% if flash[:notice].present? %>
     <%= render FlatPack::Alert::Component.new(style: :success, title: flash[:notice]) %>
@@ -32,7 +33,7 @@
   <% else %>
     <% persistence_hint = @page_copy.fetch(:persistence_hint).presence %>
     <% if persistence_hint %>
-      <p class="text-sm text-(--surface-muted-content-color)"><%= persistence_hint %></p>
+      <%= render FlatPack::Text::Component.new(text: persistence_hint, size: :sm, style: :muted) %>
     <% end %>
 
     <%= render FlatPack::Card::Component.new(class: "w-full") do |card| %>
@@ -67,9 +68,11 @@
               hover: true,
               trailing: trailing_content.presence
             ) do %>
-              <div class="font-semibold">
-                <%= @scope.root_label_for(controller: self, actor: RecordingStudio::RootSwitchable::Current.actor, device_key: current_root_device_key, recording: root_recording) %>
-              </div>
+              <%= render FlatPack::Text::Component.new(
+                text: @scope.root_label_for(controller: self, actor: RecordingStudio::RootSwitchable::Current.actor, device_key: current_root_device_key, recording: root_recording).to_s,
+                as: :div,
+                weight: :semibold
+              ) %>
             <% end %>
           <% end %>
         <% end %>

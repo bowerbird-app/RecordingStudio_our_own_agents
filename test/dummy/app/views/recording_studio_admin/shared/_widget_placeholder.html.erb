@@ -1,3 +1,4 @@
+<%# Delete this override once Admin 2.5.2 and core 6.3 are pinned. %>
 <% presenter ||= recording_studio_widget_presenter(widget) %>
 <% compact_card = presenter.compact? %>
 <% placeholder_height = if compact_card
@@ -17,7 +18,7 @@
         <div class="flex flex-1 items-start gap-3">
           <div class="min-w-0 flex-1 space-y-2">
             <% if widget.title.present? %>
-              <h3 class="text-lg font-semibold leading-tight text-(--surface-content-color)"><%= widget.title %></h3>
+              <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :lg, weight: :semibold) %>
             <% end %>
             <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "66%", shimmer: true) %>
             <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "50%", shimmer: true) %>
@@ -31,7 +32,7 @@
         </div>
       <% else %>
         <% if widget.title.present? %>
-          <h3 class="text-xl font-semibold text-(--surface-content-color)"><%= widget.title %></h3>
+          <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
         <% end %>
 
         <% if widget.subtitle.present? && widget.type != :progress %>

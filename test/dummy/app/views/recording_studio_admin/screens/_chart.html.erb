@@ -1,3 +1,4 @@
+<%# Delete this override once Admin 2.5.2 and core 6.3 are pinned. %>
 <% if screen.chart %>
   <% summary = screen.summary %>
   <% metric_count = summary&.value || screen.query_result.count %>
@@ -22,24 +23,28 @@
           <div class="mb-4 flex items-start gap-4">
             <% if summary.nil? || summary.show_metric %>
               <div class="shrink-0">
-                <p class="text-5xl font-bold leading-none text-(--surface-content-color)"><%= metric_count %></p>
+                <% if metric_count.is_a?(Numeric) %>
+                  <%= render FlatPack::Number::Component.new(value: metric_count, animate: :none, tag: :span, class: "text-[length:var(--text-5xl)] font-bold leading-none") %>
+                <% else %>
+                  <%= render FlatPack::Text::Component.new(text: metric_count.to_s, as: :span, size: :"2xl", weight: :bold) %>
+                <% end %>
               </div>
             <% end %>
 
             <div class="min-w-0 flex-1 space-y-1 text-left">
               <% if screen.chart.title.present? %>
-                <h3 class="text-lg font-semibold text-(--surface-content-color)"><%= screen.chart.title %></h3>
+                <%= render FlatPack::Heading::Component.new(text: screen.chart.title, level: :h3, size: :lg, weight: :semibold) %>
               <% end %>
 
               <% if metric_change.present? || metric_period_label.present? %>
-                <p class="flex flex-wrap items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                   <% if metric_change.present? %>
-                    <span class="text-sm font-semibold <%= change_text_class %>"><%= metric_change %></span>
+                    <%= render FlatPack::Text::Component.new(text: metric_change.to_s, as: :span, size: :sm, weight: :semibold, class: change_text_class) %>
                   <% end %>
                   <% if metric_period_label.present? %>
-                    <span class="text-sm font-semibold text-(--surface-muted-content-color)"><%= metric_period_label %></span>
+                    <%= render FlatPack::Text::Component.new(text: metric_period_label, as: :span, size: :sm, weight: :semibold, style: :muted) %>
                   <% end %>
-                </p>
+                </div>
               <% end %>
             </div>
           </div>

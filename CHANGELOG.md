@@ -12,15 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Gemspec homepage is `https://github.com/bowerbird-app/RecordingStudio_our_own_agents`.
-- `recording_studio_admin` stays `~> 2.0` and is capped at `< 2.6`, so a bundle update cannot pull Admin 2.6+ (that line depends on Logs).
+- `recording_studio_admin` is `>= 2.0.6`, `< 2.6`. Admin 2.0.6 is the first release that passes `href:` into FlatPack Button. The ceiling still blocks Admin 2.6+ (that line depends on Logs).
 - Transitive `crass` is 1.0.8 (GHSA-pq4g-8rxf-4g29).
 - Dummy lockfile `net-ssh` is 7.3.8 (was 7.3.0), still inside `~> 7.3`.
 - Development and dummy FlatPack pins are `v0.1.331`. That resolves with `recording_studio` `v4.6.0`, `recording_studio_ai` `v0.11.0`, and `recording_studio_admin` `v2.3.0`, and locks `view_component` 4.20.0 (GHSA-8qw7-6phv-7q6p, `>= 4.14.0`). The gemspec still has no `flat_pack` runtime dependency.
-- Dummy host templates call the current FlatPack APIs: Card `border:` instead of `style:`, PageNav `with_back` / `with_close` / `with_item`, and TopNav `right` without `always_display`. The pinned core, Admin, and root-switchable gems still pass the removed keywords, so the dummy overrides those templates.
+- Dummy host templates call the current FlatPack APIs: Card `border:` instead of `style:`, PageNav `with_back` / `with_close` / `with_item`, TopNav `right` without `always_display`, and Heading, Text, Number, and AvatarGroup instead of raw headings, paragraphs, and avatar stacks. The pinned core 4.6, Admin 2.3–2.5, and root-switchable gems still pass the removed keywords, so the dummy overrides those templates and hides the break. Delete the overrides once Admin 2.5.2 and core 6.3 are pinned.
 
 ### Upgrade notes
 
-- No host action and no migration. Keep Admin on 2.5.x.
+- No migration. Keep Admin on `>= 2.0.6`, `< 2.6`.
+- Development FlatPack is `v0.1.331` (`view_component` 4.20.0). Admin 2.3 through 2.5 and core 4.6 break on that FlatPack: Card `style:`, PageNav `back_icon` / `anchor_label`, and TopNav `always_display`. Hosts on those gems should stay on FlatPack `v0.1.207` until Admin 2.5.2 and core 6.3 are pinned. The dummy overrides hide that break in this repo only.
 
 ## [0.8.2] - 2026-10-30
 
