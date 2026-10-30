@@ -378,7 +378,7 @@ string literals.
 
 ## Admin
 
-The `agents` section is staff operations for this gem. The hub title is **Agents admin**. Widgets cover Failed runs, Attempts this period, Tokens this period, and Hungry agents, using Last 4 weeks (today through 27 days back). Links open Agents, Runs, Tasks, Usage by agent, and Evaluations.
+The `agents` section is staff operations for this gem. The hub title is **Agents admin**. Widgets cover Failed runs, Attempts this period, Tokens this period, and Hungry agents, using Last 4 weeks (today through 27 days back). Links open Agents, Runs, Tasks, Usage by agent, and Evaluations. Hub buttons are FlatPack links. Admin's `url:` DSL already maps to Button `href:`. This gem does not patch Button. Call Button with `href:` when a screen in this gem needs a link.
 
 Runs filters by agent, status, and date (Last 4 weeks by default), charts attempts over time, and links the AI run into Recording Studio AI. Agent keys in that filter come from workspaces the actor can view. The Runs table shows the agent name and a status badge. Names on Agents and Runs open that agent's details: key, instructions, skills, tools, knowledge, and who it can pass to. Skills and tools on that page open their own details. Usage by agent uses the same date window and shows attempts, outcomes, tokens, wait, and tools per agent version. Averages skip attempts whose model call is gone. Tasks show the goal and when it was created. Agents lists names, versions, and whether each is on, including agents that have not run. The actions menu turns an agent on or off. The registry key stays as an optional column.
 

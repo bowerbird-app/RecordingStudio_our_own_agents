@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.8.1", ::RecordingStudioAgents::VERSION
+    assert_equal "0.8.2", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -68,6 +68,7 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
     assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
     assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.207"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.207"'
   end
 
   def test_template_does_not_ship_copied_core_hooks_or_example_capability
