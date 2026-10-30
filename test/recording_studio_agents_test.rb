@@ -229,7 +229,10 @@ class RecordingStudioAgentsTest < Minitest::Test
 
     assert_includes switchable, "root_recordings_for"
     refute_includes switchable, "access_check = ->(**) { true }"
-    assert_includes controller, "DummyGenerateStub.with_hook"
+    helper = File.read(File.expand_path("dummy/lib/agents_generate_stub.rb", __dir__))
+    assert_includes helper, "DummyGenerateStub.with_hook"
+    assert_includes controller, "AgentsGenerateStub.with_generate_stub"
+    refute_includes controller, "def with_generate_stub"
     refute_includes controller, "define_method(:generate)"
     assert_includes stub, "Thread.current"
     assert_includes File.read(File.expand_path("dummy/test/support_clerk_agent_test.rb", __dir__)),

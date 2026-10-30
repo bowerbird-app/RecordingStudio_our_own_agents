@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lookup and fallback rescues catch database and Recording Studio AI errors (`ActiveRecord::StatementInvalid`, connection failures, `RecordingStudioAI::Errors::*`, and `ActiveRecord::RecordNotFound`). `NoMethodError` is no longer hidden. A bad `working_state_json` still rescues `ContractError`. Compaction and observation keep going only for those lookup errors and `ContractError`. An unwrapped provider error, such as a timeout, fails the run.
 - `execution.rb` still records any other error as a failed run.
 - Engine config loads `config/recording_studio_agents.yml` only when that file exists. A YAML syntax error raises. The loader no longer matches Rails error text.
-- Engine tests replace configuration through `RecordingStudioAgents.configuration=`. The dummy generate-stub hook is a private method. `Object#stub` comes from the `minitest-mock` dev gem.
+- Engine tests replace configuration through `RecordingStudioAgents.configuration=`. The dummy generate-stub hook is the public `AgentsGenerateStub` helper, not a controller action. `Object#stub` comes from the `minitest-mock` dev gem.
 
 ### Upgrade notes
 
