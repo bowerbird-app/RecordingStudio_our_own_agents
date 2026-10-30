@@ -23,11 +23,7 @@
           <div class="mb-4 flex items-start gap-4">
             <% if summary.nil? || summary.show_metric %>
               <div class="shrink-0">
-                <% if metric_count.is_a?(Numeric) %>
-                  <%= render FlatPack::Number::Component.new(value: metric_count, animate: :none, tag: :span, class: "text-[length:var(--text-5xl)] font-bold leading-none") %>
-                <% else %>
-                  <%= render FlatPack::Text::Component.new(text: metric_count.to_s, as: :span, size: :"2xl", weight: :bold) %>
-                <% end %>
+                <%= render FlatPack::Heading::Component.new(text: metric_count.to_s, level: :h3, size: :"5xl", weight: :bold) %>
               </div>
             <% end %>
 
@@ -37,14 +33,14 @@
               <% end %>
 
               <% if metric_change.present? || metric_period_label.present? %>
-                <div class="flex flex-wrap items-center gap-2">
+                <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center) do %>
                   <% if metric_change.present? %>
                     <%= render FlatPack::Text::Component.new(text: metric_change.to_s, as: :span, size: :sm, weight: :semibold, class: change_text_class) %>
                   <% end %>
                   <% if metric_period_label.present? %>
                     <%= render FlatPack::Text::Component.new(text: metric_period_label, as: :span, size: :sm, weight: :semibold, style: :muted) %>
                   <% end %>
-                </div>
+                <% end %>
               <% end %>
             </div>
           </div>

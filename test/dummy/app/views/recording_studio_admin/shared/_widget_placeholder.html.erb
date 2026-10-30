@@ -45,12 +45,12 @@
             <%= render FlatPack::Skeleton::Component.new(variant: :rectangle, height: "16rem", shimmer: true) %>
           </div>
         <% when :list %>
-          <div class="space-y-3 pt-2">
+          <%= render FlatPack::Stack::Component.new(gap: :sm, class: "pt-2") do %>
             <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "83%", shimmer: true) %>
             <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "66%", shimmer: true) %>
             <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "75%", shimmer: true) %>
             <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "50%", shimmer: true) %>
-          </div>
+          <% end %>
         <% when :progress %>
           <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "50%", shimmer: true) %>
           <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "100%", shimmer: true) %>
