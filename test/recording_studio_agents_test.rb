@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.8.9", ::RecordingStudioAgents::VERSION
+    assert_equal "0.8.10", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -122,7 +122,9 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes application_layout, '<html data-theme="rounded">'
     assert_includes application_layout, 'stylesheet_link_tag "flat_pack/variables"'
     assert_includes application_layout, "javascript_importmap_tags"
-    assert_includes application_layout, "min-h-screen"
+    assert_includes application_layout, "PageLayout::Component"
+    assert_includes application_layout, 'stylesheet_link_tag "host_chrome"'
+    refute_includes application_layout, "min-h-screen"
     refute_includes application_layout, "mt-28"
     refute_includes application_layout, "flat_pack_sidebar"
   end

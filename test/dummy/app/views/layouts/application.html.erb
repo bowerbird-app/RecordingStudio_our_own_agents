@@ -19,14 +19,16 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "host_chrome", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "admin_tables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="m-0 min-h-screen bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
-    <main class="mx-auto flex min-h-screen w-full max-w-md items-center justify-center p-6">
+  <body>
+    <%= render FlatPack::PageLayout::Component.new(width: :narrow, align: :center) do %>
       <%= yield %>
-    </main>
+    <% end %>
   </body>
 </html>

@@ -1,0 +1,26 @@
+/*
+  Dummy shell. FlatPack PageLayout and SidebarLayout own the signed-in
+  product screens. These rules cover the sign-in page, the Admin default
+  layout override, and the sidebar menu button, which has no FlatPack
+  visibility prop.
+*/
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--surface-page-background-color);
+  color: var(--surface-content-color);
+}
+
+[data-recording-studio-default-layout] main {
+  width: min(72rem, 100%);
+  margin-inline: auto;
+  min-height: 100dvh;
+  padding: var(--page-layout-padding-inline);
+}
+
+@media (min-width: 768px) {
+  [data-flat-pack--sidebar-layout-target="mobileToggle"] {
+    display: none;
+  }
+}

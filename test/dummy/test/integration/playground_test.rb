@@ -24,6 +24,7 @@ class PlaygroundTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert RecordingStudioAI.configuration.retain_responses
+    assert_includes response.body, "playground-agent"
     assert_includes response.body, "Playground"
     assert_includes response.body, "Try an agent on this workspace and watch the steps."
     assert_includes response.body, "md:grid-cols-2"
@@ -48,7 +49,8 @@ class PlaygroundTest < ActionDispatch::IntegrationTest
     assert_select "[data-playground-skills] [role='option'][data-value='web_research@1']"
     assert_select "[data-playground-tools='web_researcher@1'] input[name='tools[]'][value='web_search@1']"
     assert_select "a[href='/playground']", text: /Playground/
-    defaults = JSON.parse(css_select("script#playground-skill-defaults").text)
+    form = css_select("form[data-controller='playground-agent']").first
+    defaults = JSON.parse(form["data-playground-agent-skills-value"])
     assert_equal [ "page_lookup@1" ], defaults["page_librarian@1"]
     assert_equal [ "support_voice@1" ], defaults["support_clerk@1"]
     assert_equal [ "web_research@1" ], defaults["web_researcher@1"]
@@ -56,7 +58,7 @@ class PlaygroundTest < ActionDispatch::IntegrationTest
     assert_select "select[name='profile'] option[value='medium']", text: "Medium"
     assert_select "select[name='profile'] option[value='high']", text: "High"
     assert_select "select[name='profile'] option[selected][value='medium']"
-    profiles = JSON.parse(css_select("script#playground-profile-defaults").text)
+    profiles = JSON.parse(form["data-playground-agent-profiles-value"])
     assert_equal "medium", profiles["page_librarian@1"]
   end
 

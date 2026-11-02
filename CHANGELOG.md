@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.10] - 2026-11-02
+
+### Changed
+
+- The dummy sign-in page uses FlatPack `PageLayout`. Home, the sidebar, and the Admin layout override use `Stack` and `Cluster` instead of utility classes. Playground agent switching is a Stimulus controller. Step notes render in `CodeBlock`.
+- `host_chrome.css` sets the page background and hides the sidebar menu button from 768px up. `data-theme="rounded"` stays.
+
+### Upgrade notes
+
+- No host action and no migration. Tailwind is still installed because FlatPack 0.1.331 controls still emit utility classes.
+
 ## [0.8.9] - 2026-11-02
 
 ### Changed
@@ -485,7 +496,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.10...HEAD
+[0.8.10]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...v0.8.10
 [0.8.9]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.8...v0.8.9
 [0.8.8]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.7...v0.8.8
 [0.8.7]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.6...v0.8.7

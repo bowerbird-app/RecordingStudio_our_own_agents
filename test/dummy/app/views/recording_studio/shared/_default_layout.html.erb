@@ -15,6 +15,8 @@
     <%= stylesheet_link_tag "cascade_layers", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "host_chrome", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "admin_tables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <% if lookup_context.exists?("recording_studio/default_layout_head", [], true) %>
@@ -44,15 +46,8 @@
     <%= javascript_importmap_tags if respond_to?(:javascript_importmap_tags) %>
   </head>
 
-  <body class="bg-(--surface-page-background-color) text-(--surface-content-color)" data-recording-studio-default-layout="true" data-theme="<%= content_for(:body_theme).presence || 'rounded' %>">
-    <main class="mx-auto min-h-screen w-full max-w-6xl p-6">
-      <% if flash[:notice].present? %>
-        <%= render FlatPack::Alert::Component.new(description: flash[:notice], style: :success, class: "mb-4") %>
-      <% end %>
-      <% if flash[:alert].present? %>
-        <%= render FlatPack::Alert::Component.new(description: flash[:alert], style: :danger, class: "mb-4") %>
-      <% end %>
-
+  <body data-recording-studio-default-layout="true" data-theme="<%= content_for(:body_theme).presence || 'rounded' %>">
+    <main>
       <% back_label = content_for(:page_nav_back_label).presence || RecordingStudio.t("recording_studio.core.navigation.go_back") %>
       <% anchor_label = content_for(:page_nav_anchor_label).presence || RecordingStudio.t("recording_studio.core.navigation.close") %>
       <% back_icon = content_for(:page_nav_back_icon).presence || "chevron-left" %>
@@ -62,7 +57,13 @@
       <% back_url = content_for(:page_nav_back_url).presence %>
       <% anchor_url = content_for(:page_nav_anchor_url).presence %>
 
-      <div class="mt-4 mb-8">
+      <%= render FlatPack::Stack::Component.new(gap: :lg) do %>
+        <% if flash[:notice].present? %>
+          <%= render FlatPack::Alert::Component.new(description: flash[:notice], style: :success) %>
+        <% end %>
+        <% if flash[:alert].present? %>
+          <%= render FlatPack::Alert::Component.new(description: flash[:alert], style: :danger) %>
+        <% end %>
         <%= render FlatPack::PageNav::Component.new do |page_nav| %>
           <% page_nav.with_back(
             href: back_url,
@@ -76,13 +77,15 @@
           <% end %>
           <% if content_for?(:page_nav_right) %>
             <% page_nav.with_item do %>
-              <div class="ml-auto flex items-center gap-2"><%= yield :page_nav_right %></div>
+              <%= render FlatPack::Cluster::Component.new(gap: :sm, justify: :end) do %>
+                <%= yield :page_nav_right %>
+              <% end %>
             <% end %>
           <% end %>
         <% end %>
-      </div>
 
-      <%= yield %>
+        <%= yield %>
+      <% end %>
     </main>
   </body>
 </html>

@@ -1,5 +1,6 @@
 <% content_for :title, "Page librarian" %>
 
+<%= render FlatPack::Stack::Component.new(gap: :lg) do %>
 <%= render FlatPack::PageTitle::Component.new(
   title: "Page librarian",
   subtitle: "Point it at this workspace and it finds the page you named.",
@@ -18,8 +19,7 @@
 <% if @progress_steps.present? %>
   <%= render FlatPack::PageTitle::Component.new(
     title: progress_heading,
-    variant: :h2,
-    class: "mt-10"
+    variant: :h2
   ) %>
   <%= render FlatPack::List::Component.new(spacing: :dense) do %>
     <% @progress_steps.each do |step| %>
@@ -34,4 +34,5 @@
       <% end %>
     <% end %>
   <% end %>
+<% end %>
 <% end %>
