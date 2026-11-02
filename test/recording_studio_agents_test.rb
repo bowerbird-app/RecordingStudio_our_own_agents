@@ -91,6 +91,22 @@ class RecordingStudioAgentsTest < Minitest::Test
     refute File.exist?(File.expand_path("../lib/recording_studio_agents/services/base_service.rb", __dir__))
   end
 
+  def test_upgrade_notes_say_there_is_no_migration_in_this_gem
+    changelog = File.read(File.expand_path("../CHANGELOG.md", __dir__))
+    upgrading = File.read(File.expand_path("../UPGRADING.md", __dir__))
+    section_view = File.read(
+      File.expand_path("dummy/app/views/recording_studio_admin/sections/show.html.erb", __dir__)
+    )
+
+    assert_includes changelog, "no migration in this gem"
+    assert_includes upgrading, "no migration in this gem"
+    assert_includes upgrading, "Hosts still install the upstream migrations"
+    refute_includes upgrading, "862354d7814e44d6b4f13b243c096a98d8e0602c"
+    refute_includes upgrading, "not tagged yet"
+    assert_includes section_view, "FlatPack::Grid::Component.new(cols: 4"
+    refute_includes section_view, "cols: 3"
+  end
+
   def test_dummy_importmap_pins_admin_screen_controllers
     importmap = File.read(File.expand_path("dummy/config/importmap.rb", __dir__))
     application_js = File.read(File.expand_path("dummy/app/javascript/application.js", __dir__))

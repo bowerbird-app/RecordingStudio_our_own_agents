@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Upgrade notes
 
-- Hosts need Recording Studio 6.3 and Admin 2.8.1 or newer, below 7 and 3.0. There is no migration.
+- Hosts need Recording Studio 6.3 and Admin 2.8.1 or newer, below 7 and 3.0. There is no migration in this gem. Hosts still install the upstream gems' migrations.
 - Drop any `include RecordingStudio::UsesDefaultLayout`. Set `config.layout` on Admin and Accessible instead.
 
 ## [0.8.10] - 2026-11-02

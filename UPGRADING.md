@@ -2,15 +2,13 @@
 
 ## 0.8.11
 
-Development and dummy apps pin Recording Studio `v6.3.0` and the core 6 addon set: FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`. The dummy also pins Root Switchable `v0.11.3` and Cache `v0.6.0`.
-
-Web Search `v0.6.0` is not tagged yet. The dummy pins commit `862354d7814e44d6b4f13b243c096a98d8e0602c` on `cursor/recording-studio-6-b9e3`. Switch that pin to the `v0.6.0` tag before review.
+Development and dummy apps pin Recording Studio `v6.3.0` and the core 6 addon set: FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`. The dummy also pins Root Switchable `v0.11.3`, Cache `v0.6.0`, and Web Search `v0.6.0`.
 
 The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. Do not pin `view_component` in this gem. Tailwind stays until Admin tables no longer need a host Tailwind build.
 
 `RecordingStudio::UsesDefaultLayout` is gone. Set `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
 
-Install the new migrations from Recording Studio AI, Accessible, Logs, and Root Switchable in the host app. This gem does not add a migration of its own. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. `grant_access` now refuses a role the manager does not already hold.
+There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. `grant_access` now refuses a role the manager does not already hold.
 
 ## 0.8.10
 
