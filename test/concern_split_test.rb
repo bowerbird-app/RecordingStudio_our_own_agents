@@ -17,6 +17,34 @@ class ConcernSplitTest < Minitest::Test
     end
   end
 
+  def test_nothing_includes_admin_queries
+    root = File.expand_path("..", __dir__)
+    offenders = []
+    Dir.glob(File.join(root, "{lib,app,test}/**/*.rb")).each do |path|
+      next if path.end_with?("concern_split_test.rb")
+
+      relative = path.delete_prefix("#{root}/")
+      File.foreach(path) do |line|
+        next unless line.match?(/include\s+(::)?(RecordingStudioAgents::)?Admin::Queries\b/)
+
+        offenders << relative
+        break
+      end
+    end
+
+    assert_empty offenders
+  end
+
+  def test_rubocop_names_the_split_files_that_miss_metrics
+    rubocop = File.read(File.expand_path("../.rubocop.yml", __dir__))
+
+    refute_includes rubocop, "runtime/**/*"
+    refute_includes rubocop, "persistence/**/*"
+    assert_includes rubocop, "lib/recording_studio_agents/runtime/performance.rb"
+    assert_includes rubocop, "lib/recording_studio_agents/persistence/run_ledger.rb"
+    refute_includes rubocop, "persistence/opening.rb"
+  end
+
   def test_admin_queries_keep_the_same_module_api
     queries = RecordingStudioAgents::Admin::Queries
 
