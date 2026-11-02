@@ -96,15 +96,15 @@ class AdminRegistrationTest < Minitest::Test
     assert_equal :last_3_days, period.preset_key
   end
 
-  def test_last_4_weeks_alignment_is_idempotent
+  def test_register_does_not_prepend_admin_period
     RecordingStudioAgents::Admin.register!
     RecordingStudioAgents::Admin.register!
 
-    count = RecordingStudioAdmin::Period.singleton_class.ancestors.count do |mod|
-      mod == RecordingStudioAgents::Admin::LastFourWeeksPeriod
-    end
-
-    assert_equal 1, count
+    names = RecordingStudioAdmin::Period.singleton_class.ancestors.map(&:name)
+    refute_includes names, "RecordingStudioAgents::Admin::LastFourWeeksPeriod"
+    assert_equal 27, RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
+    admin = File.read(File.expand_path("../lib/recording_studio_agents/admin.rb", __dir__))
+    refute_includes admin, "prepend"
   end
 
   def test_runs_and_usage_screens_default_to_last_4_weeks

@@ -1,5 +1,9 @@
 # Upgrading
 
+## 0.9.2
+
+Admin 2.8.1 `Period::LAST_4_WEEKS_LOOKBACK_DAYS` is 27, so Last 4 weeks is today minus 27. This gem no longer prepends `RecordingStudioAdmin::Period`. Widget comparisons still use that same 27-day window. There is no migration.
+
 ## 0.9.1
 
 Staff screens that must ignore the switched product workspace set `RecordingStudioAdmin` `config.current_root_recording_resolver` to a callable that returns nil. Delete any prepend of `RecordingStudioAdmin::ApplicationController#current_root_recording`.
