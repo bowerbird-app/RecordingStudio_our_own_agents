@@ -17,19 +17,15 @@ class ConcernSplitTest < Minitest::Test
     end
   end
 
-  def test_nothing_includes_admin_queries
-    root = File.expand_path("..", __dir__)
-    offenders = []
-    Dir.glob(File.join(root, "{lib,app,test}/**/*.rb")).each do |path|
-      next if path.end_with?("concern_split_test.rb")
+  def test_nothing_includes_or_extends_admin_queries
+    queries = RecordingStudioAgents::Admin::Queries
+    real_class = Object.instance_method(:class)
+    offenders = ObjectSpace.each_object(Module).filter_map do |mod|
+      next if real_class.bind_call(mod) == ActiveSupport::Deprecation::DeprecatedConstantProxy
+      next if mod.equal?(queries)
+      next unless mod.ancestors.include?(queries)
 
-      relative = path.delete_prefix("#{root}/")
-      File.foreach(path) do |line|
-        next unless line.match?(/include\s+(::)?(RecordingStudioAgents::)?Admin::Queries\b/)
-
-        offenders << relative
-        break
-      end
+      mod.name || mod.inspect
     end
 
     assert_empty offenders
