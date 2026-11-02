@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.9] - 2026-11-02
+
+### Changed
+
+- The dummy Admin screens keep a local stylesheet, `test/dummy/app/assets/stylesheets/admin_tables.css`. It is not part of the gem. It sets the table frame to `--card-border-width` and `--card-shadow`. The rounded `--card-border-width` rule sits in `@layer theme` inside `:where()`, so it does not beat FlatPack's unlayered rounded theme. Below 768px the Actions column peeks by about 1rem, and the table frame clips its horizontal scrollbar to `--card-radius`. Header, padding, row hover, and skeletons stay on FlatPack and Admin.
+- `test/dummy/app/assets/stylesheets/cascade_layers.css` is linked first, before `yield :head`, and declares `@layer theme, base, components, utilities`. FlatPack's rich text sheet opens `@layer components` before Tailwind, and without this order Tailwind's base reset beats utilities.
+
+### Upgrade notes
+
+- No host action and no migration. `admin_tables.css` is dummy-only. Do not link it from a host.
+
 ## [0.8.8] - 2026-11-02
 
 ### Changed
@@ -474,7 +485,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.8...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...HEAD
+[0.8.9]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.8...v0.8.9
 [0.8.8]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.7...v0.8.8
 [0.8.7]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.6...v0.8.7
 [0.8.6]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.5...v0.8.6

@@ -9,6 +9,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%= stylesheet_link_tag "cascade_layers", "data-turbo-track": "reload" %>
     <%= yield :head %>
 
     <link rel="icon" href="/icon.png" type="image/png">
@@ -18,6 +19,7 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "admin_tables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>

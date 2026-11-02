@@ -1,0 +1,43 @@
+/*
+  Dummy only. This file is not shipped in the gem.
+
+  FlatPack::Table still paints the scroll floor with a border utility and
+  min-w-[40rem]. Those utilities live in the Tailwind utilities layer, which
+  beats @layer components and :where(). The frame rule sits in @layer utilities
+  so it can replace that border. The token rules belong in FlatPack::Table.
+
+  Rounded sets --card-border-width to 0 in an unlayered block. The same token
+  here sits in @layer theme inside :where(), so it does not beat that block.
+  clip-path rounds the scrollbar into the card radius. The scroller is the
+  frame, so there is no outer wrapper to clip it. box-shadow is clipped
+  with the bar, and drop-shadow draws the card shadow outside that curve.
+*/
+
+@layer theme {
+  :where(html[data-theme~="rounded"], body[data-theme~="rounded"]) {
+    --card-border-width: 1px;
+    --card-border-color: var(--surface-border-color);
+  }
+}
+
+@layer utilities {
+  div:has(> table.fp-table) {
+    border-style: solid;
+    border-width: var(--card-border-width);
+    border-color: var(--card-border-color);
+    border-radius: var(--card-radius);
+    background: var(--table-background-color);
+    box-shadow: var(--card-shadow);
+    clip-path: inset(0 round var(--card-radius));
+    filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.08));
+  }
+
+  /* Keep each column at its content width and let the scrollport show
+     about 1rem of whatever comes next. A fixed layout would squash Runs. */
+  @media (max-width: 767px) {
+    table.fp-table.min-w-\[40rem\] {
+      width: max-content;
+      min-width: calc(100% + 1rem);
+    }
+  }
+}
