@@ -15,7 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The dummy pins Recording Studio Web Search `v0.6.0`.
 - The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. `view_component` stays transitive. Tailwind and the dummy Tailwind CI build stay.
 - Core 6 removed `RecordingStudio::UsesDefaultLayout`. The dummy sets `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
-- The dummy drops the Admin and Root Switchable view overrides that hid FlatPack keyword changes. Admin and Root Switchable render their own templates. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
+- The dummy drops the Admin and Root Switchable view overrides that hid FlatPack keyword changes. Admin renders its own section template, at its default columns. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
+- A 4-up layout needs an upstream Admin section cols setting (follow-up).
+- The dummy widget card moves More out of the header into the card footer as a FlatPack ghost button, with the same link and label. Titles clamp at two lines.
 - The first admin on a workspace uses `bootstrap_owner_access!`. A later grant uses a manager who already holds admin.
 - The dummy installs the upstream migrations those gems ship for AI call logs, access requests, logs runs, and root-switch actor ids. This gem's own tables are unchanged.
 

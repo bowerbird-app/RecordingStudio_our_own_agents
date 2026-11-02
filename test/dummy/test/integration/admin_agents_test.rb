@@ -65,9 +65,15 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Attempts this period"
     assert_includes response.body, "Tokens this period"
     assert_includes response.body, "Hungry agents"
-    assert_includes response.body, "lg:grid-cols-4"
+    assert_includes response.body, "lg:grid-cols-3"
     assert_includes response.body, "md:grid-cols-2"
-    refute_includes response.body, "lg:grid-cols-3"
+    refute_includes response.body, "lg:grid-cols-4"
+    assert_select "div.border-t a[data-fp-style=ghost]", text: "More", minimum: 1
+    assert_select "a[data-fp-style=secondary]", text: "More", count: 0
+    assert_select "h3.font-semibold", text: "Attempts this period" do |titles|
+      assert_includes titles.first["class"], "[-webkit-line-clamp:2]"
+    end
+    assert_select "span.whitespace-nowrap", text: "Last 4 weeks", minimum: 1
     assert_select "a", text: "Agents"
     assert_select "a", text: "Runs"
     assert_select "a", text: "Tasks"

@@ -94,8 +94,8 @@ class RecordingStudioAgentsTest < Minitest::Test
   def test_upgrade_notes_say_there_is_no_migration_in_this_gem
     changelog = File.read(File.expand_path("../CHANGELOG.md", __dir__))
     upgrading = File.read(File.expand_path("../UPGRADING.md", __dir__))
-    section_view = File.read(
-      File.expand_path("dummy/app/views/recording_studio_admin/sections/show.html.erb", __dir__)
+    widget_view = File.read(
+      File.expand_path("dummy/app/views/recording_studio_admin/shared/_widget.html.erb", __dir__)
     )
 
     assert_includes changelog, "no migration in this gem"
@@ -103,8 +103,15 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes upgrading, "Hosts still install the upstream migrations"
     refute_includes upgrading, "862354d7814e44d6b4f13b243c096a98d8e0602c"
     refute_includes upgrading, "not tagged yet"
-    assert_includes section_view, "FlatPack::Grid::Component.new(cols: 4"
-    refute_includes section_view, "cols: 3"
+    refute File.exist?(
+      File.expand_path("dummy/app/views/recording_studio_admin/sections/show.html.erb", __dir__)
+    )
+    assert_includes changelog, "upstream Admin section cols setting"
+    assert_includes upgrading, "upstream Admin section cols setting"
+    assert_includes widget_view, "card.footer"
+    assert_includes widget_view, "style: :ghost"
+    refute_includes widget_view, "style: :secondary"
+    assert_includes widget_view, "[-webkit-line-clamp:2]"
   end
 
   def test_dummy_importmap_pins_admin_screen_controllers

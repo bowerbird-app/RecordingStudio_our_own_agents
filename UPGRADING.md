@@ -10,6 +10,8 @@ The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_
 
 There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. `grant_access` now refuses a role the manager does not already hold.
 
+A 4-up layout needs an upstream Admin section cols setting (follow-up). This gem uses Admin's own section template and its default columns. The dummy widget template puts More in the card footer as a FlatPack ghost button so the label cannot clip at that width.
+
 ## 0.8.10
 
 The dummy sign-in shell and the Admin layout override are FlatPack `PageLayout`. Sidebar spacing is `Stack`. Home and the playground use `fp-layout-content`, so the column inset matches the top bar. The playground agent switch is the `playground-agent` Stimulus controller. Step notes use `CodeBlock`. Table row actions stay Admin's ghost button. `data-theme="rounded"` is unchanged. There is no migration.
