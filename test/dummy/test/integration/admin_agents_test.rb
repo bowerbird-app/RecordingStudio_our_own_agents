@@ -58,6 +58,7 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
 
     get "/admin/sections/agents"
     assert_response :success
+    assert_includes response.body, "admin_tables"
     assert_includes response.body, "Agents admin"
     assert_includes response.body, "Attempts this period"
     assert_includes response.body, "Tokens this period"

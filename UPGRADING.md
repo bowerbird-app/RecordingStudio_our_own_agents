@@ -1,5 +1,9 @@
 # Upgrading
 
+## 0.8.9
+
+The dummy Admin layout links `admin_tables.css` after FlatPack variables. That file styles `table.fp-table` and the Admin screen-table toolbar from FlatPack's table tokens. There is no migration.
+
 ## 0.8.8
 
 `Runtime`, ledger persistence, and admin queries live in smaller files under the same constants. `Runtime#call`, `Persistence::RunLedger`, `Persistence::Opening`, and `Admin::Queries` behave as before. There is no migration.
