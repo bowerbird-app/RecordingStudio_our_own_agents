@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.9.0", ::RecordingStudioAgents::VERSION
+    assert_equal "0.9.1", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -250,6 +250,9 @@ class RecordingStudioAgentsTest < Minitest::Test
     refute_includes ai, "DummyStudioProviders.install!"
     assert_includes controller, "DummyOfflineTools.scripted"
     refute_includes controller, "prepend"
+    refute_includes controller, "RecordingStudioAI::Run.create!"
+    refute_includes controller, "CustomToolInvocation.create!"
+    refute_includes controller, "RecordingStudioAI::Run."
     refute_includes ai, "prepend"
     refute File.exist?(File.expand_path("dummy/config/initializers/dummy_generate_stub.rb", __dir__))
     refute_includes File.read(File.expand_path("../lib/recording_studio_agents/engine.rb", __dir__)), "class_eval"

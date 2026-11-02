@@ -48,6 +48,21 @@ RecordingStudioAI.configure do |config|
   config.allowed_provider_overrides = %i[gemini typesafe]
   config.retain_responses = true
   config.authorization_handler = RecordingStudioAI::AccessibleAuthorization.method(:call)
+  # Playground and demo calls are stored on a workspace. Staff screens open on
+  # the admin root. List both, or a workspace call looks missing.
+  config.admin_runs_scope = lambda do |context|
+    root_ids = []
+    root_ids << context.root_recording.id if context&.root_recording
+    root_ids.concat(
+      RecordingStudio::Recording.where(
+        RecordingStudio::Recording.recording_studio_trashable_kept_sql
+      ).where(recordable_type: "Workspace").pluck(:id)
+    )
+    root_ids.uniq!
+    next RecordingStudioAI::Run.none if root_ids.empty?
+
+    RecordingStudioAI::Run.where(root_recording_id: root_ids)
+  end
   config.custom_tool_confirmation_handler = lambda do |definition:, **|
     definition.requires_confirmation ? :pending : :approved
   end

@@ -7,6 +7,9 @@ RecordingStudioAdmin.configure do |config|
   config.async_widgets.enabled = false
 
   config.layout = "recording_studio/default_layout"
+  # Staff screens stay off the switched product workspace. A nil return wins
+  # over Root Switchable. Admin config is the only owner of that nil root.
+  config.current_root_recording_resolver = ->(_context) { nil }
   config.access_recording_resolver = lambda do |_context|
     admin_root = AdminRoot.find_by(name: "Admin")
     next unless admin_root
@@ -18,42 +21,10 @@ RecordingStudioAdmin.configure do |config|
   config.site_admin_recording_resolver = config.access_recording_resolver
 end
 
-# Admin opens on the staff root, while playground and demo calls are stored on a
-# workspace. Model call screens need both, or a workspace call looks missing.
-module RecordingStudioAdminWorkspaceRuns
-  def runs_scope(context = admin_context)
-    bind_admin_context!(context) if context
-    root_ids = []
-    root_ids << context.root_recording.id if context&.root_recording
-    root_ids.concat(
-      RecordingStudio::Recording.where(
-        RecordingStudio::Recording.recording_studio_trashable_kept_sql
-      ).where(recordable_type: "Workspace").pluck(:id)
-    )
-    root_ids.uniq!
-    return RecordingStudioAI::Run.none if root_ids.empty?
-
-    RecordingStudioAI::Run.where(root_recording_id: root_ids)
-  end
-end
-
-module RecordingStudioAdminIgnoreProductRoot
-  def current_root_recording
-    nil
-  end
-end
-
 Rails.application.config.to_prepare do
-  if defined?(RecordingStudioAdmin::ApplicationController) &&
-     !RecordingStudioAdmin::ApplicationController.ancestors.include?(RecordingStudioAdminIgnoreProductRoot)
-    RecordingStudioAdmin::ApplicationController.prepend(RecordingStudioAdminIgnoreProductRoot)
-  end
-
-  if defined?(AdminScreens::RecordingStudioAIWidgets) &&
-     !AdminScreens::RecordingStudioAIWidgets.singleton_class.ancestors.include?(RecordingStudioAdminWorkspaceRuns)
-    AdminScreens::RecordingStudioAIWidgets.singleton_class.prepend(RecordingStudioAdminWorkspaceRuns)
-  end
-
+  # app/admin is outside Zeitwerk. Admin 2.8.1 has no setting that reloads a
+  # host section class, so this prepare still drops RootSection and loads the
+  # file. register_section is the public registration API.
   if defined?(AdminScreens::RootSection)
     AdminScreens.send(:remove_const, :RootSection)
   end
