@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.7] - 2026-11-02
+
+### Changed
+
+- Site metric `api_authorize` still goes to `RecordingStudioMetrics.register`. The proc now comes from `RecordingStudioAgents::Admin::MetricsAccess`, which calls `RecordingStudioAccessible.authorized?` on the admin root. The Metrics module does not load Accessible.
+- Agent turn on / turn off inherits `RecordingStudioAdmin::ApplicationController`. The nil `current_root_recording` stub on that controller is gone. Admin owns the root lookup. The redirect is `RecordingStudioAdmin::Engine.routes.url_helpers.screen_path` with `script_name` set to `RecordingStudioAdmin.configuration.surface_for(:admin).path`, the path `recording_studio_admin_for` stored. `default_mount_path` is not that mount. A missing admin definition is a 404 from Admin's `rescue_from`.
+- `RecordingStudioAgents::Api::Access` is a `DeprecatedConstantProxy` for `RecordingStudioAgents::Admin::MetricsAccess`. Reading it warns. It goes away in the next release.
+
+### Upgrade notes
+
+- No migration. Metrics authorization is unchanged for staff who can view the admin root. Call `RecordingStudioAgents::Admin::MetricsAccess` in new code. `RecordingStudioAgents::Api::Access` still works and will be removed in the next release.
+- Hosts that overrode `RecordingStudioAgents::Admin::AgentsController` need to follow `RecordingStudioAdmin::ApplicationController`.
+
 ## [0.8.6] - 2026-11-02
 
 ### Breaking
@@ -451,7 +464,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.6...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.7...HEAD
+[0.8.7]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.6...v0.8.7
 [0.8.6]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.5...v0.8.6
 [0.8.5]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.4...v0.8.5
 [0.8.4]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.3...v0.8.4

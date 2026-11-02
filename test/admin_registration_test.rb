@@ -197,4 +197,20 @@ class AdminRegistrationTest < Minitest::Test
     assert resource.action_for(:turn_off).visible?(agent, context)
     refute resource.action_for(:turn_on).visible?(agent, context)
   end
+
+  def test_enablement_controller_uses_admin_application_controller
+    source = File.read(
+      File.expand_path("../app/controllers/recording_studio_agents/admin/agents_controller.rb", __dir__)
+    )
+
+    assert_includes source, "class AgentsController < RecordingStudioAdmin::ApplicationController"
+    assert_includes source, "RecordingStudioAdmin::Engine.routes.url_helpers.screen_path("
+    assert_includes source, "RecordingStudioAdmin.configuration.surface_for(:admin).path"
+    refute_includes source, "undef_method"
+    refute_includes source, "admin_screen_path"
+    refute_includes source, "default_mount_path"
+    refute_includes source, "DefinitionNotFound"
+    refute_includes source, "def current_root_recording"
+    refute_includes source, "< ::ApplicationController"
+  end
 end

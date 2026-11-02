@@ -1,38 +1,16 @@
 # frozen_string_literal: true
 
+require "active_support/deprecation"
+
 module RecordingStudioAgents
   module Api
-    module Access
-      module_function
+    # Removed in the next release. Call RecordingStudioAgents::Admin::MetricsAccess.
+    DEPRECATOR = ActiveSupport::Deprecation.new("0.9.0", "RecordingStudioAgents")
 
-      ResolverContext = Struct.new(:controller)
-
-      def admin_root_recording
-        resolver = RecordingStudioAdmin.configuration.access_recording_resolver
-        return unless resolver
-
-        resolver.call(ResolverContext.new(nil))
-      end
-
-      def actor_for(context)
-        context&.access_grant&.actor
-      end
-
-      def can_view?(context)
-        authorized_on_admin_root?(context, :view)
-      end
-
-      def authorized_on_admin_root?(context, role)
-        actor = actor_for(context)
-        recording = admin_root_recording
-        return false if actor.blank? || recording.blank?
-
-        RecordingStudioAccessible.authorized?(
-          actor: actor,
-          recording: recording,
-          role: role
-        )
-      end
-    end
+    Access = ActiveSupport::Deprecation::DeprecatedConstantProxy.new(
+      "RecordingStudioAgents::Api::Access",
+      "RecordingStudioAgents::Admin::MetricsAccess",
+      DEPRECATOR
+    )
   end
 end

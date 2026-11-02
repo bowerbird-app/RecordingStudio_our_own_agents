@@ -258,6 +258,47 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
     RecordingStudioAgents::AgentEnablement.delete_all
   end
 
+  test "turn off redirects through the admin surface mount" do
+    user = User.find_or_create_by!(email: "admin-enablement-mount@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+    admin_root = AdminRoot.find_or_create_by!(name: "Admin")
+    grant_accessible!(recording: RecordingStudio.root_recording_for(admin_root), actor: user)
+    sign_in user
+    RecordingStudioAgents::AgentEnablement.delete_all
+
+    surface = RecordingStudioAdmin.configuration.surface_for(:admin)
+    original_path = surface.path
+    surface.path("/staff")
+
+    post "/recording_studio_agents/admin/agents/page_librarian/turn_off", params: { version: 1 }
+
+    assert_redirected_to "/staff/screens/registered_agents"
+  ensure
+    surface.path(original_path) if surface && original_path
+    RecordingStudioAgents::AgentEnablement.delete_all
+  end
+
+  test "a missing admin definition on turn off is not found" do
+    user = User.find_or_create_by!(email: "admin-enablement-missing@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+    admin_root = AdminRoot.find_or_create_by!(name: "Admin")
+    grant_accessible!(recording: RecordingStudio.root_recording_for(admin_root), actor: user)
+    sign_in user
+
+    missing = Object.new
+    missing.define_singleton_method(:fetch) { |*, **| raise RecordingStudioAdmin::DefinitionNotFound }
+
+    RecordingStudioAgents.stub(:agents, missing) do
+      post "/recording_studio_agents/admin/agents/page_librarian/turn_off", params: { version: 1 }
+    end
+
+    assert_response :not_found
+  end
+
   test "turning an agent off requires admin access" do
     user = User.find_or_create_by!(email: "admin-enablement-forbidden@example.com") do |record|
       record.password = "Password123!"
