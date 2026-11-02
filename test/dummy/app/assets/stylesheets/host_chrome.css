@@ -1,32 +1,31 @@
 /*
-  Dummy shell. FlatPack PageLayout and SidebarLayout own the signed-in
-  product screens. These rules cover the sign-in page, the Admin default
-  layout override, and the sidebar menu button, which has no FlatPack
-  visibility prop.
+  Dummy shell. PageLayout owns the Admin column. SidebarLayout has no
+  prop for the menu button, so the desktop hide stays here until FlatPack
+  adds a toggle-visibility prop. The ghost row-action rule stays unlayered
+  because FlatPack's ghost border is unlayered and would otherwise win.
 */
 
-body {
-  margin: 0;
-  min-height: 100dvh;
-  background: var(--surface-page-background-color);
-  color: var(--surface-content-color);
-}
-
-[data-recording-studio-default-layout] main {
-  width: min(72rem, 100%);
-  margin-inline: auto;
-  min-height: 100dvh;
-  padding: var(--page-layout-padding-inline);
-}
-
-@media (min-width: 768px) {
-  [data-flat-pack--sidebar-layout-target="mobileToggle"] {
-    display: none;
+@layer components {
+  :where(body) {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--surface-page-background-color);
+    color: var(--surface-content-color);
   }
 }
 
-/* FlatPack paints a ghost icon button with a transparent border. The
-   row action should keep the same circle as Back and Close. */
+/* .inline-flex lives in the Tailwind utilities layer, which is linked
+   after this file. :where() and a bare attribute selector tie that
+   class and lose. The element selector is the extra specificity that
+   hides the button until SidebarLayout grows a toggle-visibility prop. */
+@layer utilities {
+  @media (min-width: 768px) {
+    button[data-flat-pack--sidebar-layout-target="mobileToggle"] {
+      display: none;
+    }
+  }
+}
+
 table.fp-table .fp-button[data-fp-style="ghost"] {
   --fp-button-border: var(--button-secondary-border-color);
   --fp-button-background: var(--button-secondary-background-color);

@@ -2,7 +2,7 @@
 
 ## 0.8.10
 
-The dummy sign-in shell is FlatPack `PageLayout`. Sidebar spacing is `Stack`. Home and the playground use `fp-layout-content`, so the column inset matches the top bar. The playground agent switch is the `playground-agent` Stimulus controller. Step notes use `CodeBlock`. `data-theme="rounded"` is unchanged. There is no migration.
+The dummy sign-in shell and the Admin layout override are FlatPack `PageLayout`. Sidebar spacing is `Stack`. Home and the playground use `fp-layout-content`, so the column inset matches the top bar. The playground agent switch is the `playground-agent` Stimulus controller. Step notes use `CodeBlock`. `data-theme="rounded"` is unchanged. There is no migration.
 
 ## 0.8.9
 

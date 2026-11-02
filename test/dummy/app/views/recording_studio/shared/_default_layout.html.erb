@@ -47,7 +47,7 @@
   </head>
 
   <body data-recording-studio-default-layout="true" data-theme="<%= content_for(:body_theme).presence || 'rounded' %>">
-    <main>
+    <%= render FlatPack::PageLayout::Component.new(width: :wide) do %>
       <% back_label = content_for(:page_nav_back_label).presence || RecordingStudio.t("recording_studio.core.navigation.go_back") %>
       <% anchor_label = content_for(:page_nav_anchor_label).presence || RecordingStudio.t("recording_studio.core.navigation.close") %>
       <% back_icon = content_for(:page_nav_back_icon).presence || "chevron-left" %>
@@ -86,6 +86,6 @@
 
         <%= yield %>
       <% end %>
-    </main>
+    <% end %>
   </body>
 </html>

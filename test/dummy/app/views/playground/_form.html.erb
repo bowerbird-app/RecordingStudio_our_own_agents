@@ -20,7 +20,8 @@
     label: "Profile",
     options: RecordingStudioAgents::Profiles::NAMES.map { |name| [ RecordingStudioAgents::Profiles.label(name), name.to_s ] },
     value: @form.profile,
-    required: true
+    required: true,
+    data: { playground_agent_target: "profile" }
   ) %>
 
   <%= render FlatPack::TextArea::Component.new(
@@ -53,7 +54,7 @@
   <% @catalog.each do |entry| %>
     <% next if entry.tools.empty? %>
     <% active = entry.token == @form.agent %>
-    <fieldset data-playground-tools="<%= entry.token %>"<% unless active %> disabled hidden<% end %>>
+    <fieldset data-playground-tools="<%= entry.token %>" data-playground-agent-target="tools"<% unless active %> disabled hidden<% end %>>
       <%= render FlatPack::Select::Component.new(
         name: "tools",
         label: "Tools",

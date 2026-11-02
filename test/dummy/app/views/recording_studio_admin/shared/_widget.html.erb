@@ -46,12 +46,12 @@
       <% header_subtitle = %i[list progress].include?(widget.type) ? nil : presenter.header_subtitle %>
 
       <% if compact_card %>
-          <div class="relative flex h-full items-start gap-3 overflow-hidden <%= "z-10 pointer-events-none" if compact_card_href.present? && widget.info.present? %>">
-            <div class="min-w-0 flex-1 space-y-2 text-left">
-              <div class="flex items-start gap-3">
+          <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start, class: "relative h-full overflow-hidden #{'z-10 pointer-events-none' if compact_card_href.present? && widget.info.present?}") do %>
+            <%= render FlatPack::Stack::Component.new(gap: :sm, class: "min-w-0 flex-1 text-left") do %>
+              <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start) do %>
                 <% if compact_metric_value.present? %>
-                  <div class="shrink-0">
-                    <div class="flex items-baseline gap-1 leading-none">
+                  <%= render FlatPack::Stack::Component.new(gap: :sm, class: "shrink-0") do %>
+                    <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, class: "leading-none") do %>
                       <% compact_metric = capture do %>
                         <%= render FlatPack::Heading::Component.new(text: compact_metric_value.to_s, level: :h3, size: :"5xl", weight: :bold) %>
                       <% end %>
@@ -65,18 +65,18 @@
                       <% if compact_unit_label.present? %>
                         <%= render FlatPack::Text::Component.new(text: compact_unit_label, as: :span, size: :xs, style: :muted) %>
                       <% end %>
-                    </div>
-                  </div>
+                    <% end %>
+                  <% end %>
                 <% end %>
 
-                <div class="min-w-0 flex-1 space-y-2 text-left">
+                <%= render FlatPack::Stack::Component.new(gap: :sm, class: "min-w-0 flex-1 text-left") do %>
                   <% if widget.info.present? %>
-                    <div class="flex items-start gap-1">
+                    <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start) do %>
                       <% if widget.title.present? %>
                         <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :lg, weight: :semibold, class: "min-w-0 overflow-hidden [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]") %>
                       <% end %>
                       <%= info_trigger %>
-                    </div>
+                    <% end %>
                   <% elsif widget.title.present? %>
                     <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :lg, weight: :semibold, class: "overflow-hidden [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]") %>
                   <% end %>
@@ -95,8 +95,8 @@
                       show_label: progress_label.present?
                     ) %>
                   <% end %>
-                </div>
-              </div>
+                <% end %>
+              <% end %>
 
             <% if (widget.show_change && widget.change.present?) || compact_period_label.present? %>
               <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, class: "text-left") do %>
@@ -108,28 +108,26 @@
                 <% end %>
               <% end %>
               <% end %>
-          </div>
+            <% end %>
 
           <% if widget.type == :list && presenter.compact_list_visual_stack? && presenter.compact_list_visual_items.any? %>
-            <div class="w-[104px] min-w-[104px] shrink-0">
-              <% visual_items = presenter.compact_list_visual_items %>
+            <% visual_items = presenter.compact_list_visual_items %>
+            <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, justify: :end, class: "w-[104px] min-w-[104px] shrink-0") do %>
               <% if visual_items.any? { |item| item.is_a?(Hash) && item[:icon].present? } %>
-                <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, justify: :end) do %>
-                  <% visual_items.each do |item| %>
-                    <% if item.is_a?(Hash) && item[:icon].present? %>
-                      <%= render FlatPack::Shared::IconComponent.new(name: item[:icon].to_s, size: :sm) %>
-                    <% else %>
-                      <%= render FlatPack::Avatar::Component.new(name: presenter.list_item_avatar_name(item).to_s, size: :sm) %>
-                    <% end %>
+                <% visual_items.each do |item| %>
+                  <% if item.is_a?(Hash) && item[:icon].present? %>
+                    <%= render FlatPack::Shared::IconComponent.new(name: item[:icon].to_s, size: :sm) %>
+                  <% else %>
+                    <%= render FlatPack::Avatar::Component.new(name: presenter.list_item_avatar_name(item).to_s, size: :sm) %>
                   <% end %>
                 <% end %>
               <% else %>
                 <% avatar_items = visual_items.map { |item| { name: presenter.list_item_avatar_name(item).to_s } } %>
                 <%= render FlatPack::AvatarGroup::Component.new(items: avatar_items, size: :sm, max: avatar_items.length, show_overflow: false) %>
               <% end %>
-            </div>
+            <% end %>
           <% elsif widget.series.present? %>
-            <div class="w-[104px] min-w-[104px] shrink-0">
+            <%= render FlatPack::Stack::Component.new(gap: :sm, class: "w-[104px] min-w-[104px] shrink-0") do %>
               <%= render FlatPack::Chart::Component.new(
                 type: mini_chart_type,
                 series: mini_chart_series,
@@ -138,17 +136,17 @@
                 class: "w-full",
                 options: mini_chart_render_options
               ) %>
-            </div>
+            <% end %>
           <% end %>
-        </div>
+        <% end %>
       <% else %>
-        <div class="space-y-4">
+        <%= render FlatPack::Stack::Component.new(gap: :md) do %>
           <% if header_subtitle.present? || unit_label.present? || widget.title.present? || widget.info.present? || (widget.show_metric && widget.value.present?) || (widget.show_change && widget.change.present?) || widget_href.present? || period_label.present? %>
-            <div class="flex items-start justify-between gap-3">
+            <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start, justify: :between) do %>
               <% if header_subtitle.present? || unit_label.present? || widget.title.present? || widget.info.present? || (widget.show_metric && widget.value.present?) || (widget.show_change && widget.change.present?) || period_label.present? %>
-                <div class="space-y-2">
+                <%= render FlatPack::Stack::Component.new(gap: :sm) do %>
                   <% if widget.info.present? %>
-                    <div class="flex items-start gap-1">
+                    <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start) do %>
                       <% if widget.title.present? && widget.description.present? %>
                         <%= render FlatPack::Tooltip::Component.new(text: widget.description) do %>
                           <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
@@ -157,7 +155,7 @@
                         <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
                       <% end %>
                       <%= info_trigger %>
-                    </div>
+                    <% end %>
                   <% elsif widget.title.present? %>
                     <% if widget.description.present? %>
                       <%= render FlatPack::Tooltip::Component.new(text: widget.description) do %>
@@ -171,7 +169,7 @@
                     <%= render FlatPack::Text::Component.new(text: header_subtitle, size: :sm, style: :muted) %>
                   <% end %>
                   <% if widget.show_metric && widget.value.present? %>
-                    <div class="flex flex-wrap items-baseline gap-2 leading-none">
+                    <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, class: "flex-wrap leading-none") do %>
                       <% metric_number = capture do %>
                         <%= render FlatPack::Heading::Component.new(text: widget.value.to_s, level: :h3, size: :"5xl", weight: :bold) %>
                       <% end %>
@@ -182,7 +180,7 @@
                       <% else %>
                         <%= metric_number %>
                       <% end %>
-                    </div>
+                    <% end %>
                   <% end %>
                   <% if (widget.show_change && widget.change.present?) || period_label.present? %>
                     <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center) do %>
@@ -194,21 +192,21 @@
                       <% end %>
                     <% end %>
                   <% end %>
-                </div>
+                <% end %>
               <% end %>
 
               <% if widget_href.present? %>
-                <div class="shrink-0">
+                <%= render FlatPack::Stack::Component.new(gap: :sm, class: "shrink-0") do %>
                   <%= render FlatPack::Tooltip::Component.new(text: t("recording_studio.admin.widgets.open", label: widget_link_label, default: "Open %{label}")) do %>
                     <%= render FlatPack::Button::Component.new(text: t("recording_studio.admin.widgets.more", default: "More"), href: widget_href, style: :secondary, size: :sm) %>
                   <% end %>
-                </div>
+                <% end %>
               <% end %>
-            </div>
+            <% end %>
           <% end %>
 
           <%= render partial: "recording_studio_admin/shared/widgets/#{widget.type}", locals: { widget: widget } %>
-        </div>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

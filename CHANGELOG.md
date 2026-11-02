@@ -11,9 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- The dummy sign-in page uses FlatPack `PageLayout`. Home, the sidebar, and the Admin layout override use `Stack` and `Cluster` instead of utility classes. Playground agent switching is a Stimulus controller. Step notes render in `CodeBlock`.
-- `host_chrome.css` sets the page background and hides the sidebar menu button from 768px up. `data-theme="rounded"` stays.
-- Home and the playground sit in FlatPack's `fp-layout-content` inset, the same inset as the top bar. Row actions use the secondary button border so the circle matches Back and Close.
+- The dummy sign-in page and the Admin layout override use FlatPack `PageLayout`. Home and the sidebar use `Stack` and `Cluster`. Playground agent switching is a Stimulus controller with profile and tools targets. Step notes render in `CodeBlock`.
+- `host_chrome.css` sets the page background inside `@layer components`. The sidebar menu button hides from 768px up inside `@layer utilities`, on `button` plus the SidebarLayout target. `:where()` and a bare attribute selector lose to Tailwind's later `.inline-flex`. `data-theme="rounded"` stays. SidebarLayout still has no toggle-visibility prop.
+- Home and the playground sit in FlatPack's `fp-layout-content` inset, the same inset as the top bar. Row actions use the secondary button border so the circle matches Back and Close. Admin widget cards use `Stack` and `Cluster`.
 
 ### Upgrade notes
 

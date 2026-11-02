@@ -106,6 +106,15 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes sidebar_layout, 'data-theme="rounded"'
     assert_includes sidebar_layout, "FlatPack::SidebarLayout::Component"
     assert_includes sidebar_layout, "fp-layout-content"
+    default_layout = File.read(File.expand_path("dummy/app/views/recording_studio/shared/_default_layout.html.erb", __dir__))
+    assert_includes default_layout, "PageLayout::Component.new(width: :wide)"
+    refute_includes default_layout, "<main>"
+    host_chrome = File.read(File.expand_path("dummy/app/assets/stylesheets/host_chrome.css", __dir__))
+    assert_includes host_chrome, "@layer components"
+    assert_includes host_chrome, "@layer utilities"
+    assert_includes host_chrome, 'button[data-flat-pack--sidebar-layout-target="mobileToggle"]'
+    refute_includes host_chrome, ':where([data-flat-pack--sidebar-layout-target="mobileToggle"])'
+    refute_includes host_chrome, "[data-recording-studio-default-layout] main"
     top_nav = File.read(File.expand_path("dummy/app/views/layouts/flat_pack/_top_nav.html.erb", __dir__))
     assert_includes top_nav, "padding: :none"
     assert_includes sidebar_layout, 'stylesheet_link_tag "flat_pack/variables"'
