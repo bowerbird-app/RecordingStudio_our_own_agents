@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- The dummy paints Admin screen tables from `admin_tables.css` and the FlatPack table tokens (`--table-border-color`, header, padding, row hover). The table no longer depends on a Tailwind scan of FlatPack or Admin.
+- The dummy paints Admin screen tables from `admin_tables.css` and the FlatPack table tokens (`--table-border-color`, header, padding, row hover). The table card uses the same `--card-border-width` and `--card-shadow` as the chart card. Below 768px the table's minimum width is 30rem so the next column peeks. The table no longer depends on a Tailwind scan of FlatPack or Admin.
 
 ### Upgrade notes
 

@@ -2,7 +2,7 @@
 
 ## 0.8.9
 
-The dummy Admin layout links `admin_tables.css` after FlatPack variables. That file styles `table.fp-table` and the Admin screen-table toolbar from FlatPack's table tokens. There is no migration.
+The dummy Admin layout links `admin_tables.css` after FlatPack variables. That file styles `table.fp-table` and the Admin screen-table toolbar from FlatPack's table tokens. The table frame uses `--card-border-width` and `--card-shadow`, the same edge as a FlatPack card. There is no migration.
 
 ## 0.8.8
 

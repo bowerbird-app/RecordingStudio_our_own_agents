@@ -7,11 +7,15 @@ class AdminTableCssTest < ActiveSupport::TestCase
     css = Rails.root.join("app/assets/stylesheets/admin_tables.css").read
 
     assert_includes css, "table.fp-table"
-    assert_includes css, "var(--table-border-color)"
+    assert_includes css, "var(--card-border-width)"
+    assert_includes css, "var(--card-shadow)"
     assert_includes css, "var(--table-header-background-color)"
     assert_includes css, "var(--table-padding-x)"
     assert_includes css, "var(--table-row-hover-background-color)"
     assert_includes css, "recording-studio-admin--screen-filters"
+    assert_includes css, "min-width: 30rem"
+    assert_includes css, "[data-recording-studio-admin-table-cell-content] + [data-recording-studio-admin-table-cell-skeleton]"
+    assert_includes css, "[data-recording-studio-admin-table-cell-skeleton].flex"
     refute_includes css, "@apply"
     refute_includes css, "@import \"tailwindcss\""
   end

@@ -7,9 +7,12 @@
 
 div:has(> table.fp-table) {
   overflow-x: auto;
-  border: 1px solid var(--table-border-color);
+  border-style: solid;
+  border-width: var(--card-border-width);
+  border-color: var(--card-border-color);
   border-radius: var(--card-radius);
   background: var(--table-background-color);
+  box-shadow: var(--card-shadow);
 }
 
 table.fp-table {
@@ -26,6 +29,16 @@ table.fp-table.min-w-\[30rem\] {
 
 table.fp-table.min-w-\[48rem\] {
   min-width: 48rem;
+}
+
+/* A 40rem table puts Enabled just past a 390px screen, in the empty
+   part of the Version cell, so the row looks finished. 30rem keeps
+   Enabled in the scrollport and lets the next column peek.
+   This follows the named min-width classes so a 48rem table stays wide. */
+@media (max-width: 767px) {
+  table.fp-table.min-w-\[40rem\] {
+    min-width: 30rem;
+  }
 }
 
 table.fp-table thead {
@@ -135,13 +148,20 @@ span:has([data-recording-studio-admin-table-cell-skeleton]) {
   display: block;
 }
 
-[data-recording-studio-admin-table-cell-skeleton] {
+/* The loaded cell hides its skeleton until the filter controller adds
+   .flex. The placeholder skeleton is the cell, so it stays visible.
+   .flex is a layered utility and cannot beat an unlayered display. */
+[data-recording-studio-admin-table-cell-content] + [data-recording-studio-admin-table-cell-skeleton] {
   position: absolute;
   inset: 0 auto 0 0;
   display: none;
   width: 100%;
   align-items: center;
   pointer-events: none;
+}
+
+[data-recording-studio-admin-table-cell-skeleton].flex {
+  display: flex;
 }
 
 table.fp-table [role="status"][aria-busy="true"] {
