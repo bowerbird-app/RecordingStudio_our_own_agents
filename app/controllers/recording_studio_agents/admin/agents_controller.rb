@@ -31,13 +31,15 @@ module RecordingStudioAgents
         raise ActiveRecord::RecordNotFound
       end
 
-      # screen_path on this engine controller is Admin's route helper. It recalls
-      # agent_key from the turn on / turn off route, and that route has no
-      # agent_key, so generation raises. Hide the helper for this call so
-      # admin_screen_path uses Admin's mount path.
+      # This controller inherits Admin's screen_path. That helper recalls
+      # agent_key from the turn on / turn off request, and Admin's screen route
+      # has no agent_key, so generation raises. The engine proxy does not recall
+      # the request. script_name is Admin's mount path.
       def registered_agents_screen_path
-        singleton_class.undef_method(:screen_path)
-        recording_studio_admin_context.admin_screen_path("registered_agents")
+        RecordingStudioAdmin::Engine.routes.url_helpers.screen_path(
+          "registered_agents",
+          script_name: RecordingStudioAdmin.configuration.default_mount_path
+        )
       end
 
       def enablement_notice(agent, enabled)

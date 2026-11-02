@@ -37,7 +37,21 @@ class MetricsTest < Minitest::Test
     refute_includes metrics, "respond_to?"
     refute_includes metrics, "rescue"
 
-    assert_equal RecordingStudioAgents::Admin::MetricsAccess, RecordingStudioAgents::Api::Access
+    alias_source = File.read(File.expand_path("../lib/recording_studio_agents/api/access.rb", __dir__))
+    assert_includes alias_source, "DeprecatedConstantProxy"
+    assert_includes alias_source, "RecordingStudioAgents::Admin::MetricsAccess"
+    assert_equal "RecordingStudioAgents::Admin::MetricsAccess", RecordingStudioAgents::Api::Access.name
+
+    warnings = []
+    behavior = RecordingStudioAgents::Api::DEPRECATOR.behavior
+    begin
+      RecordingStudioAgents::Api::DEPRECATOR.behavior = ->(message, *) { warnings << message }
+      assert_equal false, RecordingStudioAgents::Api::Access.can_view?(nil)
+      assert_match(/RecordingStudioAgents::Api::Access is deprecated/, warnings.join)
+    ensure
+      RecordingStudioAgents::Api::DEPRECATOR.behavior = behavior
+    end
+
     assert_includes access, "def authorize"
     assert_includes access, "def can_view?"
     assert_includes access, "authorized_on_admin_root?(context, :view)"

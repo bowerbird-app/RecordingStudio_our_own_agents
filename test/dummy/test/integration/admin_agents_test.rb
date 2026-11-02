@@ -267,20 +267,14 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
     grant_accessible!(recording: RecordingStudio.root_recording_for(admin_root), actor: user)
     sign_in user
 
-    controller = RecordingStudioAgents::Admin::AgentsController
-    controller.alias_method :load_agent_without_missing_definition!, :load_agent!
-    controller.define_method(:load_agent!) { raise RecordingStudioAdmin::DefinitionNotFound }
+    missing = Object.new
+    missing.define_singleton_method(:fetch) { |*, **| raise RecordingStudioAdmin::DefinitionNotFound }
 
-    post "/recording_studio_agents/admin/agents/page_librarian/turn_off", params: { version: 1 }
+    RecordingStudioAgents.stub(:agents, missing) do
+      post "/recording_studio_agents/admin/agents/page_librarian/turn_off", params: { version: 1 }
+    end
 
     assert_response :not_found
-  ensure
-    if controller&.private_method_defined?(:load_agent_without_missing_definition!) ||
-       controller&.method_defined?(:load_agent_without_missing_definition!)
-      controller.alias_method :load_agent!, :load_agent_without_missing_definition!
-      controller.send(:private, :load_agent!)
-      controller.remove_method :load_agent_without_missing_definition!
-    end
   end
 
   test "turning an agent off requires admin access" do

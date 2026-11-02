@@ -2,7 +2,7 @@
 
 ## 0.8.7
 
-`api_authorize` for agent metrics is `RecordingStudioAgents::Admin::MetricsAccess`. It still allows a view on the admin root through Accessible. The Metrics module does not call Accessible itself. `RecordingStudioAgents::Api::Access` is a deprecated alias of `Admin::MetricsAccess` for this release.
+`api_authorize` for agent metrics is `RecordingStudioAgents::Admin::MetricsAccess`. It still allows a view on the admin root through Accessible. The Metrics module does not call Accessible itself. `RecordingStudioAgents::Api::Access` warns and forwards to `Admin::MetricsAccess` for this release.
 
 Turn on and turn off inherit `RecordingStudioAdmin::ApplicationController`. This gem no longer defines `current_root_recording`. There is no migration.
 
