@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- The dummy Admin screens keep a local stylesheet, `test/dummy/app/assets/stylesheets/admin_tables.css`. It is not part of the gem. It sets the table frame to `--card-border-width` and `--card-shadow`. On the rounded theme that width is 1px and the color is `--surface-border-color`, so cards keep a hairline. Below 768px the Actions column peeks by about 1rem. Header, padding, row hover, and skeletons stay on FlatPack and Admin.
-- `test/dummy/app/assets/stylesheets/cascade_layers.css` is linked first and declares `@layer theme, base, components, utilities`. FlatPack's rich text sheet opens `@layer components` before Tailwind, and without this order Tailwind's base reset beats utilities.
+- The dummy Admin screens keep a local stylesheet, `test/dummy/app/assets/stylesheets/admin_tables.css`. It is not part of the gem. It sets the table frame to `--card-border-width` and `--card-shadow`. The rounded `--card-border-width` rule sits in `@layer theme` inside `:where()`, so it does not beat FlatPack's unlayered rounded theme. Below 768px the Actions column peeks by about 1rem, and the horizontal scrollbar is inset by `--card-radius` so it does not cover the bottom corners. Header, padding, row hover, and skeletons stay on FlatPack and Admin.
+- `test/dummy/app/assets/stylesheets/cascade_layers.css` is linked first, before `yield :head`, and declares `@layer theme, base, components, utilities`. FlatPack's rich text sheet opens `@layer components` before Tailwind, and without this order Tailwind's base reset beats utilities.
 
 ### Upgrade notes
 

@@ -6,14 +6,17 @@
   beats @layer components and :where(). The frame rule sits in @layer utilities
   so it can replace that border. The token rules belong in FlatPack::Table.
 
-  Rounded sets --card-border-width to 0. html[data-theme] wins that variable
-  so cards and this frame keep a 1px --surface-border-color line.
+  Rounded sets --card-border-width to 0 in an unlayered block. The same token
+  here sits in @layer theme inside :where(), so it does not beat that block.
+  The horizontal bar is inset by the card radius so it does not paint a square
+  over the bottom corners.
 */
 
-html[data-theme~="rounded"],
-body[data-theme~="rounded"] {
-  --card-border-width: 1px;
-  --card-border-color: var(--surface-border-color);
+@layer theme {
+  :where(html[data-theme~="rounded"], body[data-theme~="rounded"]) {
+    --card-border-width: 1px;
+    --card-border-color: var(--surface-border-color);
+  }
 }
 
 @layer utilities {
@@ -24,6 +27,22 @@ body[data-theme~="rounded"] {
     border-radius: var(--card-radius);
     background: var(--table-background-color);
     box-shadow: var(--card-shadow);
+  }
+
+  /* Inset the bar from the rounded corners. The scroller is the frame, so
+     there is no outer clip wrapper to hide it. */
+  div:has(> table.fp-table)::-webkit-scrollbar {
+    height: 0.75rem;
+  }
+
+  div:has(> table.fp-table)::-webkit-scrollbar-track {
+    margin-inline: var(--card-radius);
+    background: transparent;
+  }
+
+  div:has(> table.fp-table)::-webkit-scrollbar-thumb {
+    background: var(--surface-border-color);
+    border-radius: var(--radius-full);
   }
 
   /* Keep each column at its content width and let the scrollport show

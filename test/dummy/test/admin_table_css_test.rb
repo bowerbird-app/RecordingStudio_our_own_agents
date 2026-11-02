@@ -7,12 +7,14 @@ class AdminTableCssTest < ActiveSupport::TestCase
     css = Rails.root.join("app/assets/stylesheets/admin_tables.css").read
 
     assert_includes css, "@layer utilities"
+    assert_includes css, "@layer theme"
     assert_includes css, "var(--card-border-width)"
     assert_includes css, "var(--card-shadow)"
-    assert_includes css, "html[data-theme~=\"rounded\"],"
-    assert_includes css, "body[data-theme~=\"rounded\"]"
+    assert_includes css, ":where(html[data-theme~=\"rounded\"], body[data-theme~=\"rounded\"])"
     assert_includes css, "--card-border-width: 1px"
     assert_includes css, "--card-border-color: var(--surface-border-color)"
+    assert_includes css, "margin-inline: var(--card-radius)"
+    refute_match(/^html\[data-theme~="rounded"\]/m, css)
     assert_includes css, "width: max-content"
     assert_includes css, "min-width: calc(100% + 1rem)"
     refute_includes css, "table-layout: fixed"
@@ -53,6 +55,9 @@ class AdminTableCssTest < ActiveSupport::TestCase
       assert layers_at, relative
       assert_operator layers_at, :<, flatpack_at
       assert_operator layers_at, :<, tailwind_at
+      head_at = layout.index("yield :head")
+      assert head_at, relative
+      assert_operator layers_at, :<, head_at
     end
   end
 end
