@@ -11,11 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- The dummy paints Admin screen tables from `admin_tables.css` and the FlatPack table tokens (`--table-border-color`, header, padding, row hover). The table card uses the same `--card-border-width` and `--card-shadow` as the chart card. Below 768px the table's minimum width is 30rem so the next column peeks. The table no longer depends on a Tailwind scan of FlatPack or Admin.
+- The dummy Admin screens keep a local stylesheet, `test/dummy/app/assets/stylesheets/admin_tables.css`. It is not part of the gem. It sets the table frame to `--card-border-width` and `--card-shadow`, and below 768px sets a 40rem table to 30rem so the next column peeks. Header, padding, row hover, and skeletons stay on FlatPack and Admin.
 
 ### Upgrade notes
 
-- Hosts that compile Tailwind only to style Admin tables can link `admin_tables.css` after `flat_pack/variables`. There is no migration.
+- No host action and no migration. `admin_tables.css` is dummy-only. Do not link it from a host.
 
 ## [0.8.8] - 2026-11-02
 

@@ -43,4 +43,4 @@ Run those commands from the dummy app directory.
 
 The home page uses a sidebar layout. Devise sign-in keeps `layouts/application`. Admin, the workspace switch page, and access screens use Recording Studio's shared default layout. Admin screen tables lazy-load through Turbo frames. The dummy importmap pins Turbo and Recording Studio Admin controllers so those frames fill.
 
-Admin screen tables take their header, padding, and row hover from `app/assets/stylesheets/admin_tables.css`, using FlatPack's `--table-*` tokens. The frame around the table uses `--card-border-width` and `--card-shadow`, so it matches the chart card. `bin/rails tailwindcss:build` still compiles layout utilities. The table does not need that scan.
+Admin screen tables take header, padding, and row hover from FlatPack and the Tailwind build. `app/assets/stylesheets/admin_tables.css` is dummy-only. It sets the table frame to `--card-border-width` and `--card-shadow`, and below 768px it shortens a 40rem table to 30rem so the next column peeks.

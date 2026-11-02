@@ -1,199 +1,26 @@
 /*
-  Admin screen tables. FlatPack::Table and Recording Studio Admin paint those
-  tables with utility class names. These rules use the same FlatPack table
-  tokens, so the table still has a border, header, padding, and row hover
-  when those utilities are not compiled.
+  Dummy only. This file is not shipped in the gem.
+
+  FlatPack::Table still paints the scroll floor with a border utility and
+  min-w-[40rem]. Those utilities live in the Tailwind utilities layer, which
+  beats @layer components and :where(). The two rules below sit in @layer
+  utilities so the table frame can use the card edge and a phone can peek
+  the next column. The token rules belong in FlatPack::Table.
 */
 
-div:has(> table.fp-table) {
-  overflow-x: auto;
-  border-style: solid;
-  border-width: var(--card-border-width);
-  border-color: var(--card-border-color);
-  border-radius: var(--card-radius);
-  background: var(--table-background-color);
-  box-shadow: var(--card-shadow);
-}
-
-table.fp-table {
-  width: 100%;
-  min-width: 40rem;
-  border-collapse: collapse;
-  background: var(--table-background-color);
-  color: var(--table-cell-text-color);
-}
-
-table.fp-table.min-w-\[30rem\] {
-  min-width: 30rem;
-}
-
-table.fp-table.min-w-\[48rem\] {
-  min-width: 48rem;
-}
-
-/* A 40rem table puts Enabled just past a 390px screen, in the empty
-   part of the Version cell, so the row looks finished. 30rem keeps
-   Enabled in the scrollport and lets the next column peek.
-   This follows the named min-width classes so a 48rem table stays wide. */
-@media (max-width: 767px) {
-  table.fp-table.min-w-\[40rem\] {
-    min-width: 30rem;
+@layer utilities {
+  div:has(> table.fp-table) {
+    border-style: solid;
+    border-width: var(--card-border-width);
+    border-color: var(--card-border-color);
+    border-radius: var(--card-radius);
+    background: var(--table-background-color);
+    box-shadow: var(--card-shadow);
   }
-}
 
-table.fp-table thead {
-  background: var(--table-header-background-color);
-  border-bottom: 1px solid var(--table-header-border-color);
-}
-
-table.fp-table th,
-table.fp-table td {
-  padding: var(--table-padding-y) var(--table-padding-x);
-  text-align: start;
-  vertical-align: middle;
-}
-
-table.fp-table th {
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--table-header-text-color);
-}
-
-table.fp-table td {
-  font-size: 0.875rem;
-  color: var(--table-cell-text-color);
-}
-
-table.fp-table tbody tr + tr td {
-  border-top: 1px solid var(--table-row-divider-color);
-}
-
-table.fp-table tbody tr:hover {
-  background: var(--table-row-hover-background-color);
-}
-
-table.fp-table tbody tr:has(:checked) {
-  background: var(--table-row-selected-background-color);
-}
-
-table.fp-table .text-center,
-table.fp-table .text-end {
-  text-align: center;
-}
-
-table.fp-table .text-end {
-  text-align: end;
-}
-
-table.fp-table .truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-table.fp-table .whitespace-nowrap {
-  white-space: nowrap;
-}
-
-table.fp-table a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-table.fp-table a:hover {
-  color: var(--table-sort-link-hover-color);
-}
-
-table.fp-table thead.sr-only,
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-[data-controller~="recording-studio-admin--screen-filters"] > div:first-child {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-[data-controller~="recording-studio-admin--screen-filters"] h3 {
-  margin: 0;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--surface-content-color);
-}
-
-[data-controller~="recording-studio-admin--screen-filters"] p {
-  margin: 0.25rem 0 0;
-  font-size: 0.875rem;
-  color: var(--surface-muted-content-color);
-}
-
-span:has([data-recording-studio-admin-table-cell-skeleton]) {
-  position: relative;
-  display: block;
-  min-height: 1rem;
-}
-
-[data-recording-studio-admin-table-cell-content] {
-  display: block;
-}
-
-/* The loaded cell hides its skeleton until the filter controller adds
-   .flex. The placeholder skeleton is the cell, so it stays visible.
-   .flex is a layered utility and cannot beat an unlayered display. */
-[data-recording-studio-admin-table-cell-content] + [data-recording-studio-admin-table-cell-skeleton] {
-  position: absolute;
-  inset: 0 auto 0 0;
-  display: none;
-  width: 100%;
-  align-items: center;
-  pointer-events: none;
-}
-
-[data-recording-studio-admin-table-cell-skeleton].flex {
-  display: flex;
-}
-
-table.fp-table [role="status"][aria-busy="true"] {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 1rem;
-  border-radius: 0.25rem;
-  background: var(--skeleton-background-color);
-}
-
-table.fp-table [role="status"][aria-busy="true"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    110deg,
-    transparent 20%,
-    var(--skeleton-shimmer-highlight-color) 45%,
-    transparent 70%
-  );
-  animation: fp-skeleton-shimmer var(--skeleton-shimmer-duration) linear infinite;
-}
-
-@keyframes fp-skeleton-shimmer {
-  to {
-    transform: translateX(180%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  table.fp-table [role="status"][aria-busy="true"]::before {
-    animation: none;
+  @media (max-width: 767px) {
+    table.fp-table.min-w-\[40rem\] {
+      min-width: 30rem;
+    }
   }
 }
