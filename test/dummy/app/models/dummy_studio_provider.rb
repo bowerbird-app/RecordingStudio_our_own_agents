@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Offline stand-in for Gemini generation and Jev decisions.
+# Offline stand-in for Gemini generation and TypeSafe decisions.
 # Registered with RecordingStudioAI.register_provider when no provider key is set.
 class DummyStudioProvider < RecordingStudioAI::Providers::Base
   def configured?

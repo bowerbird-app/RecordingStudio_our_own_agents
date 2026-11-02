@@ -23,7 +23,7 @@ class AIProvidersTest < ActiveSupport::TestCase
     assert_nil configuration.openai_api_key
   end
 
-  test "profiles send generation to Gemini and decisions to Jev" do
+  test "profiles send generation to Gemini and decisions to TypeSafe" do
     configuration = RecordingStudioAI.configuration
 
     %i[low medium high].each do |profile|

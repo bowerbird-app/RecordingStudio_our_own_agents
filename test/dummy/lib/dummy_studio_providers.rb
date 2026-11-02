@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Swaps the live Gemini and Jev adapters for DummyStudioProvider when no key is set.
+# Swaps the live Gemini and TypeSafe adapters for DummyStudioProvider when no key is set.
 module DummyStudioProviders
   module_function
 

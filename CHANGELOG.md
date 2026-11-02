@@ -9,17 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.8.6] - 2026-11-02
 
-### Removed
+### Breaking
 
-- The engine no longer `class_eval`s host models or controllers from `hooks.extend_model` / `hooks.extend_controller`. Lifecycle hooks (`before_initialize`, `on_configuration`, `after_initialize`) stay.
+- `RecordingStudioAgents::Engine.apply_model_extensions` and `apply_controller_extensions` are removed. The engine no longer `class_eval`s host models or controllers from `hooks.extend_model` / `hooks.extend_controller`. Lifecycle hooks (`before_initialize`, `on_configuration`, `after_initialize`) stay. When this gem's hooks still have `extend_model` or `extend_controller` blocks, boot logs a warning naming them. Those blocks are not applied.
 
 ### Changed
 
-- The dummy offline demo registers `DummyStudioProvider` with `RecordingStudioAI.register_provider` for Gemini and Jev when no provider key is set. It no longer prepends `RecordingStudioAI.generate`, `decide`, or `perform_tool`.
+- The dummy offline demo registers `DummyStudioProvider` with `RecordingStudioAI.register_provider` for Gemini (`:gemini`) and TypeSafe (`:typesafe`) when `gemini_api_key` and `openai_api_key` are blank. It no longer prepends `RecordingStudioAI.generate`, `decide`, or `perform_tool`.
 
 ### Upgrade notes
 
-- Hosts that called `hooks.extend_model` or `hooks.extend_controller` for this gem need another extension point. Those blocks are no longer applied. There is no migration.
+- Hosts that called `Engine.apply_model_extensions`, `Engine.apply_controller_extensions`, `hooks.extend_model`, or `hooks.extend_controller` for this gem need another extension point. There is no migration.
 - Dummy apps that copied the generate prepend should register a provider instead.
 
 ## [0.8.5] - 2026-10-30
@@ -272,12 +272,12 @@ Task context reaches the model with the goal. A replay rejects a changed task or
 
 ## [0.4.8] - 2026-09-23
 
-The dummy host generates with Gemini and decides with TypeSafe Jev. Its home page uses a sidebar. Gem screens stay on the shared default layout, and Admin opens on a staff hub.
+The dummy host generates with Gemini and decides with TypeSafe (`jev-latest`). Its home page uses a sidebar. Gem screens stay on the shared default layout, and Admin opens on a staff hub.
 
 ### Changed
 - Development and dummy Gemfiles pin Recording Studio AI `v0.4.0`.
-- Dummy profiles list Gemini for generation and TypeSafe `jev-latest` for decisions. `generate` never selects Jev, and `decide` never selects Gemini.
-- The dummy reads `GEMINI_API_KEY` or `google_ai_studio` for Gemini, and `TYPESAFE_API_KEY` or `typesafe` for Jev. The test suite ignores those variables and keeps the offline librarian stub.
+- Dummy profiles list Gemini for generation and TypeSafe `jev-latest` for decisions. `generate` never selects TypeSafe, and `decide` never selects Gemini.
+- The dummy reads `GEMINI_API_KEY` or `google_ai_studio` for Gemini, and `TYPESAFE_API_KEY` or `typesafe` for TypeSafe. The test suite ignores those variables and keeps the offline librarian stub.
 - The dummy no longer sets the Recording Studio AI admin config keys removed in AI 0.3.2.
 - Dummy home uses a Flatpack sidebar. Admin, the workspace switcher, and access screens keep `recording_studio/default_layout`.
 - Dummy Admin mounts with `root_section: :root`. The staff hub is `/admin`. Agents is `/admin/sections/agents`.

@@ -160,13 +160,44 @@ class EngineTest < Minitest::Test
     assert_equal 22, RecordingStudioAgents.configuration.lease_seconds
   end
 
+  def test_after_initialize_warns_when_extension_hooks_are_registered
+    RecordingStudioAgents.configuration.hooks.extend_model(:page) { nil }
+    RecordingStudioAgents.configuration.hooks.extend_controller("pages") { nil }
+
+    messages = []
+    logger = Object.new
+    logger.define_singleton_method(:warn) { |message| messages << message }
+
+    Rails.stub(:logger, logger) do
+      RecordingStudioAgents::Engine.warn_unused_extension_hooks!
+    end
+
+    assert_equal 1, messages.length
+    assert_includes messages.first, "apply_model_extensions"
+    assert_includes messages.first, "extend_model blocks for page"
+    assert_includes messages.first, "extend_controller blocks for pages"
+  end
+
+  def test_after_initialize_stays_quiet_without_extension_hooks
+    messages = []
+    logger = Object.new
+    logger.define_singleton_method(:warn) { |message| messages << message }
+
+    Rails.stub(:logger, logger) do
+      RecordingStudioAgents::Engine.warn_unused_extension_hooks!
+    end
+
+    assert_empty messages
+  end
+
   def test_engine_does_not_class_eval_host_models_or_controllers
     source = File.read(File.expand_path("../lib/recording_studio_agents/engine.rb", __dir__))
     names = RecordingStudioAgents::Engine.initializers.map(&:name)
 
     refute_includes source, "class_eval"
-    refute_includes source, "apply_model_extensions"
-    refute_includes source, "apply_controller_extensions"
+    refute_includes source, "def apply_model_extensions"
+    refute_includes source, "def apply_controller_extensions"
+    assert_includes source, "warn_unused_extension_hooks!"
     refute_includes names, "recording_studio_agents.apply_model_extensions"
     refute_includes names, "recording_studio_agents.apply_controller_extensions"
     assert_includes names, "recording_studio_agents.before_initialize"

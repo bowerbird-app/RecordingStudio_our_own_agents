@@ -231,7 +231,10 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes switchable, "root_recordings_for"
     refute_includes switchable, "access_check = ->(**) { true }"
     assert_includes providers, "RecordingStudioAI.register_provider"
-    assert_includes ai, "DummyStudioProviders.install!"
+    application = File.read(File.expand_path("dummy/config/application.rb", __dir__))
+    assert_includes application, "DummyStudioProviders.install!"
+    assert_includes application, "recording_studio_web_search.apply_model_extensions"
+    refute_includes ai, "DummyStudioProviders.install!"
     assert_includes controller, "DummyOfflineTools.scripted"
     refute_includes controller, "prepend"
     refute_includes ai, "prepend"

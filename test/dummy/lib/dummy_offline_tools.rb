@@ -8,7 +8,6 @@ module DummyOfflineTools
   module_function
 
   def scripted
-    install!
     Thread.current[THREAD_KEY] = true
     yield
   ensure
@@ -27,6 +26,9 @@ module DummyOfflineTools
     return unless defined?(RecordingStudio::WebSearch::AiTool)
 
     definition = RecordingStudio::WebSearch::AiTool::DEFINITION
+    current = RecordingStudioAI.tools.fetch(definition.fetch(:key), version: definition.fetch(:version))
+    return if current&.executor_label.to_s.start_with?("DummyOffline(")
+
     original = definition.fetch(:executor)
     RecordingStudioAI.tools.register(
       **definition,

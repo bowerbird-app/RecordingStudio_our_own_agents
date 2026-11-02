@@ -2,9 +2,9 @@
 
 ## 0.8.6
 
-The engine no longer applies `hooks.extend_model` or `hooks.extend_controller` with `class_eval`. `before_initialize`, `on_configuration`, and `after_initialize` are unchanged. There is no migration.
+**Breaking.** `RecordingStudioAgents::Engine.apply_model_extensions` and `apply_controller_extensions` are removed. The engine no longer applies `hooks.extend_model` or `hooks.extend_controller`. If this gem's hooks still have those blocks at boot, it logs a warning with the registered model and controller names. `before_initialize`, `on_configuration`, and `after_initialize` are unchanged. There is no migration.
 
-The dummy registers an offline provider through `RecordingStudioAI.register_provider` when Gemini and OpenAI keys are blank. Do not prepend `RecordingStudioAI` to stub `generate`.
+The dummy registers `DummyStudioProvider` for Gemini (`:gemini`) and TypeSafe (`:typesafe`) through `RecordingStudioAI.register_provider` when `gemini_api_key` and `openai_api_key` are blank. Do not prepend `RecordingStudioAI` to stub `generate`.
 
 ## 0.8.4
 

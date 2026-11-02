@@ -16,6 +16,15 @@ class WebResearchTest < ActionDispatch::IntegrationTest
 
     tool = RecordingStudioAI.tools.fetch(:web_search, version: 1)
     assert_equal "Web search", tool.name
+    assert_match(/\ADummyOffline\(/, tool.executor_label)
+
+    result = DummyOfflineTools.scripted { tool.executor.call({ query: "studio" }, nil) }
+    assert_equal "Searched the web.", result["summary"]
+
+    DummyOfflineTools.install!
+    again = RecordingStudioAI.tools.fetch(:web_search, version: 1)
+    assert_equal tool.executor_label, again.executor_label
+    refute_match(/DummyOffline\(DummyOffline/, again.executor_label)
 
     skill = RecordingStudioAgents.skills.fetch(:web_research, version: 1)
     assert_equal "Web research", skill.name
