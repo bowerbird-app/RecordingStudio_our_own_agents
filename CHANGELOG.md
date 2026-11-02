@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Admin `Period` owns the 27-day `last_4_weeks` window (`LAST_4_WEEKS_LOOKBACK_DAYS`). This gem no longer prepends `RecordingStudioAdmin::Period`. Widget comparisons still use `LastFourWeeks`, which is the same 27 days.
+- `RecordingStudioAgents::Admin::LastFourWeeksPeriod` is removed. Admin `Period` owns `last_4_weeks` (`LAST_4_WEEKS_LOOKBACK_DAYS`). This gem no longer prepends `RecordingStudioAdmin::Period`. Widget comparisons read that Admin constant.
 
 ### Upgrade notes
 

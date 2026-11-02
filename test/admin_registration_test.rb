@@ -119,8 +119,13 @@ class AdminRegistrationTest < Minitest::Test
     assert_equal :last_4_weeks, usage_filter.options[:default]
   end
 
-  def test_last_four_weeks_lookback_matches_flatpack
-    assert_equal 27, RecordingStudioAgents::Admin::LastFourWeeks::LOOKBACK_DAYS
+  def test_last_four_weeks_lookback_matches_admin_period
+    lookback = RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
+
+    assert_equal lookback, RecordingStudioAgents::Admin::LastFourWeeks.lookback_days
+    refute_includes File.read(
+      File.expand_path("../lib/recording_studio_agents/admin/last_four_weeks_period.rb", __dir__)
+    ), "LastFourWeeksPeriod"
   end
 
   def test_hub_links_name_operational_screens
