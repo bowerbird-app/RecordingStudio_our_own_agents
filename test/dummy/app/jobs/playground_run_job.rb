@@ -42,7 +42,7 @@ class PlaygroundRunJob < ApplicationJob
     if generative_provider_configured?
       runner.call
     else
-      DummyGenerateStub.with_hook(PlaygroundDurableStub.new) { runner.call }
+      DummyOfflineTools.scripted { runner.call }
     end
   end
 

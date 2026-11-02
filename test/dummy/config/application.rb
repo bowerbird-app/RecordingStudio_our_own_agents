@@ -28,6 +28,15 @@ module Dummy
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # Web Search re-registers web_search from HostBoot on each prepare. This
+    # block is registered after that initializer so the offline wrap runs once
+    # and stays in place.
+    initializer "dummy.offline_providers", after: "recording_studio_web_search.apply_model_extensions" do
+      config.to_prepare do
+        DummyStudioProviders.install!
+      end
+    end
+
     initializer "dummy.ignore_admin_screen_definitions", before: :set_autoload_paths do |app|
       Rails.autoloaders.each do |loader|
         loader.ignore(app.root.join("app/admin"))

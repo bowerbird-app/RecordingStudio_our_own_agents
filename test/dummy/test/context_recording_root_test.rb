@@ -74,7 +74,7 @@ class ContextRecordingRootTest < ActiveSupport::TestCase
       purpose: "agent_page_librarian",
       text: "Found it."
     )
-    DummyGenerateStub.with_hook(lambda { |**|
+    RecordingStudioAI.stub(:generate, lambda { |**|
       on_call&.call
       response
     }) do

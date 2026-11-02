@@ -160,176 +160,51 @@ class EngineTest < Minitest::Test
     assert_equal 22, RecordingStudioAgents.configuration.lease_seconds
   end
 
-  def test_apply_extension_initializers_register_active_support_on_load_callbacks
-    to_prepare_blocks = []
-    config_stub = Object.new
-    config_stub.define_singleton_method(:to_prepare) do |&block|
-      to_prepare_blocks << block
+  def test_after_initialize_warns_when_extension_hooks_are_registered
+    RecordingStudioAgents.configuration.hooks.extend_model(:page) { nil }
+    RecordingStudioAgents.configuration.hooks.extend_controller("pages") { nil }
+
+    messages = []
+    logger = Object.new
+    logger.define_singleton_method(:warn) { |message| messages << message }
+
+    Rails.stub(:logger, logger) do
+      RecordingStudioAgents::Engine.warn_unused_extension_hooks!
     end
 
-    RecordingStudioAgents::Engine.stub(:config, config_stub) do
-      find_initializer("recording_studio_agents.apply_model_extensions").block.call
-      find_initializer("recording_studio_agents.apply_controller_extensions").block.call
-    end
-
-    assert_equal 2, to_prepare_blocks.size
+    assert_equal 1, messages.length
+    assert_includes messages.first, "apply_model_extensions"
+    assert_includes messages.first, "extend_model blocks for page"
+    assert_includes messages.first, "extend_controller blocks for pages"
   end
 
-  def test_model_extension_initializer_skips_abstract_models
-    to_prepare_blocks = []
-    config_stub = Object.new
-    config_stub.define_singleton_method(:to_prepare) do |&block|
-      to_prepare_blocks << block
+  def test_after_initialize_stays_quiet_without_extension_hooks
+    messages = []
+    logger = Object.new
+    logger.define_singleton_method(:warn) { |message| messages << message }
+
+    Rails.stub(:logger, logger) do
+      RecordingStudioAgents::Engine.warn_unused_extension_hooks!
     end
 
-    abstract_model = Class.new do
-      def self.abstract_class?
-        true
-      end
-    end
-    concrete_model = Class.new do
-      def self.abstract_class?
-        false
-      end
-    end
-    applied = []
-    active_record_base = Class.new
-    active_record_base.define_singleton_method(:descendants) { [abstract_model, concrete_model] }
-
-    RecordingStudioAgents::Engine.stub(:config, config_stub) do
-      find_initializer("recording_studio_agents.apply_model_extensions").block.call
-    end
-
-    with_temporary_nested_constant(:ActiveRecord, :Base, active_record_base) do
-      RecordingStudioAgents::Engine.stub(:apply_model_extensions, ->(model) { applied << model }) do
-        to_prepare_blocks.first.call
-      end
-    end
-
-    assert_equal [concrete_model], applied
+    assert_empty messages
   end
 
-  def test_controller_extension_initializer_applies_all_controllers
-    to_prepare_blocks = []
-    config_stub = Object.new
-    config_stub.define_singleton_method(:to_prepare) do |&block|
-      to_prepare_blocks << block
-    end
+  def test_engine_does_not_class_eval_host_models_or_controllers
+    source = File.read(File.expand_path("../lib/recording_studio_agents/engine.rb", __dir__))
+    names = RecordingStudioAgents::Engine.initializers.map(&:name)
 
-    first_controller = Class.new
-    second_controller = Class.new
-    applied = []
-    action_controller_base = Class.new
-    action_controller_base.define_singleton_method(:descendants) { [first_controller, second_controller] }
-
-    RecordingStudioAgents::Engine.stub(:config, config_stub) do
-      find_initializer("recording_studio_agents.apply_controller_extensions").block.call
-    end
-
-    with_temporary_nested_constant(:ActionController, :Base, action_controller_base) do
-      RecordingStudioAgents::Engine.stub(:apply_controller_extensions, ->(controller) { applied << controller }) do
-        to_prepare_blocks.first.call
-      end
-    end
-
-    assert_equal [first_controller, second_controller], applied
-  end
-
-  def test_apply_model_extensions_adds_registered_methods_once
-    model_class = Class.new do
-      def self.name
-        "ExampleRecord"
-      end
-    end
-
-    RecordingStudioAgents.configuration.hooks.extend_model(:ExampleRecord) do
-      def template_extension_method
-        :applied
-      end
-    end
-
-    RecordingStudioAgents::Engine.apply_model_extensions(model_class)
-    RecordingStudioAgents::Engine.apply_model_extensions(model_class)
-
-    instance = model_class.new
-    assert_equal :applied, instance.template_extension_method
-  end
-
-  def test_apply_controller_extensions_matches_demodulized_name
-    controller_class = Class.new do
-      def self.name
-        "Admin::DashboardController"
-      end
-    end
-
-    RecordingStudioAgents.configuration.hooks.extend_controller(:DashboardController) do
-      def template_controller_extension
-        :applied
-      end
-    end
-
-    RecordingStudioAgents::Engine.apply_controller_extensions(controller_class)
-
-    instance = controller_class.new
-    assert_equal :applied, instance.template_controller_extension
-  end
-
-  def test_apply_extensions_flattens_compacts_and_tracks_identity
-    target = Class.new
-    extension = proc do
-      def generated_method
-        :generated
-      end
-    end
-
-    RecordingStudioAgents::Engine.send(:apply_extensions, target, [nil, [extension, extension]])
-
-    assert_equal :generated, target.new.generated_method
-    assert_equal true, target.instance_variable_get(:@recording_studio_agents_applied_extensions).compare_by_identity?
-  end
-
-  def test_apply_extensions_returns_without_target
-    assert_nil RecordingStudioAgents::Engine.send(:apply_extensions, nil, [])
-  end
-
-  def test_extension_keys_for_includes_demodulized_name
-    namespaced = Class.new do
-      def self.name
-        "Admin::ReportsController"
-      end
-    end
-
-    expected_keys = [:"Admin::ReportsController"]
-    expected_keys << :ReportsController
-
-    assert_equal expected_keys, RecordingStudioAgents::Engine.send(:extension_keys_for, namespaced)
-  end
-
-  def test_extension_keys_for_removes_duplicate_names
-    plain = Class.new do
-      def self.name
-        "ReportsController"
-      end
-    end
-
-    assert_equal [:ReportsController], RecordingStudioAgents::Engine.send(:extension_keys_for, plain)
+    refute_includes source, "class_eval"
+    refute_includes source, "def apply_model_extensions"
+    refute_includes source, "def apply_controller_extensions"
+    assert_includes source, "warn_unused_extension_hooks!"
+    refute_includes names, "recording_studio_agents.apply_model_extensions"
+    refute_includes names, "recording_studio_agents.apply_controller_extensions"
+    assert_includes names, "recording_studio_agents.before_initialize"
+    assert_includes names, "recording_studio_agents.load_config"
   end
 
   private
-
-  def with_temporary_nested_constant(parent_name, child_name, value)
-    parent_defined = Object.const_defined?(parent_name, false)
-    parent = parent_defined ? Object.const_get(parent_name) : Object.const_set(parent_name, Module.new)
-    child_defined = parent.const_defined?(child_name, false)
-    previous_child = parent.const_get(child_name) if child_defined
-
-    parent.const_set(child_name, value)
-    yield
-  ensure
-    parent.send(:remove_const, child_name) if parent.const_defined?(child_name, false)
-    parent.const_set(child_name, previous_child) if child_defined
-    Object.send(:remove_const, parent_name) unless parent_defined
-  end
 
   def find_initializer(name)
     RecordingStudioAgents::Engine.initializers.find { |initializer| initializer.name == name }

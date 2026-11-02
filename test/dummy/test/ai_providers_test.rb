@@ -23,7 +23,7 @@ class AIProvidersTest < ActiveSupport::TestCase
     assert_nil configuration.openai_api_key
   end
 
-  test "profiles send generation to Gemini and decisions to Jev" do
+  test "profiles send generation to Gemini and decisions to TypeSafe" do
     configuration = RecordingStudioAI.configuration
 
     %i[low medium high].each do |profile|
@@ -46,20 +46,20 @@ class AIProvidersTest < ActiveSupport::TestCase
     end
   end
 
-  test "the librarian demo calls the live generator only when Gemini or OpenAI is configured" do
+  test "offline runs register the dummy studio provider instead of prepending generate" do
     with_provider_keys(gemini_api_key: nil, openai_api_key: nil) do
-      seen_hook = nil
-      AgentsGenerateStub.with_generate_stub { seen_hook = Thread.current[DummyGenerateStub::THREAD_KEY] }
-      assert_respond_to seen_hook, :call
+      DummyStudioProviders.install!
+      assert_instance_of DummyStudioProvider, RecordingStudioAI.configuration.providers.fetch(:gemini)
+      assert_instance_of DummyStudioProvider, RecordingStudioAI.configuration.providers.fetch(:typesafe)
     end
 
     with_provider_keys(gemini_api_key: "gemini-test", openai_api_key: nil) do
-      seen_hook = :unset
-      AgentsGenerateStub.with_generate_stub { seen_hook = Thread.current[DummyGenerateStub::THREAD_KEY] }
-      assert_nil seen_hook
+      DummyStudioProviders.install!
+      assert_instance_of RecordingStudioAI::Providers::Gemini, RecordingStudioAI.configuration.providers.fetch(:gemini)
+      assert_instance_of RecordingStudioAI::Providers::TypeSafe, RecordingStudioAI.configuration.providers.fetch(:typesafe)
     end
   ensure
-    Thread.current[DummyGenerateStub::THREAD_KEY] = nil
+    DummyStudioProviders.install!
   end
 
   test "decision runs are allowed by the history constraints" do

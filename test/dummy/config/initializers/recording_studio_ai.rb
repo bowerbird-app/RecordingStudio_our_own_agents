@@ -23,13 +23,13 @@ RecordingStudioAI.configure do |config|
   config.gemini_api_key = DummyAIProviderKeys.read(
     "GEMINI_API_KEY", "google_ai_studio", "GOOGLE_AI_STUDIO", offline: offline
   )
-  # TypeSafe supplies Jev for decisions. Cloud agents inject typesafe.
+  # TypeSafe supplies decisions. The profile model is jev-latest. Cloud agents inject typesafe.
   config.typesafe_api_key = DummyAIProviderKeys.read(
     "TYPESAFE_API_KEY", "typesafe", "TYPESAFE", offline: offline
   )
 
   config.default_profile = :medium
-  # Generation resolves to Gemini. Decisions resolve to Jev. Each operation
+  # Generation resolves to Gemini. Decisions resolve to TypeSafe. Each operation
   # keeps only the candidates that declare it.
   config.profiles = {
     low: [

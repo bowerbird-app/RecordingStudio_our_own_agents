@@ -52,8 +52,9 @@ class AgentsDemoTest < ActionDispatch::IntegrationTest
     assert_equal "succeeded", run.status
     assert run.output_digest.present?
     refute_includes run.attributes.keys, "output_text"
+    ai_run_ids = [ run.recording_studio_ai_run_id, *run.agent_steps.pluck(:recording_studio_ai_run_id) ]
     assert RecordingStudioAI::CustomToolInvocation.exists?(
-      run_id: run.recording_studio_ai_run_id,
+      run_id: ai_run_ids.compact,
       tool_key: "find_page",
       tool_name_snapshot: "Find page"
     )

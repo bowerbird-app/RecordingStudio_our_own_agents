@@ -1,5 +1,11 @@
 # Upgrading
 
+## 0.8.6
+
+**Breaking.** `RecordingStudioAgents::Engine.apply_model_extensions` and `apply_controller_extensions` are removed. The engine no longer applies `hooks.extend_model` or `hooks.extend_controller`. If this gem's hooks still have those blocks at boot, it logs a warning with the registered model and controller names. `before_initialize`, `on_configuration`, and `after_initialize` are unchanged. There is no migration.
+
+The dummy registers `DummyStudioProvider` for Gemini (`:gemini`) and TypeSafe (`:typesafe`) through `RecordingStudioAI.register_provider` when `gemini_api_key` and `openai_api_key` are blank. Do not prepend `RecordingStudioAI` to stub `generate`.
+
 ## 0.8.4
 
 The engine no longer draws `GET /recording_studio_agents`. `recording_studio_agents.root_path` is gone. Hosts that linked that path or health-checked the mount need another URL. There is no migration.
