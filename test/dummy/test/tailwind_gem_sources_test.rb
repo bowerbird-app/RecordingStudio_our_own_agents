@@ -35,14 +35,13 @@ class TailwindGemSourcesTest < ActiveSupport::TestCase
   test "compiled dummy tailwind includes default layout and admin table utilities" do
     css_path = Rails.root.join("app/assets/builds/tailwind.css")
     css = css_path.exist? ? File.read(css_path) : ""
-    unless css.include?("max-w-6xl") && css.include?("inset-y-0")
+    unless css.include?("overflow-x-auto") && css.include?("inset-y-0")
       Rake::Task["tailwindcss:build"].reenable
       Rake::Task["tailwindcss:build"].invoke
       css = File.read(css_path)
     end
 
-    assert_includes css, "min-h-screen"
-    assert_includes css, "max-w-6xl"
+    assert_includes css, "overflow-x-auto"
     assert_includes css, "inset-y-0"
   end
 end

@@ -1,5 +1,5 @@
 <%# Delete this override once Admin 2.5.2 and core 6.3 are pinned. %>
-<%= render FlatPack::TopNav::Component.new do |nav| %>
+<%= render FlatPack::TopNav::Component.new(padding: :none) do |nav| %>
   <% nav.left do %>
     <%= render FlatPack::Button::Component.new(
       icon: "menu",
@@ -10,8 +10,7 @@
       data: {
         "flat-pack--sidebar-layout-target": "mobileToggle",
         action: "click->flat-pack--sidebar-layout#toggleMobile"
-      },
-      class: "md:hidden"
+      }
     ) %>
   <% end %>
 

@@ -1,15 +1,14 @@
 <%# Delete this override once Admin 2.5.2 and core 6.3 are pinned. %>
-<%= render FlatPack::Card::Component.new(class: "w-full") do |card| %>
+<%= render FlatPack::Card::Component.new do |card| %>
   <% card.body do %>
-    <div class="space-y-6">
+    <%= render FlatPack::Stack::Component.new(gap: :lg) do %>
       <%= render FlatPack::PageTitle::Component.new(
         title: "Login",
-        variant: :h2,
-        class: "mb-0 pb-0"
+        variant: :h2
       ) %>
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-        <div class="space-y-4">
+        <%= render FlatPack::Stack::Component.new(gap: :md) do %>
         <%= render FlatPack::EmailInput::Component.new(
           name: "user[email]",
           label: "Email",
@@ -37,9 +36,9 @@
           size: :md,
           type: "submit"
         ) %>
-        </div>
+        <% end %>
       <% end %>
-    </div>
+    <% end %>
   <% end %>
 
   <% card.footer do %>

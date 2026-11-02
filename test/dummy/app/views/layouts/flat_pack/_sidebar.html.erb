@@ -7,14 +7,16 @@
   <% end %>
 
   <% sidebar.items do %>
-    <nav class="py-4 space-y-1" aria-label="Main">
-      <% MenuPage.all.each do |page| %>
-        <%= render FlatPack::Sidebar::Item::Component.new(
-          text: page.name,
-          href: page.path,
-          icon: page.icon,
-          active: page.active?(request)
-        ) %>
+    <nav aria-label="Main">
+      <%= render FlatPack::Stack::Component.new(gap: :sm) do %>
+        <% MenuPage.all.each do |page| %>
+          <%= render FlatPack::Sidebar::Item::Component.new(
+            text: page.name,
+            href: page.path,
+            icon: page.icon,
+            active: page.active?(request)
+          ) %>
+        <% end %>
       <% end %>
     </nav>
   <% end %>

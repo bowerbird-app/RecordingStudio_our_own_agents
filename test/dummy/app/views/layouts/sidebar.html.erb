@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full" data-theme="rounded">
+<html data-theme="rounded">
   <head>
     <title><%= content_for(:title) || "Agents" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,12 +19,14 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/variables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "flat_pack/rich_text", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "flat_pack/application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "host_chrome", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "admin_tables", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="h-full bg-[var(--surface-page-background-color)] text-[var(--surface-content-color)]">
+  <body>
     <%= render FlatPack::SidebarLayout::Component.new(
       side: :left,
       storage_key: "agents-sidebar"
@@ -34,29 +36,31 @@
       <% end %>
 
       <% layout.top_nav do %>
-        <%= render "layouts/flat_pack/top_nav" %>
+        <div class="fp-layout-content">
+          <%= render "layouts/flat_pack/top_nav" %>
+        </div>
       <% end %>
 
       <% layout.main do %>
-        <div class="p-6">
+        <div class="fp-layout-content">
+        <%= render FlatPack::Stack::Component.new(gap: :md) do %>
           <% if notice.present? %>
             <%= render FlatPack::Alert::Component.new(
               description: notice,
               style: :success,
-              dismissible: true,
-              class: "mb-4"
+              dismissible: true
             ) %>
           <% end %>
           <% if alert.present? %>
             <%= render FlatPack::Alert::Component.new(
               description: alert,
               style: :danger,
-              dismissible: true,
-              class: "mb-4"
+              dismissible: true
             ) %>
           <% end %>
 
           <%= yield %>
+        <% end %>
         </div>
       <% end %>
     <% end %>

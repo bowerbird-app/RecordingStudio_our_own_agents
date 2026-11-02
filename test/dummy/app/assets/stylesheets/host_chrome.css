@@ -1,0 +1,29 @@
+/*
+  Dummy shell. PageLayout owns the Admin column. SidebarLayout has no
+  prop for the menu button, so the desktop hide stays here until FlatPack
+  adds a toggle-visibility prop.
+
+  cascade_layers.css is linked first, so these layers stay in
+  theme, base, components, utilities order.
+*/
+
+@layer components {
+  :where(body) {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--surface-page-background-color);
+    color: var(--surface-content-color);
+  }
+}
+
+/* .inline-flex lives in the Tailwind utilities layer. :where() and a bare
+   attribute selector tie that class and lose. The element selector is the
+   extra specificity that hides the button until SidebarLayout grows a
+   toggle-visibility prop. */
+@layer utilities {
+  @media (min-width: 768px) {
+    button[data-flat-pack--sidebar-layout-target="mobileToggle"] {
+      display: none;
+    }
+  }
+}

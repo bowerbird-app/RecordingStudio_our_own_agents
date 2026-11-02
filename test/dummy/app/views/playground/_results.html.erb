@@ -11,7 +11,7 @@
           size: :sm
         ))
       ) do %>
-        <pre><%= step.exchange %></pre>
+        <%= render FlatPack::CodeBlock::Component.new(code: step.exchange.to_s, title: "Notes") %>
       <% end %>
     <% end %>
   <% end %>

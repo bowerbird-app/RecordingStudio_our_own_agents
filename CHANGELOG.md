@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.10] - 2026-11-02
+
+### Changed
+
+- The dummy sign-in page and the Admin layout override use FlatPack `PageLayout`. Home and the sidebar use `Stack` and `Cluster`. Playground agent switching is a Stimulus controller with profile and tools targets. Step notes render in `CodeBlock`.
+- `host_chrome.css` sets the page background inside `@layer components`. The sidebar menu button hides from 768px up inside `@layer utilities`, on `button` plus the SidebarLayout target. `:where()` and a bare attribute selector lose to Tailwind's later `.inline-flex`. `data-theme="rounded"` stays. SidebarLayout still has no toggle-visibility prop.
+- Home and the playground sit in FlatPack's `fp-layout-content` inset, the same inset as the top bar. Admin widget cards use `Stack` and `Cluster`. The dummy no longer restyles table ghost buttons. Admin's screen table still renders those row actions as `Button` `style: :ghost` (`recording_studio_admin/screens/_table.html.erb`). Matching them to secondary is an Admin change.
+- The three dummy layouts still link `cascade_layers.css` first, before `host_chrome.css`, so host layers do not reorder Tailwind.
+
+### Upgrade notes
+
+- No host action and no migration. Tailwind is still installed because FlatPack 0.1.331 controls still emit utility classes.
+
 ## [0.8.9] - 2026-11-02
 
 ### Changed
@@ -485,7 +498,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.10...HEAD
+[0.8.10]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...v0.8.10
 [0.8.9]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.8...v0.8.9
 [0.8.8]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.7...v0.8.8
 [0.8.7]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.6...v0.8.7
