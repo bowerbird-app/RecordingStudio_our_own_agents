@@ -1,4 +1,5 @@
-<%= render FlatPack::Card::Component.new(style: :default, class: "w-full") do |card| %>
+<%# Delete this override once Admin 2.5.2 and core 6.3 are pinned. %>
+<%= render FlatPack::Card::Component.new(class: "w-full") do |card| %>
   <% card.body do %>
     <div class="space-y-6">
       <%= render FlatPack::PageTitle::Component.new(
