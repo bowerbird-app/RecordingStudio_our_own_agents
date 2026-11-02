@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.8] - 2026-11-02
+
+### Changed
+
+- `Runtime`, `Persistence`, and `Admin::Queries` are split by concern. `Runtime#call` is unchanged. Runs still open through `Persistence::RunLedger` and `Persistence::Opening`. Admin screens still call `Admin::Queries`.
+
+### Upgrade notes
+
+- No host action and no migration. The engine `class_eval` hook injector was already removed in 0.8.6.
+
 ## [0.8.7] - 2026-11-02
 
 ### Changed
@@ -464,7 +474,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.7...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.8...HEAD
+[0.8.8]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.7...v0.8.8
 [0.8.7]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.6...v0.8.7
 [0.8.6]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.5...v0.8.6
 [0.8.5]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.4...v0.8.5
