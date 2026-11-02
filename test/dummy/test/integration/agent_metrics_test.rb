@@ -22,7 +22,7 @@ class AgentMetricsTest < ActiveSupport::TestCase
     @root = RecordingStudio.root_recording_for(@workspace)
     @admin_root = RecordingStudio.root_recording_for(AdminRoot.find_or_create_by!(name: "Admin"))
     grant!(@admin_root, @staff, :admin)
-    bootstrap_owner!(@root, @staff)
+    grant!(@root, @staff, :admin)
     seed_runs_and_evaluations!
     Current.actor = nil
   end
@@ -165,27 +165,36 @@ class AgentMetricsTest < ActiveSupport::TestCase
     result.data.to_h { |row| [(row[:date] || row["date"]).to_s, row[:value] || row["value"]] }
   end
 
-  def bootstrap_owner!(recording, actor)
-    result = RecordingStudioAccessible.bootstrap_owner_access!(
-      recording: recording,
-      actor: actor
-    )
-    raise result.error if result.failure?
-  end
-
   def grant!(recording, actor, role)
     return if RecordingStudioAccessible.authorized?(actor: actor, recording: recording, role: role)
 
+    if role.to_sym == :admin
+      bootstrap = RecordingStudioAccessible.bootstrap_owner_access!(recording: recording, actor: actor)
+      return if bootstrap.success?
+    end
+
+    manager = admin_manager_for(recording) || @staff
     original = RecordingStudioAccessible.configuration.access_management_authorizer
     RecordingStudioAccessible.configuration.access_management_authorizer = ->(**) { true }
     result = RecordingStudioAccessible.grant_access(
       recording: recording,
       actor: actor,
       role: role,
-      manager_actor: @staff
+      manager_actor: manager
     )
     raise result.error if result.failure?
   ensure
     RecordingStudioAccessible.configuration.access_management_authorizer = original
+  end
+
+  def admin_manager_for(recording)
+    RecordingStudioAccessible.access_recordings_for(recording).each do |access_recording|
+      access = access_recording.recordable
+      next unless access.respond_to?(:role) && access.role.to_s == "admin"
+      next unless access.respond_to?(:actor) && access.actor
+
+      return access.actor
+    end
+    nil
   end
 end

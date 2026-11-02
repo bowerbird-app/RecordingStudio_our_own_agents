@@ -7,10 +7,10 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     assert_equal [ "all_workspaces" ], RecordingStudioRootSwitchable.configuration.scopes.keys
     assert_equal "recording_studio/default_layout", RecordingStudioRootSwitchable.configuration.layout
     assert_includes ApplicationController.ancestors, RecordingStudio::RootSwitchable::ControllerSupport
-    refute_includes ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
+    refute RecordingStudio.const_defined?(:UsesDefaultLayout)
     assert_includes ApplicationController._helpers.ancestors, RecordingStudio::LayoutHelper
-    assert_includes RecordingStudioAdmin::ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
-    assert_includes RecordingStudioAccessible::ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
+    assert_equal "recording_studio/default_layout", RecordingStudioAdmin.configuration.layout
+    assert_equal "recording_studio/default_layout", RecordingStudioAccessible.configuration.layout
   end
 
   test "dummy app validates declarations" do

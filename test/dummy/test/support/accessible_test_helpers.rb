@@ -19,6 +19,7 @@ module AccessibleTestHelpers
       return if bootstrap_result.success?
     end
 
+    manager = admin_manager_for(recording) || actor
     previous = RecordingStudioAccessible.configuration.access_management_authorizer
     begin
       RecordingStudioAccessible.configuration.access_management_authorizer = ->(**) { true }
@@ -26,7 +27,7 @@ module AccessibleTestHelpers
         recording: recording,
         actor: actor,
         role: role,
-        manager_actor: actor
+        manager_actor: manager
       )
       raise result.error unless result.success?
     ensure
@@ -45,6 +46,17 @@ module AccessibleTestHelpers
   end
 
   private
+
+  def admin_manager_for(recording)
+    RecordingStudioAccessible.access_recordings_for(recording).each do |access_recording|
+      access = access_recording.recordable
+      next unless access.respond_to?(:role) && access.role.to_s == "admin"
+      next unless access.respond_to?(:actor) && access.actor
+
+      return access.actor
+    end
+    nil
+  end
 
   def role_covers?(current_role, required_role)
     return false if current_role.nil?

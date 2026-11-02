@@ -84,7 +84,7 @@ begin
   bootstrap_owner_access.call(admin_root_recording, user)
 
   [root_recording, accessible_root_recording, private_root_recording].each do |recording|
-    grant_workspace_access.call(recording, user)
+    bootstrap_owner_access.call(recording, user)
   end
 
   unless RecordingStudioAgents::AgentRun.exists?(idempotency_key: "seed:page_librarian")

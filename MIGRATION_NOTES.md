@@ -49,14 +49,15 @@ Success criteria now stay for the run. A later plan adds an open criterion and k
 
 - Ruby 3.3 or newer
 - Rails 8.1 or newer
-- Recording Studio `~> 4.2` (dummy and development tag `v4.6.0`)
-- Recording Studio AI `~> 0.3` (dummy and development tag `v0.11.0`)
-- Recording Studio Admin `~> 2.0` (dummy tag `v2.3.0`; requires Trashable `v0.10.0` with `require: false`)
-- Accessible `~> 0.11` (dummy tag `v0.18.0`; requires Trashable `v0.10.0` with `require: false`)
-- Root Switchable dummy tag `v0.9.0` (requires Cache dummy tag `v0.5.0`)
-- Web Search dummy tag `v0.5.0`
-- Metrics `>= 0.3.0`, `< 0.4` (dummy and development tag `v0.3.1`). MCP tool names are in the README metrics table. `agent_runs-over_time` takes `from`, `to`, and `interval`. The other agent metric tools do not.
-- FlatPack dummy tag `v0.1.207`
+- Recording Studio `>= 6.3.0`, `< 7` (dummy and development tag `v6.3.0`)
+- Recording Studio AI `~> 0.3` (dummy and development tag `v0.19.5`)
+- Recording Studio Admin `>= 2.8.1`, `< 3.0` (dummy tag `v2.8.1`; requires Trashable `v0.12.0` with `require: false`)
+- Accessible `~> 0.11` (dummy tag `v0.24.0`; requires Trashable `v0.12.0` with `require: false`)
+- Logs dummy and development tag `v0.7.1`
+- Root Switchable dummy tag `v0.11.3` (requires Cache dummy tag `v0.6.0`)
+- Web Search is untagged. The dummy pins commit `862354d7814e44d6b4f13b243c096a98d8e0602c` until tag `v0.6.0` exists.
+- Metrics `>= 0.3.0`, `< 1.0` (dummy and development tag `v0.7.0`). MCP tool names are in the README metrics table. `agent_runs-over_time` takes `from`, `to`, and `interval`. The other agent metric tools do not.
+- FlatPack dummy tag `v0.1.332`. `view_component` stays transitive.
 
 ## Verification
 

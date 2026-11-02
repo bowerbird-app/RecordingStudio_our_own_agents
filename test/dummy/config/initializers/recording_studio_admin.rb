@@ -6,6 +6,7 @@ RecordingStudioAdmin.configure do |config|
   config.current_actor_method = :current_user
   config.async_widgets.enabled = false
 
+  config.layout = "recording_studio/default_layout"
   config.access_recording_resolver = lambda do |_context|
     admin_root = AdminRoot.find_by(name: "Admin")
     next unless admin_root
@@ -43,20 +44,6 @@ module RecordingStudioAdminIgnoreProductRoot
 end
 
 Rails.application.config.to_prepare do
-  gem_controllers = []
-  if defined?(RecordingStudioAdmin::ApplicationController)
-    gem_controllers << RecordingStudioAdmin::ApplicationController
-  end
-  if defined?(RecordingStudioAccessible::ApplicationController)
-    gem_controllers << RecordingStudioAccessible::ApplicationController
-  end
-
-  gem_controllers.each do |controller|
-    next if controller.ancestors.include?(RecordingStudio::UsesDefaultLayout)
-
-    controller.include(RecordingStudio::UsesDefaultLayout)
-  end
-
   if defined?(RecordingStudioAdmin::ApplicationController) &&
      !RecordingStudioAdmin::ApplicationController.ancestors.include?(RecordingStudioAdminIgnoreProductRoot)
     RecordingStudioAdmin::ApplicationController.prepend(RecordingStudioAdminIgnoreProductRoot)
