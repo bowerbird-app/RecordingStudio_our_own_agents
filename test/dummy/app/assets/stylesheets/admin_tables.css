@@ -3,10 +3,17 @@
 
   FlatPack::Table still paints the scroll floor with a border utility and
   min-w-[40rem]. Those utilities live in the Tailwind utilities layer, which
-  beats @layer components and :where(). The two rules below sit in @layer
-  utilities so the table frame can use the card edge and a phone can peek
-  the next column. The token rules belong in FlatPack::Table.
+  beats @layer components and :where(). The frame rule sits in @layer utilities
+  so it can replace that border. The token rules belong in FlatPack::Table.
+
+  Rounded sets --card-border-width to 0. html[data-theme] wins that variable
+  so cards and this frame keep a 1px --surface-border-color line.
 */
+
+html[data-theme~="rounded"] {
+  --card-border-width: 1px;
+  --card-border-color: var(--surface-border-color);
+}
 
 @layer utilities {
   div:has(> table.fp-table) {
@@ -18,9 +25,17 @@
     box-shadow: var(--card-shadow);
   }
 
+  /* Last column is the Actions menu. The table is one button wider than the
+     scrollport, minus 1rem, so about 1rem of Actions stays in view. */
   @media (max-width: 767px) {
     table.fp-table.min-w-\[40rem\] {
-      min-width: 30rem;
+      width: calc(100% + 1.75rem);
+      min-width: calc(100% + 1.75rem);
+      table-layout: fixed;
+    }
+
+    table.fp-table.min-w-\[40rem\] > :is(thead, tbody) > tr > :last-child {
+      width: 2.75rem;
     }
   }
 }
