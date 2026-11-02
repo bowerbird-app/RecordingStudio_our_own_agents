@@ -4,7 +4,7 @@
 
 `api_authorize` for agent metrics is `RecordingStudioAgents::Admin::MetricsAccess`. It still allows a view on the admin root through Accessible. The Metrics module does not call Accessible itself. `RecordingStudioAgents::Api::Access` warns and forwards to `Admin::MetricsAccess` for this release.
 
-Turn on and turn off inherit `RecordingStudioAdmin::ApplicationController`. This gem no longer defines `current_root_recording`. There is no migration.
+Turn on and turn off inherit `RecordingStudioAdmin::ApplicationController`. This gem no longer defines `current_root_recording`. The redirect uses the `:admin` surface path, so a mount such as `/staff` stays on `/staff`. There is no migration.
 
 ## 0.8.6
 

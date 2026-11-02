@@ -205,9 +205,10 @@ class AdminRegistrationTest < Minitest::Test
 
     assert_includes source, "class AgentsController < RecordingStudioAdmin::ApplicationController"
     assert_includes source, "RecordingStudioAdmin::Engine.routes.url_helpers.screen_path("
-    assert_includes source, "script_name: RecordingStudioAdmin.configuration.default_mount_path"
+    assert_includes source, "RecordingStudioAdmin.configuration.surface_for(:admin).path"
     refute_includes source, "undef_method"
     refute_includes source, "admin_screen_path"
+    refute_includes source, "default_mount_path"
     refute_includes source, "DefinitionNotFound"
     refute_includes source, "def current_root_recording"
     refute_includes source, "< ::ApplicationController"

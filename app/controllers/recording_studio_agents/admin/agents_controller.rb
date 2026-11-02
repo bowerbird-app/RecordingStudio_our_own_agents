@@ -34,11 +34,12 @@ module RecordingStudioAgents
       # This controller inherits Admin's screen_path. That helper recalls
       # agent_key from the turn on / turn off request, and Admin's screen route
       # has no agent_key, so generation raises. The engine proxy does not recall
-      # the request. script_name is Admin's mount path.
+      # the request. script_name is the path recording_studio_admin_for stored
+      # on the :admin surface.
       def registered_agents_screen_path
         RecordingStudioAdmin::Engine.routes.url_helpers.screen_path(
           "registered_agents",
-          script_name: RecordingStudioAdmin.configuration.default_mount_path
+          script_name: RecordingStudioAdmin.configuration.surface_for(:admin).path
         )
       end
 
