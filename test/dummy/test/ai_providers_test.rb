@@ -47,17 +47,15 @@ class AIProvidersTest < ActiveSupport::TestCase
   end
 
   test "the librarian demo calls the live generator only when Gemini or OpenAI is configured" do
-    controller = AgentsController.new
-
     with_provider_keys(gemini_api_key: nil, openai_api_key: nil) do
       seen_hook = nil
-      controller.send(:with_generate_stub) { seen_hook = Thread.current[DummyGenerateStub::THREAD_KEY] }
+      AgentsGenerateStub.with_generate_stub { seen_hook = Thread.current[DummyGenerateStub::THREAD_KEY] }
       assert_respond_to seen_hook, :call
     end
 
     with_provider_keys(gemini_api_key: "gemini-test", openai_api_key: nil) do
       seen_hook = :unset
-      controller.send(:with_generate_stub) { seen_hook = Thread.current[DummyGenerateStub::THREAD_KEY] }
+      AgentsGenerateStub.with_generate_stub { seen_hook = Thread.current[DummyGenerateStub::THREAD_KEY] }
       assert_nil seen_hook
     end
   ensure

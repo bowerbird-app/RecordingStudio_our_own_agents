@@ -4,13 +4,13 @@ require "test_helper"
 
 class EngineTest < Minitest::Test
   def setup
-    @original_configuration = RecordingStudioAgents.instance_variable_get(:@configuration)
-    RecordingStudioAgents.instance_variable_set(:@configuration, RecordingStudioAgents::Configuration.new)
+    @original_configuration = RecordingStudioAgents.configuration
+    RecordingStudioAgents.configuration = RecordingStudioAgents::Configuration.new
   end
 
   def teardown
     RecordingStudioAgents.configuration.hooks.clear!
-    RecordingStudioAgents.instance_variable_set(:@configuration, @original_configuration)
+    RecordingStudioAgents.configuration = @original_configuration
   end
 
   def test_before_and_after_initialize_initializers_run_hooks
@@ -37,13 +37,15 @@ class EngineTest < Minitest::Test
 
     xcfg = Struct.new(:recording_studio_agents).new({ lease_seconds: 45 })
     app_config = Struct.new(:x).new(xcfg)
-    app = Struct.new(:config) do
-      def config_for(_name)
-        { lease_seconds: 12 }
-      end
-    end.new(app_config)
+    with_config_root do |paths|
+      app = Struct.new(:config, :paths) do
+        def config_for(_name)
+          { lease_seconds: 12 }
+        end
+      end.new(app_config, paths)
 
-    find_initializer("recording_studio_agents.load_config").block.call(app)
+      find_initializer("recording_studio_agents.load_config").block.call(app)
+    end
 
     assert hook_called
     assert_equal RecordingStudioAgents.configuration, hook_payload
@@ -60,18 +62,20 @@ class EngineTest < Minitest::Test
     xcfg = Struct.new(:recording_studio_agents).new(pair_config)
     app_config = Struct.new(:x).new(xcfg)
 
-    app = Struct.new(:config) do
-      def config_for(_name)
-        raise "missing file"
-      end
-    end.new(app_config)
+    with_config_root(write_yaml: false) do |paths|
+      app = Struct.new(:config, :paths) do
+        def config_for(_name)
+          raise "config_for should not run when the yaml file is missing"
+        end
+      end.new(app_config, paths)
 
-    find_initializer("recording_studio_agents.load_config").block.call(app)
+      find_initializer("recording_studio_agents.load_config").block.call(app)
+    end
 
     assert_equal 15, RecordingStudioAgents.configuration.lease_seconds
   end
 
-  def test_load_config_swallow_each_pair_errors
+  def test_load_config_does_not_hide_each_pair_errors
     bad_pair_config = Class.new do
       def each_pair
         raise "bad pair"
@@ -80,15 +84,51 @@ class EngineTest < Minitest::Test
 
     xcfg = Struct.new(:recording_studio_agents).new(bad_pair_config)
     app_config = Struct.new(:x).new(xcfg)
-    app = Struct.new(:config) do
-      def config_for(_name)
-        { lease_seconds: 80 }
+    error = with_config_root do |paths|
+      app = Struct.new(:config, :paths) do
+        def config_for(_name)
+          { lease_seconds: 80 }
+        end
+      end.new(app_config, paths)
+
+      assert_raises(RuntimeError) do
+        find_initializer("recording_studio_agents.load_config").block.call(app)
       end
-    end.new(app_config)
+    end
 
-    find_initializer("recording_studio_agents.load_config").block.call(app)
+    assert_equal "bad pair", error.message
+  end
 
-    assert_equal 80, RecordingStudioAgents.configuration.lease_seconds
+  def test_load_config_does_not_hide_no_method_error
+    with_config_root do |paths|
+      app = Struct.new(:config, :paths) do
+        def config_for(_name)
+          raise NoMethodError, "config boom"
+        end
+      end.new(Object.new, paths)
+
+      assert_raises(NoMethodError) do
+        find_initializer("recording_studio_agents.load_config").block.call(app)
+      end
+    end
+  end
+
+  def test_load_config_raises_yaml_syntax_errors
+    with_config_root do |paths|
+      File.write(File.join(paths["config"].existent.first, "recording_studio_agents.yml"), "lease_seconds: [\n")
+      app = Struct.new(:config, :paths) do
+        def config_for(name)
+          yaml = Pathname.new(paths["config"].existent.first).join("#{name}.yml")
+          ActiveSupport::ConfigurationFile.parse(yaml)
+        end
+      end.new(Object.new, paths)
+
+      error = assert_raises(RuntimeError) do
+        find_initializer("recording_studio_agents.load_config").block.call(app)
+      end
+
+      assert_includes error.message, "YAML syntax error"
+    end
   end
 
   def test_load_config_is_noop_without_config_sources
@@ -99,25 +139,23 @@ class EngineTest < Minitest::Test
     assert_equal 300, RecordingStudioAgents.configuration.lease_seconds
   end
 
-  def test_load_config_ignores_non_enumerable_yaml_and_merge_errors
-    yaml = Class.new do
-      def each
-        raise "bad yaml"
-      end
-    end.new
+  def test_load_config_ignores_non_enumerable_yaml
+    yaml = Object.new
 
     xcfg = Struct.new(:recording_studio_agents).new({ lease_seconds: 22 })
     app_config = Struct.new(:x).new(xcfg)
-    app = Struct.new(:config) do
-      attr_accessor :yaml
+    with_config_root do |paths|
+      app = Struct.new(:config, :paths) do
+        attr_accessor :yaml
 
-      def config_for(_name)
-        @yaml
-      end
-    end.new(app_config)
-    app.yaml = yaml
+        def config_for(_name)
+          @yaml
+        end
+      end.new(app_config, paths)
+      app.yaml = yaml
 
-    find_initializer("recording_studio_agents.load_config").block.call(app)
+      find_initializer("recording_studio_agents.load_config").block.call(app)
+    end
 
     assert_equal 22, RecordingStudioAgents.configuration.lease_seconds
   end
@@ -295,5 +333,13 @@ class EngineTest < Minitest::Test
 
   def find_initializer(name)
     RecordingStudioAgents::Engine.initializers.find { |initializer| initializer.name == name }
+  end
+
+  def with_config_root(write_yaml: true)
+    dir = Dir.mktmpdir
+    File.write(File.join(dir, "recording_studio_agents.yml"), "shared: {}\n") if write_yaml
+    yield({ "config" => Struct.new(:existent).new([dir]) })
+  ensure
+    FileUtils.rm_rf(dir) if dir
   end
 end

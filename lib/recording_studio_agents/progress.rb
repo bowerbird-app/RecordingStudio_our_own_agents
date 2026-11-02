@@ -58,7 +58,7 @@ module RecordingStudioAgents
 
     def durable_run?
       @run.respond_to?(:agent_steps) && @run.agent_steps.exists?
-    rescue StandardError
+    rescue *RecordingStudioAgents.lookup_errors
       false
     end
 
@@ -170,7 +170,7 @@ module RecordingStudioAgents
         return [] if run.nil? || !run.respond_to?(:custom_tool_invocations)
 
         ordered_invocations(run.custom_tool_invocations)
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         []
       end
 
@@ -190,7 +190,7 @@ module RecordingStudioAgents
         records = @run.run_activities
         records = records.order(:sequence) if records.respond_to?(:order)
         Array(records)
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         []
       end
 
@@ -210,7 +210,7 @@ module RecordingStudioAgents
 
       def lookup_ai_run
         lookup_ai_run_by_id || Ai.find_run(request_id: Ai.request_id_for(@run))
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         nil
       end
 
@@ -219,7 +219,7 @@ module RecordingStudioAgents
         return if id.blank? || !defined?(RecordingStudioAI::Run)
 
         RecordingStudioAI::Run.find_by(id: id)
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         nil
       end
     end

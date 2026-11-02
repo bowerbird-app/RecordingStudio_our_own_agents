@@ -395,7 +395,7 @@ module RecordingStudioAgents
         return false unless run.respond_to?(:agent_steps)
 
         run.agent_steps.exists?(status: "awaiting_confirmation")
-      rescue StandardError
+      rescue *RecordingStudioAgents.lookup_errors
         false
       end
 

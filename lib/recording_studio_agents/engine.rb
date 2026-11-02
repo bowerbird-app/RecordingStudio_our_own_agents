@@ -13,6 +13,18 @@ module RecordingStudioAgents
         apply_extensions(target, extensions_for(:controller, extension_keys_for(target)))
       end
 
+      def agents_config_yaml(app)
+        return unless app.respond_to?(:paths)
+
+        config_paths = app.paths["config"]
+        return unless config_paths.respond_to?(:existent)
+
+        root = Array(config_paths.existent).first
+        return if root.blank?
+
+        Pathname.new(root).join("recording_studio_agents.yml")
+      end
+
       private
 
       def extensions_for(kind, names)
@@ -56,31 +68,19 @@ module RecordingStudioAgents
     end
 
     initializer "recording_studio_agents.load_config" do |app|
-      if app.respond_to?(:config_for)
-        begin
-          yaml = begin
-            app.config_for(:recording_studio_agents)
-          rescue StandardError
-            nil
-          end
-          RecordingStudioAgents.configuration.merge!(yaml) if yaml.respond_to?(:each)
-        rescue StandardError
-          nil
-        end
+      if RecordingStudioAgents::Engine.agents_config_yaml(app)&.exist?
+        yaml = app.config_for(:recording_studio_agents)
+        RecordingStudioAgents.configuration.merge!(yaml) if yaml.respond_to?(:each)
       end
 
       if app.config.respond_to?(:x) && app.config.x.respond_to?(:recording_studio_agents)
         xcfg = app.config.x.recording_studio_agents
         if xcfg.respond_to?(:to_h)
           RecordingStudioAgents.configuration.merge!(xcfg.to_h)
-        else
-          begin
-            hash = {}
-            xcfg.each_pair { |k, v| hash[k] = v } if xcfg.respond_to?(:each_pair)
-            RecordingStudioAgents.configuration.merge!(hash) if hash&.any?
-          rescue StandardError
-            nil
-          end
+        elsif xcfg.respond_to?(:each_pair)
+          hash = {}
+          xcfg.each_pair { |k, v| hash[k] = v }
+          RecordingStudioAgents.configuration.merge!(hash) if hash.any?
         end
       end
 
