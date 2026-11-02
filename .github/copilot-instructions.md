@@ -4,7 +4,7 @@
 
 - This repository is the Recording Studio Agents Rails engine.
 - Preserve engine namespace isolation under `RecordingStudioAgents`.
-- Treat `docs/gem_template/` as architectural reference material from the original template. For current addon workflow, prefer the top-level README and the dummy app.
+- Product docs are the top-level README and UPGRADING.md. The dummy app is the host example.
 - Keep changes small and scoped.
 
 ## UI Conventions

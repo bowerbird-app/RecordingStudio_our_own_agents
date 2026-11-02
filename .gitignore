@@ -34,6 +34,8 @@ tmp/
 Thumbs.db
 
 # Rails
+coverage/
+test/dummy/coverage/
 test/dummy/log/
 test/dummy/tmp/
 test/dummy/storage/
