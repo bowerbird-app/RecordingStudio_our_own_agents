@@ -123,9 +123,14 @@ class AdminRegistrationTest < Minitest::Test
     lookback = RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
 
     assert_equal lookback, RecordingStudioAgents::Admin::LastFourWeeks.lookback_days
-    refute_includes File.read(
-      File.expand_path("../lib/recording_studio_agents/admin/last_four_weeks_period.rb", __dir__)
-    ), "LastFourWeeksPeriod"
+    refute RecordingStudioAgents::Admin::LastFourWeeks.const_defined?(:LOOKBACK_DAYS)
+    source = File.read(
+      File.expand_path("../lib/recording_studio_agents/admin/last_four_weeks.rb", __dir__)
+    )
+    refute_includes source, "LastFourWeeksPeriod"
+    assert_includes source, "def lookback_days"
+    changelog = File.read(File.expand_path("../CHANGELOG.md", __dir__))
+    assert_includes changelog, "`LastFourWeeks::LOOKBACK_DAYS` changed from a constant to a method"
   end
 
   def test_hub_links_name_operational_screens
