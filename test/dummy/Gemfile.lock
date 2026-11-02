@@ -106,7 +106,7 @@ GIT
 PATH
   remote: ../..
   specs:
-    recording_studio_agents (0.8.1)
+    recording_studio_agents (0.8.2)
       rails (~> 8.1.0)
       recording_studio (~> 4.2)
       recording_studio_accessible (~> 0.11)
@@ -686,7 +686,7 @@ CHECKSUMS
   recording_studio (4.6.0)
   recording_studio_accessible (0.18.0)
   recording_studio_admin (2.3.0)
-  recording_studio_agents (0.8.1)
+  recording_studio_agents (0.8.2)
   recording_studio_ai (0.11.0)
   recording_studio_cache (0.5.0)
   recording_studio_metrics (0.3.0)

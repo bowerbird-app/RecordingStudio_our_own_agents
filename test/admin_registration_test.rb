@@ -157,38 +157,6 @@ class AdminRegistrationTest < Minitest::Test
     assert_equal %w[Goal Created], titles
   end
 
-  def test_flatpack_button_url_maps_to_href
-    klass = Class.new do
-      attr_reader :href, :kwargs
-
-      def initialize(href: nil, **kwargs)
-        @href = href
-        @kwargs = kwargs
-      end
-    end
-    klass.prepend(RecordingStudioAgents::Admin::FlatpackButtonUrl)
-
-    from_url = klass.new(url: "/admin/screens/agent_runs", text: "Runs")
-    assert_equal "/admin/screens/agent_runs", from_url.href
-    assert_equal({ text: "Runs" }, from_url.kwargs)
-
-    prefers_href = klass.new(href: "/direct", url: "/ignored")
-    assert_equal "/direct", prefers_href.href
-  end
-
-  def test_flatpack_button_url_alignment_is_idempotent
-    skip unless defined?(::FlatPack::Button::Component)
-
-    RecordingStudioAgents::Admin.register!
-    RecordingStudioAgents::Admin.register!
-
-    count = FlatPack::Button::Component.ancestors.count do |mod|
-      mod == RecordingStudioAgents::Admin::FlatpackButtonUrl
-    end
-
-    assert_equal 1, count
-  end
-
   def test_runs_table_shows_agent_name_and_status_badges
     RecordingStudioAgents::Admin.register!
 

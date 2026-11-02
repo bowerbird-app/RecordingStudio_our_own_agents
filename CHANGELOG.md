@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-10-30
+
+### Removed
+
+- Stopgap FlatPack Button prepend that copied `url:` onto `href:`. Admin already passes `href:` into Button. Call Button with `href:` when this gem renders a link.
+- Hosts on Admin older than 2.0.6 still pass `url:` into Button. Those versions needed the removed shim. Admin 2.0.6 and later pass `href:`.
+
+### Upgrade notes
+
+- No host action and no migration. Do not copy a Button `url` prepend. Use `href:` on FlatPack Button.
+
 ## [0.8.1] - 2026-10-22
 
 ### Changed
@@ -378,18 +389,19 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.8.1...HEAD
-[0.8.1]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.8.0...v0.8.1
-[0.8.0]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.7.3...v0.8.0
-[0.7.0]: https://github.com/bowerbird-app/RecordingStudio_agents/compare/v0.6.2...v0.7.0
-[0.6.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.6.0
-[0.5.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.5.0
-[0.4.6]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.6
-[0.4.5]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.5
-[0.4.4]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.4
-[0.4.3]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.3
-[0.4.2]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.2
-[0.4.1]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.1
-[0.4.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.4.0
-[0.3.0]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.3.0
-[0.2.1]: https://github.com/bowerbird-app/RecordingStudio_agents/releases/tag/v0.2.1
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.1...v0.8.2
+[0.8.1]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.7.3...v0.8.0
+[0.7.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.6.2...v0.7.0
+[0.6.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.6.0
+[0.5.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.5.0
+[0.4.6]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.4.6
+[0.4.5]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.4.5
+[0.4.4]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.4.4
+[0.4.3]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.4.3
+[0.4.2]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.4.2
+[0.4.1]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.4.1
+[0.4.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.4.0
+[0.3.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.3.0
+[0.2.1]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/releases/tag/v0.2.1
