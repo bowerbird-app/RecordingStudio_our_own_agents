@@ -197,4 +197,14 @@ class AdminRegistrationTest < Minitest::Test
     assert resource.action_for(:turn_off).visible?(agent, context)
     refute resource.action_for(:turn_on).visible?(agent, context)
   end
+
+  def test_enablement_controller_uses_admin_application_controller
+    source = File.read(
+      File.expand_path("../app/controllers/recording_studio_agents/admin/agents_controller.rb", __dir__)
+    )
+
+    assert_includes source, "class AgentsController < RecordingStudioAdmin::ApplicationController"
+    refute_includes source, "def current_root_recording"
+    refute_includes source, "< ::ApplicationController"
+  end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "api/access"
+require_relative "admin/metrics_access"
 require "recording_studio_metrics"
 
 module RecordingStudioAgents
@@ -9,7 +9,7 @@ module RecordingStudioAgents
     EVALUATIONS = :agent_evaluations
     API = :operations
     EXPOSE = { api: [API] }.freeze
-    AUTHORIZE = ->(context) { RecordingStudioAgents::Api::Access.can_view?(context) }
+    AUTHORIZE = RecordingStudioAgents::Admin::MetricsAccess.authorize
 
     module_function
 
