@@ -101,12 +101,12 @@ GIT
 
 GIT
   remote: https://github.com/bowerbird-app/RecordingStudio_web_search.git
-  revision: 862354d7814e44d6b4f13b243c096a98d8e0602c
-  ref: 862354d7814e44d6b4f13b243c096a98d8e0602c
+  revision: 06d6589e25841784ec07a712595ebc0b7e5703ad
+  tag: v0.6.0
   specs:
     recording_studio_web_search (0.6.0)
       rails (~> 8.1.0)
-      recording_studio (>= 6.1.0)
+      recording_studio (~> 6.1)
 
 GIT
   remote: https://github.com/bowerbird-app/flatpack.git

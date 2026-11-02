@@ -68,10 +68,8 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_logs", tag: "v0.7.1"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.11.3"'
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_cache", tag: "v0.6.0"'
-    assert_includes gemfile, "Switch this ref to the v0.6.0 tag before review"
-    assert_includes gemfile, "RecordingStudio_web_search"
-    assert_includes gemfile, 'ref: "862354d7814e44d6b4f13b243c096a98d8e0602c"'
-    refute_includes gemfile, 'RecordingStudio_web_search", tag:'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_web_search", tag: "v0.6.0"'
+    refute_includes gemfile, "862354d7814e44d6b4f13b243c096a98d8e0602c"
     assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.7.0"'
     assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.7.0"'
     assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.332"'
