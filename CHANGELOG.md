@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Hosts that prepended Admin `current_root_recording` to return nil should set `config.current_root_recording_resolver` and delete the prepend.
 - Hosts that prepended `AdminScreens::RecordingStudioAIWidgets#runs_scope` should set `config.admin_runs_scope` and delete the prepend. The callable receives the Admin context and returns a `RecordingStudioAI::Run` relation.
-- Admin 2.8.1 has no setting that reloads a host section class kept outside Zeitwerk. The dummy still `remove_const`s `AdminScreens::RootSection` and loads `app/admin/root/section.rb` inside `to_prepare`, then calls `RecordingStudioAdmin.register_section`.
+- The dummy autoloads `AdminScreens::RootSection` from `app/admin` with Zeitwerk and calls `RecordingStudioAdmin.register_section`. `register_section` replaces a reloaded class of the same name. The `remove_const` reload is gone.
 
 ## [0.9.0] - 2026-11-03
 

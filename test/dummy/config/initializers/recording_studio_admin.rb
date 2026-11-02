@@ -22,12 +22,7 @@ RecordingStudioAdmin.configure do |config|
 end
 
 Rails.application.config.to_prepare do
-  # app/admin is outside Zeitwerk. Admin 2.8.1 has no setting that reloads a
-  # host section class, so this prepare still drops RootSection and loads the
-  # file. register_section is the public registration API.
-  if defined?(AdminScreens::RootSection)
-    AdminScreens.send(:remove_const, :RootSection)
-  end
-  load Rails.root.join("app/admin/root/section.rb")
+  # app/admin is a Zeitwerk root. register_section replaces a reloaded class
+  # when the class name matches.
   RecordingStudioAdmin.register_section(AdminScreens::RootSection)
 end

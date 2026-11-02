@@ -6,7 +6,7 @@ Staff screens that must ignore the switched product workspace set `RecordingStud
 
 Model-call lists that must include workspace runs set `RecordingStudioAI` `config.admin_runs_scope`. The callable receives the Admin context and returns a `RecordingStudioAI::Run` relation. Delete any prepend of `AdminScreens::RecordingStudioAIWidgets#runs_scope`.
 
-Admin 2.8.1 has no setting that reloads a host section class kept off the Zeitwerk path. A host that ignores `app/admin` still loads that file itself and calls `RecordingStudioAdmin.register_section`. There is no migration.
+Put host admin sections on the Zeitwerk path and call `RecordingStudioAdmin.register_section`. It replaces a reloaded class of the same name. There is no migration in this gem.
 
 ## 0.9.0
 

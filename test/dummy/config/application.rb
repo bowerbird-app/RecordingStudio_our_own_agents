@@ -37,12 +37,6 @@ module Dummy
       end
     end
 
-    initializer "dummy.ignore_admin_screen_definitions", before: :set_autoload_paths do |app|
-      Rails.autoloaders.each do |loader|
-        loader.ignore(app.root.join("app/admin"))
-      end
-    end
-
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

@@ -115,6 +115,8 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     section_keys = AdminRoot.recording_studio_admin_section_keys_for(admin_root, nil, nil)
     assert_equal [ "root", "agents", "recording_studio_ai", "web_search" ], section_keys
     assert_equal AdminScreens::RootSection, RecordingStudioAdmin.section_for("root")
+    section_path = Rails.root.join("app/admin/admin_screens/root_section.rb").to_s
+    assert_equal "AdminScreens::RootSection", Rails.autoloaders.main.cpath_expected_at(section_path)
   end
 
   private
