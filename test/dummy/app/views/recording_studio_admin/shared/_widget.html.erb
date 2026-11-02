@@ -127,16 +127,14 @@
               <% end %>
             <% end %>
           <% elsif widget.series.present? %>
-            <%= render FlatPack::Stack::Component.new(gap: :sm, class: "w-[104px] min-w-[104px] shrink-0") do %>
-              <%= render FlatPack::Chart::Component.new(
-                type: mini_chart_type,
-                series: mini_chart_series,
-                card: false,
-                height: 56,
-                class: "w-full",
-                options: mini_chart_render_options
-              ) %>
-            <% end %>
+            <%= render FlatPack::Chart::Component.new(
+              type: mini_chart_type,
+              series: mini_chart_series,
+              card: false,
+              height: 56,
+              class: "w-[104px] min-w-[104px] shrink-0",
+              options: mini_chart_render_options
+            ) %>
           <% end %>
         <% end %>
       <% else %>
@@ -196,10 +194,11 @@
               <% end %>
 
               <% if widget_href.present? %>
-                <%= render FlatPack::Stack::Component.new(gap: :sm, class: "shrink-0") do %>
-                  <%= render FlatPack::Tooltip::Component.new(text: t("recording_studio.admin.widgets.open", label: widget_link_label, default: "Open %{label}")) do %>
-                    <%= render FlatPack::Button::Component.new(text: t("recording_studio.admin.widgets.more", default: "More"), href: widget_href, style: :secondary, size: :sm) %>
-                  <% end %>
+                <%= render FlatPack::Tooltip::Component.new(
+                  text: t("recording_studio.admin.widgets.open", label: widget_link_label, default: "Open %{label}"),
+                  class: "shrink-0"
+                ) do %>
+                  <%= render FlatPack::Button::Component.new(text: t("recording_studio.admin.widgets.more", default: "More"), href: widget_href, style: :secondary, size: :sm) %>
                 <% end %>
               <% end %>
             <% end %>

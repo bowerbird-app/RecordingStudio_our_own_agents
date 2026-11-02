@@ -1,8 +1,10 @@
 /*
   Dummy shell. PageLayout owns the Admin column. SidebarLayout has no
   prop for the menu button, so the desktop hide stays here until FlatPack
-  adds a toggle-visibility prop. The ghost row-action rule stays unlayered
-  because FlatPack's ghost border is unlayered and would otherwise win.
+  adds a toggle-visibility prop.
+
+  cascade_layers.css is linked first, so these layers stay in
+  theme, base, components, utilities order.
 */
 
 @layer components {
@@ -14,22 +16,14 @@
   }
 }
 
-/* .inline-flex lives in the Tailwind utilities layer, which is linked
-   after this file. :where() and a bare attribute selector tie that
-   class and lose. The element selector is the extra specificity that
-   hides the button until SidebarLayout grows a toggle-visibility prop. */
+/* .inline-flex lives in the Tailwind utilities layer. :where() and a bare
+   attribute selector tie that class and lose. The element selector is the
+   extra specificity that hides the button until SidebarLayout grows a
+   toggle-visibility prop. */
 @layer utilities {
   @media (min-width: 768px) {
     button[data-flat-pack--sidebar-layout-target="mobileToggle"] {
       display: none;
     }
   }
-}
-
-table.fp-table .fp-button[data-fp-style="ghost"] {
-  --fp-button-border: var(--button-secondary-border-color);
-  --fp-button-background: var(--button-secondary-background-color);
-  --fp-button-hover-background: var(--button-secondary-hover-background-color);
-  border-color: var(--button-secondary-border-color);
-  background-color: var(--button-secondary-background-color);
 }

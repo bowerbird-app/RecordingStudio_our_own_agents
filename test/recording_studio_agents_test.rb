@@ -117,6 +117,10 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes host_chrome, 'button[data-flat-pack--sidebar-layout-target="mobileToggle"]'
     refute_includes host_chrome, ':where([data-flat-pack--sidebar-layout-target="mobileToggle"])'
     refute_includes host_chrome, "[data-recording-studio-default-layout] main"
+    refute_includes host_chrome, 'data-fp-style="ghost"'
+    refute_includes host_chrome, "--fp-button-"
+    assert_operator sidebar_layout.index("cascade_layers"), :<, sidebar_layout.index("host_chrome")
+    assert_operator default_layout.index("cascade_layers"), :<, default_layout.index("host_chrome")
     top_nav = File.read(File.expand_path("dummy/app/views/layouts/flat_pack/_top_nav.html.erb", __dir__))
     assert_includes top_nav, "padding: :none"
     assert_includes sidebar_layout, 'stylesheet_link_tag "flat_pack/variables"'

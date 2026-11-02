@@ -25,9 +25,13 @@
           <% end %>
 
           <% if widget.type == :chart %>
-            <%= render FlatPack::Stack::Component.new(gap: :sm, class: "h-14 w-[104px] min-w-[104px]") do %>
-              <%= render FlatPack::Skeleton::Component.new(variant: :rectangle, width: "104px", height: "3.5rem", shimmer: true) %>
-            <% end %>
+            <%= render FlatPack::Skeleton::Component.new(
+              variant: :rectangle,
+              width: "104px",
+              height: "3.5rem",
+              shimmer: true,
+              class: "h-14 w-[104px] min-w-[104px] shrink-0"
+            ) %>
           <% end %>
         <% end %>
       <% else %>
@@ -41,9 +45,12 @@
 
         <% case widget.type %>
         <% when :chart %>
-          <div class="mt-2 min-h-64 flex-1">
-            <%= render FlatPack::Skeleton::Component.new(variant: :rectangle, height: "16rem", shimmer: true) %>
-          </div>
+          <%= render FlatPack::Skeleton::Component.new(
+            variant: :rectangle,
+            height: "16rem",
+            shimmer: true,
+            class: "mt-2 min-h-64 flex-1"
+          ) %>
         <% when :list %>
           <%= render FlatPack::Stack::Component.new(gap: :sm, class: "pt-2") do %>
             <%= render FlatPack::Skeleton::Component.new(variant: :text, width: "83%", shimmer: true) %>
