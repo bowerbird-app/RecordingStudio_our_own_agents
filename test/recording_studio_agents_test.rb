@@ -105,6 +105,9 @@ class RecordingStudioAgentsTest < Minitest::Test
 
     assert_includes sidebar_layout, 'data-theme="rounded"'
     assert_includes sidebar_layout, "FlatPack::SidebarLayout::Component"
+    assert_includes sidebar_layout, "fp-layout-content"
+    top_nav = File.read(File.expand_path("dummy/app/views/layouts/flat_pack/_top_nav.html.erb", __dir__))
+    assert_includes top_nav, "padding: :none"
     assert_includes sidebar_layout, 'stylesheet_link_tag "flat_pack/variables"'
     assert_includes sidebar_layout, "javascript_importmap_tags"
     refute_includes sidebar_layout, "flat_pack_sidebar"

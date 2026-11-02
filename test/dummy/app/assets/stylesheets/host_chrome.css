@@ -24,3 +24,13 @@ body {
     display: none;
   }
 }
+
+/* FlatPack paints a ghost icon button with a transparent border. The
+   row action should keep the same circle as Back and Close. */
+table.fp-table .fp-button[data-fp-style="ghost"] {
+  --fp-button-border: var(--button-secondary-border-color);
+  --fp-button-background: var(--button-secondary-background-color);
+  --fp-button-hover-background: var(--button-secondary-hover-background-color);
+  border-color: var(--button-secondary-border-color);
+  background-color: var(--button-secondary-background-color);
+}

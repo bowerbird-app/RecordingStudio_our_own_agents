@@ -36,10 +36,13 @@
       <% end %>
 
       <% layout.top_nav do %>
-        <%= render "layouts/flat_pack/top_nav" %>
+        <div class="fp-layout-content">
+          <%= render "layouts/flat_pack/top_nav" %>
+        </div>
       <% end %>
 
       <% layout.main do %>
+        <div class="fp-layout-content">
         <%= render FlatPack::Stack::Component.new(gap: :md) do %>
           <% if notice.present? %>
             <%= render FlatPack::Alert::Component.new(
@@ -58,6 +61,7 @@
 
           <%= yield %>
         <% end %>
+        </div>
       <% end %>
     <% end %>
   </body>
