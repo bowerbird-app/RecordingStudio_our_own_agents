@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.8.5", ::RecordingStudioAgents::VERSION
+    assert_equal "0.8.6", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -222,21 +222,23 @@ class RecordingStudioAgentsTest < Minitest::Test
     refute File.exist?(File.expand_path("dummy/app/views/docs/install.html.erb", __dir__))
   end
 
-  def test_dummy_uses_accessible_roots_and_a_request_scoped_generate_hook
+  def test_dummy_uses_accessible_roots_and_a_registered_offline_provider
     switchable = File.read(File.expand_path("dummy/config/initializers/recording_studio_root_switchable.rb", __dir__))
     controller = File.read(File.expand_path("dummy/app/controllers/agents_controller.rb", __dir__))
-    stub = File.read(File.expand_path("dummy/config/initializers/dummy_generate_stub.rb", __dir__))
+    providers = File.read(File.expand_path("dummy/lib/dummy_studio_providers.rb", __dir__))
+    ai = File.read(File.expand_path("dummy/config/initializers/recording_studio_ai.rb", __dir__))
 
     assert_includes switchable, "root_recordings_for"
     refute_includes switchable, "access_check = ->(**) { true }"
-    helper = File.read(File.expand_path("dummy/lib/agents_generate_stub.rb", __dir__))
-    assert_includes helper, "DummyGenerateStub.with_hook"
-    assert_includes controller, "AgentsGenerateStub.with_generate_stub"
-    refute_includes controller, "def with_generate_stub"
-    refute_includes controller, "define_method(:generate)"
-    assert_includes stub, "Thread.current"
-    assert_includes File.read(File.expand_path("dummy/test/support_clerk_agent_test.rb", __dir__)),
-                    "DummyGenerateStub.with_hook"
+    assert_includes providers, "RecordingStudioAI.register_provider"
+    assert_includes ai, "DummyStudioProviders.install!"
+    assert_includes controller, "DummyOfflineTools.scripted"
+    refute_includes controller, "prepend"
+    refute_includes ai, "prepend"
+    refute File.exist?(File.expand_path("dummy/config/initializers/dummy_generate_stub.rb", __dir__))
+    refute_includes File.read(File.expand_path("../lib/recording_studio_agents/engine.rb", __dir__)), "class_eval"
+    refute_includes File.read(File.expand_path("dummy/test/support_clerk_agent_test.rb", __dir__)),
+                    "DummyGenerateStub"
   end
 
   def test_engine_does_not_ship_a_home_view

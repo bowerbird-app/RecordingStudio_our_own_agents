@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.6] - 2026-11-02
+
+### Removed
+
+- The engine no longer `class_eval`s host models or controllers from `hooks.extend_model` / `hooks.extend_controller`. Lifecycle hooks (`before_initialize`, `on_configuration`, `after_initialize`) stay.
+
+### Changed
+
+- The dummy offline demo registers `DummyStudioProvider` with `RecordingStudioAI.register_provider` for Gemini and Jev when no provider key is set. It no longer prepends `RecordingStudioAI.generate`, `decide`, or `perform_tool`.
+
+### Upgrade notes
+
+- Hosts that called `hooks.extend_model` or `hooks.extend_controller` for this gem need another extension point. Those blocks are no longer applied. There is no migration.
+- Dummy apps that copied the generate prepend should register a provider instead.
+
 ## [0.8.5] - 2026-10-30
 
 ### Changed
@@ -436,7 +451,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.5...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.6...HEAD
+[0.8.6]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.5...v0.8.6
 [0.8.5]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.4...v0.8.5
 [0.8.4]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.2...v0.8.3

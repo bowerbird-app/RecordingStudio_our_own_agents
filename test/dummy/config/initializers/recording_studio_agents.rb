@@ -25,6 +25,10 @@ RecordingStudioAI.tools.register(
   idempotent: true,
   executor_label: "Dummy::FindPage",
   executor: lambda do |arguments, context|
+    if DummyOfflineTools.scripted?
+      next DummyOfflineTools.scripted_result(:find_page)
+    end
+
     title = arguments.fetch("title")
     wanted = title.to_s.strip.downcase
     recording = RecordingStudio::Recording.where(
@@ -69,6 +73,10 @@ RecordingStudioAI.tools.register(
   idempotent: true,
   executor_label: "Dummy::ListPages",
   executor: lambda do |_arguments, context|
+    if DummyOfflineTools.scripted?
+      next DummyOfflineTools.scripted_result(:list_pages)
+    end
+
     recordings = RecordingStudio::Recording.where(
       root_recording_id: context.root_recording.id,
       recordable_type: "Page",

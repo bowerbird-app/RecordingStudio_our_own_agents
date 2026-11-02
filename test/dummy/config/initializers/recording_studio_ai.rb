@@ -52,3 +52,7 @@ RecordingStudioAI.configure do |config|
     definition.requires_confirmation ? :pending : :approved
   end
 end
+
+Rails.application.config.to_prepare do
+  DummyStudioProviders.install!
+end

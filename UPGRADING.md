@@ -1,5 +1,11 @@
 # Upgrading
 
+## 0.8.6
+
+The engine no longer applies `hooks.extend_model` or `hooks.extend_controller` with `class_eval`. `before_initialize`, `on_configuration`, and `after_initialize` are unchanged. There is no migration.
+
+The dummy registers an offline provider through `RecordingStudioAI.register_provider` when Gemini and OpenAI keys are blank. Do not prepend `RecordingStudioAI` to stub `generate`.
+
 ## 0.8.4
 
 The engine no longer draws `GET /recording_studio_agents`. `recording_studio_agents.root_path` is gone. Hosts that linked that path or health-checked the mount need another URL. There is no migration.

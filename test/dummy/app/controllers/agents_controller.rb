@@ -17,7 +17,7 @@ class AgentsController < ApplicationController
       context: { "page_recording_id" => page_recording&.id }
     )
 
-    result = AgentsGenerateStub.with_generate_stub do
+    result = DummyOfflineTools.scripted do
       RecordingStudioAgents.agent(:page_librarian, version: 1).run(
         task: task,
         root_recording: root,
