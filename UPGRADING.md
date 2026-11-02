@@ -2,7 +2,7 @@
 
 ## 0.8.9
 
-The dummy keeps `test/dummy/app/assets/stylesheets/admin_tables.css` for its own Admin screens. That file is not shipped. It lines the table frame up with the card edge. The rounded border-width rule is in `@layer theme` inside `:where()`, so FlatPack's rounded theme still wins. Below 768px about 1rem of the Actions column stays in view, and the scrollbar is inset by the card radius. `cascade_layers.css` is also dummy-only and must be the first stylesheet, before `yield :head`, so Tailwind utilities beat the base reset. There is no migration.
+The dummy keeps `test/dummy/app/assets/stylesheets/admin_tables.css` for its own Admin screens. That file is not shipped. It lines the table frame up with the card edge. The rounded border-width rule is in `@layer theme` inside `:where()`, so FlatPack's rounded theme still wins. Below 768px about 1rem of the Actions column stays in view, and the table frame clips its horizontal scrollbar to the card radius. `cascade_layers.css` is also dummy-only and must be the first stylesheet, before `yield :head`, so Tailwind utilities beat the base reset. There is no migration.
 
 ## 0.8.8
 

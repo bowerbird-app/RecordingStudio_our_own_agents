@@ -13,7 +13,8 @@ class AdminTableCssTest < ActiveSupport::TestCase
     assert_includes css, ":where(html[data-theme~=\"rounded\"], body[data-theme~=\"rounded\"])"
     assert_includes css, "--card-border-width: 1px"
     assert_includes css, "--card-border-color: var(--surface-border-color)"
-    assert_includes css, "margin-inline: var(--card-radius)"
+    assert_includes css, "clip-path: inset(0 round var(--card-radius))"
+    assert_includes css, "filter: drop-shadow(0 2px 6px rgb(0 0 0 / 0.08))"
     refute_match(/^html\[data-theme~="rounded"\]/m, css)
     assert_includes css, "width: max-content"
     assert_includes css, "min-width: calc(100% + 1rem)"
