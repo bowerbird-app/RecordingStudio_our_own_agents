@@ -1,5 +1,9 @@
 # Upgrading
 
+## 0.8.8
+
+`Runtime`, ledger persistence, and admin queries live in smaller files under the same constants. `Runtime#call`, `Persistence::RunLedger`, `Persistence::Opening`, and `Admin::Queries` behave as before. There is no migration.
+
 ## 0.8.7
 
 `api_authorize` for agent metrics is `RecordingStudioAgents::Admin::MetricsAccess`. It still allows a view on the admin root through Accessible. The Metrics module does not call Accessible itself. `RecordingStudioAgents::Api::Access` warns and forwards to `Admin::MetricsAccess` for this release.
