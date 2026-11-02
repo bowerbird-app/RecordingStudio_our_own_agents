@@ -23,7 +23,10 @@ class ConcernSplitTest < Minitest::Test
     offenders = ObjectSpace.each_object(Module).filter_map do |mod|
       next if real_class.bind_call(mod) == ActiveSupport::Deprecation::DeprecatedConstantProxy
       next if mod.equal?(queries)
-      next unless mod.ancestors.include?(queries)
+
+      included = mod.ancestors.include?(queries)
+      extended = mod.singleton_class.ancestors.include?(queries)
+      next unless included || extended
 
       mod.name || mod.inspect
     end
