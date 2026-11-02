@@ -12,11 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Site metric `api_authorize` still goes to `RecordingStudioMetrics.register`. The proc now comes from `RecordingStudioAgents::Admin::MetricsAccess`, which calls `RecordingStudioAccessible.authorized?` on the admin root. The Metrics module does not load Accessible.
-- Agent turn on / turn off inherits `RecordingStudioAdmin::ApplicationController`. The nil `current_root_recording` stub on that controller is gone. Admin owns the root lookup.
+- Agent turn on / turn off inherits `RecordingStudioAdmin::ApplicationController`. The nil `current_root_recording` stub on that controller is gone. Admin owns the root lookup. The redirect uses `recording_studio_admin_context.admin_screen_path`. A missing admin definition is a 404 from Admin's `rescue_from`.
+- `RecordingStudioAgents::Api::Access` is a deprecated alias of `RecordingStudioAgents::Admin::MetricsAccess` for this release.
 
 ### Upgrade notes
 
-- No host action and no migration. Metrics authorization is unchanged for staff who can view the admin root.
+- No migration. Metrics authorization is unchanged for staff who can view the admin root. Call `RecordingStudioAgents::Admin::MetricsAccess` in new code. `RecordingStudioAgents::Api::Access` still works and will be removed in the next release.
 - Hosts that overrode `RecordingStudioAgents::Admin::AgentsController` need to follow `RecordingStudioAdmin::ApplicationController`.
 
 ## [0.8.6] - 2026-11-02

@@ -258,6 +258,31 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
     RecordingStudioAgents::AgentEnablement.delete_all
   end
 
+  test "a missing admin definition on turn off is not found" do
+    user = User.find_or_create_by!(email: "admin-enablement-missing@example.com") do |record|
+      record.password = "Password123!"
+      record.password_confirmation = "Password123!"
+    end
+    admin_root = AdminRoot.find_or_create_by!(name: "Admin")
+    grant_accessible!(recording: RecordingStudio.root_recording_for(admin_root), actor: user)
+    sign_in user
+
+    controller = RecordingStudioAgents::Admin::AgentsController
+    controller.alias_method :load_agent_without_missing_definition!, :load_agent!
+    controller.define_method(:load_agent!) { raise RecordingStudioAdmin::DefinitionNotFound }
+
+    post "/recording_studio_agents/admin/agents/page_librarian/turn_off", params: { version: 1 }
+
+    assert_response :not_found
+  ensure
+    if controller&.private_method_defined?(:load_agent_without_missing_definition!) ||
+       controller&.method_defined?(:load_agent_without_missing_definition!)
+      controller.alias_method :load_agent!, :load_agent_without_missing_definition!
+      controller.send(:private, :load_agent!)
+      controller.remove_method :load_agent_without_missing_definition!
+    end
+  end
+
   test "turning an agent off requires admin access" do
     user = User.find_or_create_by!(email: "admin-enablement-forbidden@example.com") do |record|
       record.password = "Password123!"

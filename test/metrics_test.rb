@@ -37,6 +37,7 @@ class MetricsTest < Minitest::Test
     refute_includes metrics, "respond_to?"
     refute_includes metrics, "rescue"
 
+    assert_equal RecordingStudioAgents::Admin::MetricsAccess, RecordingStudioAgents::Api::Access
     assert_includes access, "def authorize"
     assert_includes access, "def can_view?"
     assert_includes access, "authorized_on_admin_root?(context, :view)"

@@ -43,6 +43,7 @@ require "recording_studio_agents/execution"
 require "recording_studio_agents/agent"
 require "recording_studio_agents/admin"
 require "recording_studio_agents/metrics"
+require "recording_studio_agents/api/access"
 require "recording_studio_agents/engine"
 RecordingStudioAgents::Metrics.install!
 
