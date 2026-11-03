@@ -96,15 +96,15 @@ class AdminRegistrationTest < Minitest::Test
     assert_equal :last_3_days, period.preset_key
   end
 
-  def test_last_4_weeks_alignment_is_idempotent
+  def test_register_does_not_prepend_admin_period
     RecordingStudioAgents::Admin.register!
     RecordingStudioAgents::Admin.register!
 
-    count = RecordingStudioAdmin::Period.singleton_class.ancestors.count do |mod|
-      mod == RecordingStudioAgents::Admin::LastFourWeeksPeriod
-    end
-
-    assert_equal 1, count
+    names = RecordingStudioAdmin::Period.singleton_class.ancestors.map(&:name)
+    refute_includes names, "RecordingStudioAgents::Admin::LastFourWeeksPeriod"
+    refute_includes names, "RecordingStudioAgents::Admin::LastFourWeeks"
+    refute RecordingStudioAgents::Admin.const_defined?(:LastFourWeeksPeriod, false)
+    assert_equal 27, RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
   end
 
   def test_runs_and_usage_screens_default_to_last_4_weeks
@@ -119,8 +119,16 @@ class AdminRegistrationTest < Minitest::Test
     assert_equal :last_4_weeks, usage_filter.options[:default]
   end
 
-  def test_last_four_weeks_lookback_matches_flatpack
-    assert_equal 27, RecordingStudioAgents::Admin::LastFourWeeks::LOOKBACK_DAYS
+  def test_last_four_weeks_lookback_matches_admin_period
+    lookback = RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
+
+    weeks = RecordingStudioAgents::Admin::LastFourWeeks
+
+    refute weeks.const_defined?(:LOOKBACK_DAYS, false)
+    assert_equal lookback, weeks.lookback_days
+
+    now = Time.zone.local(2026, 9, 8, 12, 0, 0)
+    assert_equal Date.new(2026, 9, 8) - lookback, weeks.current_range(now: now).begin.to_date
   end
 
   def test_hub_links_name_operational_screens

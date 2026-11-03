@@ -1,5 +1,13 @@
 # Upgrading
 
+## 0.10.0
+
+**Breaking.** `RecordingStudioAgents::Admin::LastFourWeeksPeriod` is removed. That constant was the module prepended onto `RecordingStudioAdmin::Period`, including `from_preset_key`. It is not an alias of `LastFourWeeks`. Use `RecordingStudioAdmin::Period` for presets.
+
+**Breaking.** `LastFourWeeks::LOOKBACK_DAYS` is removed. Call `LastFourWeeks.lookback_days`, which reads `RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS`.
+
+This gem no longer prepends `RecordingStudioAdmin::Period`. Runs and Usage by agent still default to Last 4 weeks. There is no migration in this gem.
+
 ## 0.9.1
 
 Staff screens that must ignore the switched product workspace set `RecordingStudioAdmin` `config.current_root_recording_resolver` to a callable that returns nil. Delete any prepend of `RecordingStudioAdmin::ApplicationController#current_root_recording`.

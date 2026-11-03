@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "admin/last_four_weeks_period"
+require_relative "admin/last_four_weeks"
 require_relative "admin/queries"
 require_relative "admin/section"
 require_relative "admin/agents_resource"
@@ -21,7 +21,6 @@ module RecordingStudioAgents
     def register!
       return unless defined?(::RecordingStudioAdmin)
 
-      align_last_four_weeks_period!
       RecordingStudioAdmin.register_section(Section)
       register_screens!
       register_resource!
@@ -33,16 +32,6 @@ module RecordingStudioAgents
 
       RecordingStudioAdmin.section_for("agents").present?
     end
-
-    def align_last_four_weeks_period!
-      return unless defined?(::RecordingStudioAdmin::Period)
-
-      singleton = ::RecordingStudioAdmin::Period.singleton_class
-      return if singleton.ancestors.include?(LastFourWeeksPeriod)
-
-      singleton.prepend(LastFourWeeksPeriod)
-    end
-    private_class_method :align_last_four_weeks_period!
 
     def register_screens!
       [
