@@ -73,6 +73,12 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
     refute_includes response.body, "lg:grid-cols-3"
     refute_includes response.body, "lg:grid-cols-4"
     assert_includes response.body, "--list-item-padding-x: 0"
+    assert_includes response.body, "--button-padding-x-sm: 0"
+    failed_at = response.body.index("Failed runs")
+    attempts_at = response.body.index("Attempts this period")
+    hungry_at = response.body.index("Hungry agents")
+    refute_includes response.body[failed_at...attempts_at], "Last 4 weeks"
+    assert_nil response.body.index("Last 4 weeks", hungry_at)
     assert_select "a[data-fp-style=ghost]", text: "View runs" do |links|
       assert_equal [ "/admin/screens/agent_runs" ], links.map { |link| link["href"] }
     end

@@ -70,6 +70,7 @@ module RecordingStudioAgents
         title "Hungry agents"
         info "Who used the most model-call tokens in the last 4 weeks."
         hide_change
+        hide_period
         metadata { { period_label: "Last 4 weeks" } }
         link_to { |context| context.admin_screen_path("registered_agents") }
         link_label "View agents"

@@ -1,7 +1,8 @@
 <%# Dummy chrome for Admin 2.8.1 shared/_widget.
     Compact and full cards use FlatPack Heading, Text, Stack, and Cluster.
     The footer ghost button uses the widget link label, or More when the widget has none.
-    List rows zero --list-item-padding-x so the row text lines up with the card title. %>
+    List rows zero --list-item-padding-x so the row text lines up with the card title.
+    The footer zeros --button-padding-x-sm so the ghost label shares that same x. %>
 <% presenter ||= recording_studio_widget_presenter(widget) %>
 <% compact_card = presenter.compact? %>
 <% widget_href = presenter.href %>
@@ -206,12 +207,13 @@
       <% end %>
     <% end %>
     <% if !compact_card && widget_href.present? %>
-      <% card.footer do %>
+      <% card.footer(style: "--button-padding-x-sm: 0") do %>
         <%= render FlatPack::Button::Component.new(
           text: widget.link_label.presence || t("recording_studio.admin.widgets.more", default: "More"),
           href: widget_href,
           style: :ghost,
-          size: :sm
+          size: :sm,
+          align: :start
         ) %>
       <% end %>
     <% end %>
