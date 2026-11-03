@@ -250,9 +250,6 @@ class RecordingStudioAgentsTest < Minitest::Test
     refute_includes ai, "DummyStudioProviders.install!"
     assert_includes controller, "DummyOfflineTools.scripted"
     refute_includes controller, "prepend"
-    refute_includes controller, "RecordingStudioAI::Run.create!"
-    refute_includes controller, "CustomToolInvocation.create!"
-    refute_includes controller, "RecordingStudioAI::Run."
     refute_includes ai, "prepend"
     refute File.exist?(File.expand_path("dummy/config/initializers/dummy_generate_stub.rb", __dir__))
     refute_includes File.read(File.expand_path("../lib/recording_studio_agents/engine.rb", __dir__)), "class_eval"

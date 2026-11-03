@@ -30,6 +30,23 @@ class AgentsDemoTest < ActionDispatch::IntegrationTest
     assert_select "body[data-recording-studio-default-layout='true']", count: 0
   end
 
+  test "home renders one list row per librarian step and inserts no model calls" do
+    ai_runs = RecordingStudioAI::Run.count
+    tool_rows = RecordingStudioAI::CustomToolInvocation.count
+    run = RecordingStudioAgents::AgentRun.where(
+      root_recording_id: @root.id,
+      agent_key: "page_librarian"
+    ).order(created_at: :desc).first
+    expected_rows = run ? RecordingStudioAgents::Progress.for(run).size : 0
+
+    get "/"
+
+    assert_response :success
+    assert_equal ai_runs, RecordingStudioAI::Run.count
+    assert_equal tool_rows, RecordingStudioAI::CustomToolInvocation.count
+    assert_select "ul.flat-pack-list > li", count: expected_rows
+  end
+
   test "demo run creates a task and a succeeded run without a live provider" do
     assert_difference -> { RecordingStudioAgents::AgentRun.count }, 1 do
       post "/agents/demo"
@@ -43,11 +60,12 @@ class AgentsDemoTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Checked this workspace"
     assert_includes response.body, "Find page"
     assert_includes response.body, "Done"
+    run = RecordingStudioAgents::AgentRun.order(:created_at).last
+    assert_select "ul.flat-pack-list > li", count: RecordingStudioAgents::Progress.for(run).size
     refute_includes response.body, "find_page"
     refute_includes response.body, "Retitle page"
     refute_includes response.body, "lookup_invoice"
 
-    run = RecordingStudioAgents::AgentRun.order(:created_at).last
     assert_equal "page_librarian", run.agent_key
     assert_equal "succeeded", run.status
     assert run.output_digest.present?
