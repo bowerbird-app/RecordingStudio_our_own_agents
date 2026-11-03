@@ -7,19 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.8.11] - 2026-11-02
+## [0.9.0] - 2026-11-03
+
+### Breaking
+
+- Hosts need Recording Studio `>= 6.3.0`, `< 7` and Admin `>= 2.8.1`, `< 3.0`.
+- `RecordingStudio::UsesDefaultLayout` is gone. Set `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
 
 ### Changed
 
 - Development and dummy apps pin Recording Studio `v6.3.0`, FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`, Root Switchable `v0.11.3`, and Cache `v0.6.0`.
 - The dummy pins Recording Studio Web Search `v0.6.0`.
 - The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. `view_component` stays transitive. Tailwind and the dummy Tailwind CI build stay.
-- Core 6 removed `RecordingStudio::UsesDefaultLayout`. The dummy sets `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
-- The dummy drops the Admin and Root Switchable view overrides that hid FlatPack keyword changes. Admin renders its own section template, at its default columns. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
+- The dummy sets `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
+- The dummy drops the Admin and Root Switchable view overrides that hid FlatPack keyword changes. Admin renders its own section template, at its default columns, with `FlatPack::Grid`. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
 - A 4-up layout needs an upstream Admin section cols setting (follow-up).
-- The dummy widget card moves More out of the header into the card footer as a FlatPack ghost button, with the same link and label. Titles clamp at two lines.
+- Compact widget cards use FlatPack `Heading`, `Text`, `Stack`, `Cluster`, and `AvatarGroup`. Full-card More is a ghost button in the card footer, with the same link and label.
 - The first admin on a workspace uses `bootstrap_owner_access!`. A later grant uses a manager who already holds admin.
-- The dummy installs the upstream migrations those gems ship for AI call logs, access requests, logs runs, and root-switch actor ids. This gem's own tables are unchanged.
+- This gem does not vendor upstream migrations, and the dummy does not copy them into `db/migrate` or `db/schema.rb`. On boot, in development and test, the dummy applies engine migrations newer than the loaded schema from the AI, Accessible, and Logs gems. This gem's own tables are unchanged.
 
 ### Upgrade notes
 
@@ -517,8 +522,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.11...HEAD
-[0.8.11]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.10...v0.8.11
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.10...v0.9.0
 [0.8.10]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...v0.8.10
 [0.8.9]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.8...v0.8.9
 [0.8.8]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.7...v0.8.8

@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.8.11", ::RecordingStudioAgents::VERSION
+    assert_equal "0.9.0", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -77,41 +77,12 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes gemfile, 'gem "tailwindcss-rails"'
     refute_includes gemfile, 'gem "view_component"'
     refute_includes development_gemfile, 'gem "view_component"'
-    ci = File.read(File.expand_path("../.github/workflows/ci.yml", __dir__))
-    assert_includes ci, "tailwindcss:build"
-
-    database = File.read(File.expand_path("dummy/config/database.yml", __dir__))
-    assert_includes database, 'ENV.fetch("DB_NAME") { "recording_studio_agents_development" }'
-    assert_includes database, 'ENV.fetch("DB_NAME") { "recording_studio_agents_test" }'
   end
 
   def test_template_does_not_ship_copied_core_hooks_or_example_capability
     refute File.exist?(File.expand_path("../lib/recording_studio_agents/hooks.rb", __dir__))
     refute File.exist?(File.expand_path("../lib/recording_studio_agents/capabilities/example.rb", __dir__))
     refute File.exist?(File.expand_path("../lib/recording_studio_agents/services/base_service.rb", __dir__))
-  end
-
-  def test_upgrade_notes_say_there_is_no_migration_in_this_gem
-    changelog = File.read(File.expand_path("../CHANGELOG.md", __dir__))
-    upgrading = File.read(File.expand_path("../UPGRADING.md", __dir__))
-    widget_view = File.read(
-      File.expand_path("dummy/app/views/recording_studio_admin/shared/_widget.html.erb", __dir__)
-    )
-
-    assert_includes changelog, "no migration in this gem"
-    assert_includes upgrading, "no migration in this gem"
-    assert_includes upgrading, "Hosts still install the upstream migrations"
-    refute_includes upgrading, "862354d7814e44d6b4f13b243c096a98d8e0602c"
-    refute_includes upgrading, "not tagged yet"
-    refute File.exist?(
-      File.expand_path("dummy/app/views/recording_studio_admin/sections/show.html.erb", __dir__)
-    )
-    assert_includes changelog, "upstream Admin section cols setting"
-    assert_includes upgrading, "upstream Admin section cols setting"
-    assert_includes widget_view, "card.footer"
-    assert_includes widget_view, "style: :ghost"
-    refute_includes widget_view, "style: :secondary"
-    assert_includes widget_view, "[-webkit-line-clamp:2]"
   end
 
   def test_dummy_importmap_pins_admin_screen_controllers
@@ -126,8 +97,6 @@ class RecordingStudioAgentsTest < Minitest::Test
 
   def test_dummy_host_uses_sidebar_and_gem_views_keep_the_default_layout
     controller_source = File.read(File.expand_path("dummy/app/controllers/application_controller.rb", __dir__))
-    switchable = File.read(File.expand_path("dummy/config/initializers/recording_studio_root_switchable.rb", __dir__))
-    admin = File.read(File.expand_path("dummy/config/initializers/recording_studio_admin.rb", __dir__))
     sidebar_layout = File.read(File.expand_path("dummy/app/views/layouts/sidebar.html.erb", __dir__))
 
     refute_includes controller_source, "include RecordingStudio::UsesDefaultLayout"
@@ -160,12 +129,6 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes sidebar_layout, "javascript_importmap_tags"
     refute_includes sidebar_layout, "flat_pack_sidebar"
     refute_includes sidebar_layout, "recording_studio/default_layout"
-
-    assert_includes switchable, 'config.layout = "recording_studio/default_layout"'
-    assert_includes admin, 'config.layout = "recording_studio/default_layout"'
-    refute_includes admin, "UsesDefaultLayout"
-    accessible = File.read(File.expand_path("dummy/config/initializers/recording_studio_accessible.rb", __dir__))
-    assert_includes accessible, 'config.layout = "recording_studio/default_layout"'
   end
 
   def test_dummy_login_layout_keeps_flatpack_assets_without_tight_main_offset

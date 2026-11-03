@@ -1,6 +1,6 @@
 # Upgrading
 
-## 0.8.11
+## 0.9.0
 
 Development and dummy apps pin Recording Studio `v6.3.0` and the core 6 addon set: FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`. The dummy also pins Root Switchable `v0.11.3`, Cache `v0.6.0`, and Web Search `v0.6.0`.
 
@@ -8,7 +8,7 @@ The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_
 
 `RecordingStudio::UsesDefaultLayout` is gone. Set `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
 
-There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. `grant_access` now refuses a role the manager does not already hold.
+There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable, then run `bin/rails db:migrate`. The dummy does not copy those migrations into `db/migrate` or `db/schema.rb`. In development and test it applies the engine migrations that are newer than the loaded schema. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. `grant_access` now refuses a role the manager does not already hold.
 
 A 4-up layout needs an upstream Admin section cols setting (follow-up). This gem uses Admin's own section template and its default columns. The dummy widget template puts More in the card footer as a FlatPack ghost button so the label cannot clip at that width.
 
