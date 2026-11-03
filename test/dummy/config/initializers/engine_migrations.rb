@@ -15,7 +15,11 @@ module DummyEngineMigrations
     return unless Rails.env.local?
 
     pool = ActiveRecord::Base.connection_pool
-    return unless pool.schema_migration.table_exists?
+    begin
+      return unless pool.schema_migration.table_exists?
+    rescue ActiveRecord::NoDatabaseError, ActiveRecord::ConnectionNotEstablished
+      return
+    end
 
     schema_version = pool.schema_migration.integer_versions.max.to_i
     return if schema_version.zero?

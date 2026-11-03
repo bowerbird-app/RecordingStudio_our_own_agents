@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development and dummy apps pin Recording Studio `v6.3.0`, FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`, Root Switchable `v0.11.3`, and Cache `v0.6.0`.
 - The dummy pins Recording Studio Web Search `v0.6.0`.
+- Development and dummy locks update nokogiri to 1.19.7 and rails-html-sanitizer to 1.7.2.
 - The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. `view_component` stays transitive. Tailwind and the dummy Tailwind CI build stay.
 - The dummy sets `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
 - The dummy drops the Admin and Root Switchable view overrides that hid FlatPack keyword changes. Admin renders its own section template, at its default columns, with `FlatPack::Grid`. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.

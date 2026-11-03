@@ -4,7 +4,7 @@
 
 Development and dummy apps pin Recording Studio `v6.3.0` and the core 6 addon set: FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`. The dummy also pins Root Switchable `v0.11.3`, Cache `v0.6.0`, and Web Search `v0.6.0`.
 
-The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. Do not pin `view_component` in this gem. Tailwind stays until Admin tables no longer need a host Tailwind build.
+The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. Do not pin `view_component` in this gem. Tailwind stays until Admin tables no longer need a host Tailwind build. Development and dummy locks use nokogiri 1.19.7 and rails-html-sanitizer 1.7.2.
 
 `RecordingStudio::UsesDefaultLayout` is gone. Set `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
 
