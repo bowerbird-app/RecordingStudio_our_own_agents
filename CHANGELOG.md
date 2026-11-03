@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.9.0] - 2026-11-03
+## 0.9.0 - 2026-11-03
 
 ### Breaking
 
@@ -21,8 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Development and dummy locks update nokogiri to 1.19.7 and rails-html-sanitizer to 1.7.2.
 - The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. `view_component` stays transitive. Tailwind and the dummy Tailwind CI build stay.
 - The dummy sets `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
-- The dummy drops the Admin and Root Switchable view overrides that hid FlatPack keyword changes. The host section template is Admin's, with `FlatPack::Grid` `cols: 2`. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
-- Admin's section grid is `cols: 3` (3-up from the `lg` breakpoint). The default page column stops at 56rem, so four cards do not fit and three leaves the fourth card alone. `cols: 2` is 2-up from `md`. FlatPack `cols: 4` becomes 4-up at `lg` (1024px), before four columns fit that column, so the dummy does not use it.
+- The dummy drops `recording_studio_admin/sections/show` and the Root Switchable view overrides. Admin's section template stays, so the section grid is Admin's `FlatPack::Grid` `cols: 3`. The widget partial `recording_studio_admin/shared/_widget` remains. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
 - Widget cards use FlatPack `Heading`, `Text`, `Stack`, `Cluster`, and `AvatarGroup`. The footer ghost button uses the widget link label. Failed runs says View runs. Hungry agents says View agents. Number cards still say More. List rows set `--list-item-padding-x` to 0 so the row text lines up with the card title. The footer sets `--button-padding-x-sm` to 0 and `align: :start` so that ghost label lines up with the title. Failed runs and Hungry agents both hide the period subtitle. The window stays in the Hungry agents info.
 - The first admin on a workspace uses `bootstrap_owner_access!`. A later grant uses a manager who already holds admin.
 - This gem does not vendor upstream migrations in its own `db/`. The dummy copies the AI, Accessible, and Logs migrations newer than `20261010000014` into `test/dummy/db/migrate` and records them in `test/dummy/db/schema.rb`. The dummy does not apply engine migrations at boot. Hosts install the upstream migrations and run `bin/rails db:migrate`. This gem's own tables are unchanged.
@@ -523,8 +522,7 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.9.0...HEAD
-[0.9.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.10...v0.9.0
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.10...HEAD
 [0.8.10]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...v0.8.10
 [0.8.9]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.8...v0.8.9
 [0.8.8]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.7...v0.8.8

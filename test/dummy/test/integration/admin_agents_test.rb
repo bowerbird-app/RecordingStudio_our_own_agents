@@ -67,13 +67,15 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Hungry agents"
     assert_equal "recording_studio/default_layout", RecordingStudioAdmin.configuration.layout
     assert_equal "recording_studio/default_layout", RecordingStudioAccessible.configuration.layout
-    assert_select "h3", text: "Attempts this period", count: 1
-    assert_select "h3", text: "Tokens this period", count: 1
-    assert_includes response.body, "md:grid-cols-2"
-    refute_includes response.body, "lg:grid-cols-3"
-    refute_includes response.body, "lg:grid-cols-4"
-    assert_includes response.body, "--list-item-padding-x: 0"
-    assert_includes response.body, "--button-padding-x-sm: 0"
+    assert_select "div.grid", count: 1 do |grids|
+      assert_select grids.first, "h3", text: "Failed runs", count: 1
+      assert_select grids.first, "h3", text: "Attempts this period", count: 1
+      assert_select grids.first, "h3", text: "Tokens this period", count: 1
+      assert_select grids.first, "h3", text: "Hungry agents", count: 1
+      assert_select grids.first, "a[data-fp-style=ghost]", text: "View runs"
+      assert_select grids.first, "a[data-fp-style=ghost]", text: "View agents"
+      assert_select grids.first, "a[data-fp-style=ghost]", text: "More", count: 2
+    end
     failed_at = response.body.index("Failed runs")
     attempts_at = response.body.index("Attempts this period")
     hungry_at = response.body.index("Hungry agents")
