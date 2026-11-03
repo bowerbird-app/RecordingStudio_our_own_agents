@@ -1,5 +1,17 @@
 # Upgrading
 
+## 0.9.0
+
+Development and dummy apps pin Recording Studio `v6.3.0` and the core 6 addon set: FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`. The dummy also pins Root Switchable `v0.11.3`, Cache `v0.6.0`, and Web Search `v0.6.0`.
+
+The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. Do not pin `view_component` in this gem. Tailwind stays until Admin tables no longer need a host Tailwind build. Development and dummy locks use nokogiri 1.19.7 and rails-html-sanitizer 1.7.2.
+
+`RecordingStudio::UsesDefaultLayout` is gone. Set `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
+
+There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable, then run `bin/rails db:migrate`. The dummy copies the AI, Accessible, and Logs migrations newer than `20261010000014` into `test/dummy/db/migrate` and `test/dummy/db/schema.rb` so a schema load can boot. It does not apply engine migrations at boot. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. Accessible 0.24 refuses `grant_access` for a role the manager does not already hold, so the seed starts with `bootstrap_owner_access!`.
+
+The dummy no longer copies Admin's section template. The section grid is Admin's `cols: 3`. The widget partial `recording_studio_admin/shared/_widget` remains. The footer ghost button uses the widget link label. Failed runs links to runs. Hungry agents links to agents. Number cards still say More. List rows set `--list-item-padding-x` to 0.
+
 ## 0.8.10
 
 The dummy sign-in shell and the Admin layout override are FlatPack `PageLayout`. Sidebar spacing is `Stack`. Home and the playground use `fp-layout-content`, so the column inset matches the top bar. The playground agent switch is the `playground-agent` Stimulus controller. Step notes use `CodeBlock`. Table row actions stay Admin's ghost button. `data-theme="rounded"` is unchanged. There is no migration.

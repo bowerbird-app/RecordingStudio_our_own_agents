@@ -1,4 +1,8 @@
-<%# Delete this override once Admin 2.5.2 and core 6.3 are pinned. %>
+<%# Dummy chrome for Admin 2.8.1 shared/_widget.
+    Compact and full cards use FlatPack Heading, Text, Stack, and Cluster.
+    The footer ghost button uses the widget link label, or More when the widget has none.
+    List rows zero --list-item-padding-x so the row text lines up with the card title.
+    The footer zeros --button-padding-x-sm so the ghost label shares that same x. %>
 <% presenter ||= recording_studio_widget_presenter(widget) %>
 <% compact_card = presenter.compact? %>
 <% widget_href = presenter.href %>
@@ -21,7 +25,7 @@
     hover: (compact_card ? :subtle : nil),
     clickable: compact_card_href.present? && widget.info.blank?,
     href: (widget.info.blank? ? compact_card_href : nil),
-    class: (compact_card ? "#{'relative ' if widget.info.present?}w-full min-h-28 max-h-28" : "w-full")
+    class: (compact_card ? "#{'relative ' if widget.info.present?}w-full min-h-28" : "w-full #{RecordingStudioAdmin::Widgets::Presenter::FULL_CARD_HEIGHT_CLASS}")
   ) do |card| %>
     <% card.body do %>
       <% if compact_card && compact_card_href.present? && widget.info.present? %>
@@ -98,107 +102,101 @@
                 <% end %>
               <% end %>
 
-            <% if (widget.show_change && widget.change.present?) || compact_period_label.present? %>
-              <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, class: "text-left") do %>
-                <% if widget.show_change && widget.change.present? %>
-                  <%= render FlatPack::Text::Component.new(text: widget.change.to_s, as: :span, size: :sm, weight: :semibold, class: change_text_class) %>
+              <% if (widget.show_change && widget.change.present?) || compact_period_label.present? %>
+                <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, class: "text-left") do %>
+                  <% if widget.show_change && widget.change.present? %>
+                    <%= render FlatPack::Text::Component.new(text: widget.change.to_s, as: :span, size: :sm, weight: :semibold, class: change_text_class) %>
+                  <% end %>
+                  <% if compact_period_label.present? %>
+                    <%= render FlatPack::Text::Component.new(text: compact_period_label, as: :span, size: :sm, weight: :semibold, style: :muted) %>
+                  <% end %>
                 <% end %>
-                <% if compact_period_label.present? %>
-                  <%= render FlatPack::Text::Component.new(text: compact_period_label, as: :span, size: :sm, weight: :semibold, style: :muted) %>
-                <% end %>
-              <% end %>
               <% end %>
             <% end %>
 
-          <% if widget.type == :list && presenter.compact_list_visual_stack? && presenter.compact_list_visual_items.any? %>
-            <% visual_items = presenter.compact_list_visual_items %>
-            <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, justify: :end, class: "w-[104px] min-w-[104px] shrink-0") do %>
-              <% if visual_items.any? { |item| item.is_a?(Hash) && item[:icon].present? } %>
-                <% visual_items.each do |item| %>
-                  <% if item.is_a?(Hash) && item[:icon].present? %>
-                    <%= render FlatPack::Shared::IconComponent.new(name: item[:icon].to_s, size: :sm) %>
-                  <% else %>
-                    <%= render FlatPack::Avatar::Component.new(name: presenter.list_item_avatar_name(item).to_s, size: :sm) %>
-                  <% end %>
-                <% end %>
-              <% else %>
-                <% avatar_items = visual_items.map { |item| { name: presenter.list_item_avatar_name(item).to_s } } %>
-                <%= render FlatPack::AvatarGroup::Component.new(items: avatar_items, size: :sm, max: avatar_items.length, show_overflow: false) %>
-              <% end %>
-            <% end %>
-          <% elsif widget.series.present? %>
-            <%= render FlatPack::Chart::Component.new(
-              type: mini_chart_type,
-              series: mini_chart_series,
-              card: false,
-              height: 56,
-              class: "w-[104px] min-w-[104px] shrink-0",
-              options: mini_chart_render_options
-            ) %>
-          <% end %>
-        <% end %>
-      <% else %>
-        <%= render FlatPack::Stack::Component.new(gap: :md) do %>
-          <% if header_subtitle.present? || unit_label.present? || widget.title.present? || widget.info.present? || (widget.show_metric && widget.value.present?) || (widget.show_change && widget.change.present?) || widget_href.present? || period_label.present? %>
-            <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start, justify: :between) do %>
-              <% if header_subtitle.present? || unit_label.present? || widget.title.present? || widget.info.present? || (widget.show_metric && widget.value.present?) || (widget.show_change && widget.change.present?) || period_label.present? %>
-                <%= render FlatPack::Stack::Component.new(gap: :sm) do %>
-                  <% if widget.info.present? %>
-                    <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start) do %>
-                      <% if widget.title.present? && widget.description.present? %>
-                        <%= render FlatPack::Tooltip::Component.new(text: widget.description) do %>
-                          <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
-                        <% end %>
-                      <% elsif widget.title.present? %>
-                        <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
-                      <% end %>
-                      <%= info_trigger %>
+            <% if widget.type == :list && presenter.compact_list_visual_stack? && presenter.compact_list_visual_items.any? %>
+              <% visual_items = presenter.compact_list_visual_items %>
+              <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, justify: :end, class: "w-[104px] min-w-[104px] shrink-0") do %>
+                <% if visual_items.any? { |item| item.is_a?(Hash) && item[:icon].present? } %>
+                  <% visual_items.each do |item| %>
+                    <% if item.is_a?(Hash) && item[:icon].present? %>
+                      <%= render FlatPack::Shared::IconComponent.new(name: item[:icon].to_s, size: :sm) %>
+                    <% else %>
+                      <%= render FlatPack::Avatar::Component.new(name: presenter.list_item_avatar_name(item).to_s, size: :sm) %>
                     <% end %>
-                  <% elsif widget.title.present? %>
-                    <% if widget.description.present? %>
+                  <% end %>
+                <% else %>
+                  <% avatar_items = visual_items.map { |item| { name: presenter.list_item_avatar_name(item).to_s } } %>
+                  <%= render FlatPack::AvatarGroup::Component.new(items: avatar_items, size: :sm, max: avatar_items.length, show_overflow: false) %>
+                <% end %>
+              <% end %>
+            <% elsif widget.series.present? %>
+              <%= render FlatPack::Chart::Component.new(
+                type: mini_chart_type,
+                series: mini_chart_series,
+                card: false,
+                height: 56,
+                class: "w-[104px] min-w-[104px] shrink-0",
+                options: mini_chart_render_options,
+                integer_ticks: presenter.mini_chart_integer_ticks?
+              ) %>
+            <% end %>
+          <% end %>
+      <% else %>
+        <%= render FlatPack::Stack::Component.new(
+          gap: :md,
+          class: "h-full min-h-0 overflow-hidden",
+          style: (widget.type == :list ? "--list-item-padding-x: 0" : nil)
+        ) do %>
+          <% if header_subtitle.present? || unit_label.present? || widget.title.present? || widget.info.present? || (widget.show_metric && widget.value.present?) || (widget.show_change && widget.change.present?) || period_label.present? %>
+            <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start, justify: :between) do %>
+              <%= render FlatPack::Stack::Component.new(gap: :sm) do %>
+                <% if widget.info.present? %>
+                  <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :start) do %>
+                    <% if widget.title.present? && widget.description.present? %>
                       <%= render FlatPack::Tooltip::Component.new(text: widget.description) do %>
                         <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
                       <% end %>
-                    <% else %>
+                    <% elsif widget.title.present? %>
                       <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
                     <% end %>
+                    <%= info_trigger %>
                   <% end %>
-                  <% if header_subtitle.present? && !(widget.show_metric && widget.value.present?) && !(widget.show_change && widget.change.present?) %>
-                    <%= render FlatPack::Text::Component.new(text: header_subtitle, size: :sm, style: :muted) %>
+                <% elsif widget.title.present? %>
+                  <% if widget.description.present? %>
+                    <%= render FlatPack::Tooltip::Component.new(text: widget.description) do %>
+                      <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
+                    <% end %>
+                  <% else %>
+                    <%= render FlatPack::Heading::Component.new(text: widget.title, level: :h3, size: :xl, weight: :semibold) %>
                   <% end %>
-                  <% if widget.show_metric && widget.value.present? %>
-                    <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, class: "flex-wrap leading-none") do %>
-                      <% metric_number = capture do %>
-                        <%= render FlatPack::Heading::Component.new(text: widget.value.to_s, level: :h3, size: :"5xl", weight: :bold) %>
-                      <% end %>
-                      <% if unit_label.present? %>
-                        <%= render FlatPack::Tooltip::Component.new(text: unit_label) do %>
-                          <%= metric_number %>
-                        <% end %>
-                      <% else %>
+                <% end %>
+                <% if header_subtitle.present? && !(widget.show_metric && widget.value.present?) && !(widget.show_change && widget.change.present?) %>
+                  <%= render FlatPack::Text::Component.new(text: header_subtitle, size: :sm, style: :muted) %>
+                <% end %>
+                <% if widget.show_metric && widget.value.present? %>
+                  <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center, class: "flex-wrap leading-none") do %>
+                    <% metric_number = capture do %>
+                      <%= render FlatPack::Heading::Component.new(text: widget.value.to_s, level: :h3, size: :"5xl", weight: :bold) %>
+                    <% end %>
+                    <% if unit_label.present? %>
+                      <%= render FlatPack::Tooltip::Component.new(text: unit_label) do %>
                         <%= metric_number %>
                       <% end %>
-                    <% end %>
-                  <% end %>
-                  <% if (widget.show_change && widget.change.present?) || period_label.present? %>
-                    <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center) do %>
-                      <% if widget.show_change && widget.change.present? %>
-                        <%= render FlatPack::Text::Component.new(text: widget.change.to_s, as: :span, size: :sm, weight: :semibold, class: change_text_class) %>
-                      <% end %>
-                      <% if period_label.present? %>
-                        <%= render FlatPack::Text::Component.new(text: period_label, as: :span, size: :sm, weight: :semibold, style: :muted) %>
-                      <% end %>
+                    <% else %>
+                      <%= metric_number %>
                     <% end %>
                   <% end %>
                 <% end %>
-              <% end %>
-
-              <% if widget_href.present? %>
-                <%= render FlatPack::Tooltip::Component.new(
-                  text: t("recording_studio.admin.widgets.open", label: widget_link_label, default: "Open %{label}"),
-                  class: "shrink-0"
-                ) do %>
-                  <%= render FlatPack::Button::Component.new(text: t("recording_studio.admin.widgets.more", default: "More"), href: widget_href, style: :secondary, size: :sm) %>
+                <% if (widget.show_change && widget.change.present?) || period_label.present? %>
+                  <%= render FlatPack::Cluster::Component.new(gap: :sm, align: :center) do %>
+                    <% if widget.show_change && widget.change.present? %>
+                      <%= render FlatPack::Text::Component.new(text: widget.change.to_s, as: :span, size: :sm, weight: :semibold, class: change_text_class) %>
+                    <% end %>
+                    <% if period_label.present? %>
+                      <%= render FlatPack::Text::Component.new(text: period_label, as: :span, size: :sm, weight: :semibold, style: :muted) %>
+                    <% end %>
+                  <% end %>
                 <% end %>
               <% end %>
             <% end %>
@@ -206,6 +204,17 @@
 
           <%= render partial: "recording_studio_admin/shared/widgets/#{widget.type}", locals: { widget: widget } %>
         <% end %>
+      <% end %>
+    <% end %>
+    <% if !compact_card && widget_href.present? %>
+      <% card.footer(style: "--button-padding-x-sm: 0") do %>
+        <%= render FlatPack::Button::Component.new(
+          text: widget.link_label.presence || t("recording_studio.admin.widgets.more", default: "More"),
+          href: widget_href,
+          style: :ghost,
+          size: :sm,
+          align: :start
+        ) %>
       <% end %>
     <% end %>
   <% end %>

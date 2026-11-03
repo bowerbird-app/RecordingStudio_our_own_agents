@@ -7,10 +7,10 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     assert_equal [ "all_workspaces" ], RecordingStudioRootSwitchable.configuration.scopes.keys
     assert_equal "recording_studio/default_layout", RecordingStudioRootSwitchable.configuration.layout
     assert_includes ApplicationController.ancestors, RecordingStudio::RootSwitchable::ControllerSupport
-    refute_includes ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
+    refute RecordingStudio.const_defined?(:UsesDefaultLayout)
     assert_includes ApplicationController._helpers.ancestors, RecordingStudio::LayoutHelper
-    assert_includes RecordingStudioAdmin::ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
-    assert_includes RecordingStudioAccessible::ApplicationController.ancestors, RecordingStudio::UsesDefaultLayout
+    assert_equal "recording_studio/default_layout", RecordingStudioAdmin.configuration.layout
+    assert_equal "recording_studio/default_layout", RecordingStudioAccessible.configuration.layout
   end
 
   test "dummy app validates declarations" do
@@ -29,6 +29,10 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     assert connection.table_exists?(:recording_studio_access_rules)
     assert connection.table_exists?(:recording_studio_agents_agent_runs)
     assert connection.table_exists?(:admin_roots)
+    assert connection.column_exists?(:recording_studio_ai_attempts, :root_recording_id)
+    assert connection.column_exists?(:recording_studio_ai_runs, :provider_session_id)
+    assert connection.table_exists?(:recording_studio_access_requests)
+    assert connection.column_exists?(:recording_studio_logs_aggregation_runs, :period_start)
     refute connection.column_exists?(:recording_studio_agents_tasks, :context_json)
     refute connection.table_exists?(:recording_studio_access_boundaries)
   end

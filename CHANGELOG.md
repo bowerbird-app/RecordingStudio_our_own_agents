@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.9.0 - 2026-11-03
+
+### Breaking
+
+- Hosts need Recording Studio `>= 6.3.0`, `< 7` and Admin `>= 2.8.1`, `< 3.0`.
+- `RecordingStudio::UsesDefaultLayout` is gone. Set `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
+
+### Changed
+
+- Development and dummy apps pin Recording Studio `v6.3.0`, FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`, Root Switchable `v0.11.3`, and Cache `v0.6.0`.
+- The dummy pins Recording Studio Web Search `v0.6.0`.
+- Development and dummy locks update nokogiri to 1.19.7 and rails-html-sanitizer to 1.7.2.
+- The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. `view_component` stays transitive. Tailwind and the dummy Tailwind CI build stay.
+- The dummy sets `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
+- The dummy drops `recording_studio_admin/sections/show` and the Root Switchable view overrides. Admin's section template stays, so the section grid is Admin's `FlatPack::Grid` `cols: 3`. The widget partial `recording_studio_admin/shared/_widget` remains. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
+- Widget cards use FlatPack `Heading`, `Text`, `Stack`, `Cluster`, and `AvatarGroup`. The footer ghost button uses the widget link label. Failed runs says View runs. Hungry agents says View agents. Number cards still say More. List rows set `--list-item-padding-x` to 0 so the row text lines up with the card title. The footer sets `--button-padding-x-sm` to 0 and `align: :start` so that ghost label lines up with the title. Failed runs and Hungry agents both hide the period subtitle. The window stays in the Hungry agents info.
+- The first admin on a workspace uses `bootstrap_owner_access!`. A later grant uses a manager who already holds admin.
+- This gem does not vendor upstream migrations in its own `db/`. The dummy copies the AI, Accessible, and Logs migrations newer than `20261010000014` into `test/dummy/db/migrate` and records them in `test/dummy/db/schema.rb`. The dummy does not apply engine migrations at boot. Hosts install the upstream migrations and run `bin/rails db:migrate`. This gem's own tables are unchanged.
+
+### Upgrade notes
+
+- Hosts need Recording Studio 6.3 and Admin 2.8.1 or newer, below 7 and 3.0. There is no migration in this gem. Hosts still install the upstream gems' migrations.
+- Drop any `include RecordingStudio::UsesDefaultLayout`. Set `config.layout` on Admin and Accessible instead.
+
 ## [0.8.10] - 2026-11-02
 
 ### Changed

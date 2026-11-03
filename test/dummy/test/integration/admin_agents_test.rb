@@ -65,6 +65,36 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "Attempts this period"
     assert_includes response.body, "Tokens this period"
     assert_includes response.body, "Hungry agents"
+    assert_equal "recording_studio/default_layout", RecordingStudioAdmin.configuration.layout
+    assert_equal "recording_studio/default_layout", RecordingStudioAccessible.configuration.layout
+    assert_select "div.grid", count: 1 do |grids|
+      assert_select grids.first, "h3", text: "Failed runs", count: 1
+      assert_select grids.first, "h3", text: "Attempts this period", count: 1
+      assert_select grids.first, "h3", text: "Tokens this period", count: 1
+      assert_select grids.first, "h3", text: "Hungry agents", count: 1
+      assert_select grids.first, "a[data-fp-style=ghost]", text: "View runs"
+      assert_select grids.first, "a[data-fp-style=ghost]", text: "View agents"
+      assert_select grids.first, "a[data-fp-style=ghost]", text: "More", count: 2
+    end
+    failed_at = response.body.index("Failed runs")
+    attempts_at = response.body.index("Attempts this period")
+    hungry_at = response.body.index("Hungry agents")
+    refute_includes response.body[failed_at...attempts_at], "Last 4 weeks"
+    assert_nil response.body.index("Last 4 weeks", hungry_at)
+    assert_select "a[data-fp-style=ghost]", text: "View runs" do |links|
+      assert_equal [ "/admin/screens/agent_runs" ], links.map { |link| link["href"] }
+    end
+    assert_select "a[data-fp-style=ghost]", text: "View agents" do |links|
+      assert_equal [ "/admin/screens/registered_agents" ], links.map { |link| link["href"] }
+    end
+    assert_select "a[data-fp-style=ghost]", text: "More" do |links|
+      hrefs = links.map { |link| link["href"] }
+      assert_equal [ "/admin/screens/agent_runs", "/admin/screens/agent_usage" ], hrefs
+      links.each do |link|
+        assert_equal "More", link.text.squish
+      end
+    end
+    assert_select "a[data-fp-style=secondary]", text: "More", count: 0
     assert_select "a", text: "Agents"
     assert_select "a", text: "Runs"
     assert_select "a", text: "Tasks"

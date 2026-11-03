@@ -119,7 +119,7 @@ recording_studio_admin_sections do
 end
 ```
 
-Site-wide run and evaluation metrics register with `recording_studio_metrics` (`>= 0.3.0`, `< 1.0`, development tag `v0.3.1`). The host exposes them once:
+Site-wide run and evaluation metrics register with `recording_studio_metrics` (`>= 0.3.0`, `< 1.0`, development tag `v0.7.0`). The host exposes them once:
 
 ```ruby
 RecordingStudioMetrics::Api.register!(api: :operations)
@@ -403,6 +403,6 @@ The dummy has a Playground page at `/playground`. The form sits on the left and 
 
 The dummy generates with Gemini and decides with TypeSafe (`jev-latest`, `RecordingStudioAI.decide`). Set `GEMINI_API_KEY` or `google_ai_studio` for generation, and `TYPESAFE_API_KEY` or `typesafe` for decisions. Without a generative key, the librarian demo uses an offline stub. Tests ignore those variables and do not call a live model provider.
 
-The dummy also installs Recording Studio Web Search `v0.5.0` and mounts it at `/addons/recording`. Brave reads `brave_search`. The playground lists a Web researcher agent with a Web research skill and the `web_search` tool, so a run can look past the workspace pages. The skill answers from the snippets. When a count only comes back as a link, the answer is that list plus the missing number. Staff can open the Web search section at `/admin/sections/web_search`. Tests leave `brave_search` unread. Without a generative key, the playground stub searches offline and does not call Brave.
+The dummy also installs Recording Studio Web Search from commit `862354d7814e44d6b4f13b243c096a98d8e0602c` (the untagged `v0.6.0` line) and mounts it at `/addons/recording`. Brave reads `brave_search`. The playground lists a Web researcher agent with a Web research skill and the `web_search` tool, so a run can look past the workspace pages. The skill answers from the snippets. When a count only comes back as a link, the answer is that list plus the missing number. Staff can open the Web search section at `/admin/sections/web_search`. Tests leave `brave_search` unread. Without a generative key, the playground stub searches offline and does not call Brave.
 
 Dummy Accessible is `v0.18.0`. Access roles are strings (`view`, `edit`, `admin`). Grants go through `bootstrap_owner_access!` and `grant_access`. The dummy copies Accessible's 0.8-0.14 migrations (`depends_on_recording_id`, access invitations, role integer to string, access constraints, access rules). Soft-trash filters use Trashable query helpers (`v0.10.0`, `require: false`) via `recording_studio_trashable_kept_sql`.

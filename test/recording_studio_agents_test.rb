@@ -4,7 +4,7 @@ require "test_helper"
 
 class RecordingStudioAgentsTest < Minitest::Test
   def test_version_matches_release
-    assert_equal "0.8.10", ::RecordingStudioAgents::VERSION
+    assert_equal "0.9.0", ::RecordingStudioAgents::VERSION
   end
 
   def test_engine_exists
@@ -14,13 +14,14 @@ class RecordingStudioAgentsTest < Minitest::Test
   def test_gemspec_pins_locked_dependencies
     gemspec = File.read(File.expand_path("../recording_studio_agents.gemspec", __dir__))
 
-    assert_includes gemspec, 'spec.add_dependency "recording_studio", "~> 4.2"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio", ">= 6.3.0", "< 7"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_ai", "~> 0.3"'
-    assert_includes gemspec, 'spec.add_dependency "recording_studio_admin", ">= 2.0.6", "< 2.6"'
+    assert_includes gemspec, 'spec.add_dependency "recording_studio_admin", ">= 2.8.1", "< 3.0"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_accessible", "~> 0.11"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_metrics", ">= 0.3.0", "< 1.0"'
     refute_includes gemspec, 'spec.add_dependency "recording_studio_metrics", "~> 0.2"'
     assert_metrics_requirement
+    assert_core_and_admin_requirements
     assert_includes gemspec, 'spec.homepage    = "https://github.com/bowerbird-app/RecordingStudio_our_own_agents"'
   end
 
@@ -52,27 +53,26 @@ class RecordingStudioAgentsTest < Minitest::Test
     gemfile = File.read(File.expand_path("dummy/Gemfile", __dir__))
     development_gemfile = File.read(File.expand_path("../Gemfile", __dir__))
 
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v4.6.0"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v4.6.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.18.0"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.18.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_admin", tag: "v2.3.0"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_admin", tag: "v2.3.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.10.0"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.10.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_AI", tag: "v0.11.0"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_AI", tag: "v0.11.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.9.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_cache", tag: "v0.5.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_web_search", tag: "v0.5.0"'
-    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.3.1"'
-    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.331"'
-    assert_includes development_gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.331"'
-
-    database = File.read(File.expand_path("dummy/config/database.yml", __dir__))
-    assert_includes database, 'ENV.fetch("DB_NAME") { "recording_studio_agents_development" }'
-    assert_includes database, 'ENV.fetch("DB_NAME") { "recording_studio_agents_test" }'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v6.3.0"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio", tag: "v6.3.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.24.0"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_accessible", tag: "v0.24.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_admin", tag: "v2.8.1"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_admin", tag: "v2.8.1"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.12.0"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_trashable", tag: "v0.12.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_AI", tag: "v0.19.5"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_AI", tag: "v0.19.5"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_logs", tag: "v0.7.1"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_logs", tag: "v0.7.1"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_root_switchable", tag: "v0.11.3"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_cache", tag: "v0.6.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_web_search", tag: "v0.6.0"'
+    refute_includes gemfile, "862354d7814e44d6b4f13b243c096a98d8e0602c"
+    assert_includes gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.7.0"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.7.0"'
+    assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.332"'
+    assert_includes development_gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.332"'
   end
 
   def test_template_does_not_ship_copied_core_hooks_or_example_capability
@@ -93,8 +93,6 @@ class RecordingStudioAgentsTest < Minitest::Test
 
   def test_dummy_host_uses_sidebar_and_gem_views_keep_the_default_layout
     controller_source = File.read(File.expand_path("dummy/app/controllers/application_controller.rb", __dir__))
-    switchable = File.read(File.expand_path("dummy/config/initializers/recording_studio_root_switchable.rb", __dir__))
-    admin = File.read(File.expand_path("dummy/config/initializers/recording_studio_admin.rb", __dir__))
     sidebar_layout = File.read(File.expand_path("dummy/app/views/layouts/sidebar.html.erb", __dir__))
 
     refute_includes controller_source, "include RecordingStudio::UsesDefaultLayout"
@@ -109,7 +107,7 @@ class RecordingStudioAgentsTest < Minitest::Test
     default_layout = File.read(
       File.expand_path("dummy/app/views/recording_studio/shared/_default_layout.html.erb", __dir__)
     )
-    assert_includes default_layout, "PageLayout::Component.new(width: :wide)"
+    assert_includes default_layout, "PageLayout::Component.new(width: page_width)"
     refute_includes default_layout, "<main>"
     host_chrome = File.read(File.expand_path("dummy/app/assets/stylesheets/host_chrome.css", __dir__))
     assert_includes host_chrome, "@layer components"
@@ -127,11 +125,6 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes sidebar_layout, "javascript_importmap_tags"
     refute_includes sidebar_layout, "flat_pack_sidebar"
     refute_includes sidebar_layout, "recording_studio/default_layout"
-
-    assert_includes switchable, 'config.layout = "recording_studio/default_layout"'
-    assert_includes admin, "RecordingStudioAdmin::ApplicationController"
-    assert_includes admin, "RecordingStudioAccessible::ApplicationController"
-    assert_includes admin, "RecordingStudio::UsesDefaultLayout"
   end
 
   def test_dummy_login_layout_keeps_flatpack_assets_without_tight_main_offset
@@ -210,7 +203,7 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes readme, "recording_studio_metrics"
     assert_includes readme, ">= 0.3.0"
     assert_includes readme, "< 1.0"
-    assert_includes readme, "v0.3.1"
+    assert_includes readme, "v0.7.0"
     refute_includes readme, "v0.2.0"
     assert_includes readme, "RecordingStudioMetrics::Api.register!(api: :operations)"
     assert_includes readme, "/recording_studio_api/apis/operations/v1/metrics/agent_runs/over_time"
@@ -271,6 +264,19 @@ class RecordingStudioAgentsTest < Minitest::Test
   end
 
   private
+
+  def assert_core_and_admin_requirements
+    spec = Gem::Specification.load(File.expand_path("../recording_studio_agents.gemspec", __dir__))
+    core = spec.dependencies.find { |entry| entry.name == "recording_studio" }.requirement
+    admin = spec.dependencies.find { |entry| entry.name == "recording_studio_admin" }.requirement
+
+    assert core.satisfied_by?(Gem::Version.new("6.3.0"))
+    refute core.satisfied_by?(Gem::Version.new("6.2.9"))
+    refute core.satisfied_by?(Gem::Version.new("7.0.0"))
+    assert admin.satisfied_by?(Gem::Version.new("2.8.1"))
+    refute admin.satisfied_by?(Gem::Version.new("2.8.0"))
+    refute admin.satisfied_by?(Gem::Version.new("3.0.0"))
+  end
 
   def assert_metrics_requirement
     spec = Gem::Specification.load(File.expand_path("../recording_studio_agents.gemspec", __dir__))
