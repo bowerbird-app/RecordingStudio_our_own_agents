@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.10.0] - 2026-11-03
 
+This release also includes 0.9.0 and 0.9.1 below (first tagged release since v0.8.10).
+
 ### Breaking
 
 - `RecordingStudioAgents::Admin::LastFourWeeksPeriod` is removed. The old constant was the module prepended onto `RecordingStudioAdmin::Period`, and it defined `from_preset_key`. An alias of `LastFourWeeks` did not keep that behavior. Use `RecordingStudioAdmin::Period` for presets.
