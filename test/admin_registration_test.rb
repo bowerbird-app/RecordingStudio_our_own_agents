@@ -102,9 +102,8 @@ class AdminRegistrationTest < Minitest::Test
 
     names = RecordingStudioAdmin::Period.singleton_class.ancestors.map(&:name)
     refute_includes names, "RecordingStudioAgents::Admin::LastFourWeeksPeriod"
+    refute_includes names, "RecordingStudioAgents::Admin::LastFourWeeks"
     assert_equal 27, RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
-    admin = File.read(File.expand_path("../lib/recording_studio_agents/admin.rb", __dir__))
-    refute_includes admin, "prepend"
   end
 
   def test_runs_and_usage_screens_default_to_last_4_weeks
@@ -122,15 +121,17 @@ class AdminRegistrationTest < Minitest::Test
   def test_last_four_weeks_lookback_matches_admin_period
     lookback = RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
 
-    assert_equal lookback, RecordingStudioAgents::Admin::LastFourWeeks.lookback_days
-    refute RecordingStudioAgents::Admin::LastFourWeeks.const_defined?(:LOOKBACK_DAYS)
-    source = File.read(
-      File.expand_path("../lib/recording_studio_agents/admin/last_four_weeks.rb", __dir__)
-    )
-    refute_includes source, "LastFourWeeksPeriod"
-    assert_includes source, "def lookback_days"
-    changelog = File.read(File.expand_path("../CHANGELOG.md", __dir__))
-    assert_includes changelog, "`LastFourWeeks::LOOKBACK_DAYS` changed from a constant to a method"
+    weeks = RecordingStudioAgents::Admin::LastFourWeeks
+    period = RecordingStudioAgents::Admin::LastFourWeeksPeriod
+
+    assert_equal lookback, weeks.lookback_days
+    assert_equal lookback, weeks::LOOKBACK_DAYS
+    assert_equal weeks, period
+    assert_equal lookback, period.lookback_days
+    assert_equal lookback, period::LOOKBACK_DAYS
+
+    now = Time.zone.local(2026, 9, 8, 12, 0, 0)
+    assert_equal Date.new(2026, 9, 8) - lookback, weeks.current_range(now: now).begin.to_date
   end
 
   def test_hub_links_name_operational_screens

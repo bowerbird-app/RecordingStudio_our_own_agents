@@ -2,7 +2,7 @@
 
 ## 0.9.2
 
-`RecordingStudioAgents::Admin::LastFourWeeksPeriod` is removed. Admin 2.8.1 `Period::LAST_4_WEEKS_LOOKBACK_DAYS` owns Last 4 weeks. This gem no longer prepends `RecordingStudioAdmin::Period`. `LastFourWeeks::LOOKBACK_DAYS` changed from a constant to a method, `lookback_days`. There is no migration in this gem.
+Admin 2.8.1 `Period::LAST_4_WEEKS_LOOKBACK_DAYS` owns Last 4 weeks. This gem no longer prepends `RecordingStudioAdmin::Period`. `LastFourWeeks::LOOKBACK_DAYS` and `lookback_days` both use that constant. `LastFourWeeksPeriod` is still `LastFourWeeks`. There is no migration in this gem.
 
 ## 0.9.1
 

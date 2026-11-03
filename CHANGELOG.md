@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `RecordingStudioAgents::Admin::LastFourWeeksPeriod` is removed. Admin `Period` owns `last_4_weeks` (`LAST_4_WEEKS_LOOKBACK_DAYS`). This gem no longer prepends `RecordingStudioAdmin::Period`. `LastFourWeeks::LOOKBACK_DAYS` changed from a constant to a method, `lookback_days`, which reads that Admin constant.
+- This gem no longer prepends `RecordingStudioAdmin::Period`. Admin owns `last_4_weeks` (`LAST_4_WEEKS_LOOKBACK_DAYS`). `LastFourWeeks::LOOKBACK_DAYS` and `LastFourWeeks.lookback_days` both read that constant. `LastFourWeeksPeriod` stays as an alias of `LastFourWeeks`.
 
 ### Upgrade notes
 
