@@ -8,9 +8,9 @@ The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_
 
 `RecordingStudio::UsesDefaultLayout` is gone. Set `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
 
-There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable, then run `bin/rails db:migrate`. The dummy does not copy those migrations into `db/migrate` or `db/schema.rb`. In development and test it applies the engine migrations that are newer than the loaded schema. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. `grant_access` now refuses a role the manager does not already hold.
+There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable, then run `bin/rails db:migrate`. The dummy does not copy those migrations into `db/migrate` or `db/schema.rb`, and it does not apply them at boot. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. Accessible 0.24 refuses `grant_access` for a role the manager does not already hold, so the seed starts with `bootstrap_owner_access!`.
 
-A 4-up layout needs an upstream Admin section cols setting (follow-up). This gem uses Admin's own section template and its default columns. The dummy widget template puts More in the card footer as a FlatPack ghost button so the label cannot clip at that width.
+The dummy section grid is FlatPack `cols: 2` (2-up from the `md` breakpoint). Admin still ships `cols: 3`. The default content column maxes at 56rem, and FlatPack `cols: 4` turns 4-up on at 1024px, before four columns fit that column. The footer ghost button uses the widget link label. Failed runs links to runs. Hungry agents links to agents. Number cards still say More. List rows set `--list-item-padding-x` to 0.
 
 ## 0.8.10
 

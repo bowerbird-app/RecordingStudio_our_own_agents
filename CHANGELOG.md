@@ -21,11 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Development and dummy locks update nokogiri to 1.19.7 and rails-html-sanitizer to 1.7.2.
 - The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_admin` `>= 2.8.1`, `< 3.0`. `view_component` stays transitive. Tailwind and the dummy Tailwind CI build stay.
 - The dummy sets `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
-- The dummy drops the Admin and Root Switchable view overrides that hid FlatPack keyword changes. Admin renders its own section template, at its default columns, with `FlatPack::Grid`. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
-- A 4-up layout needs an upstream Admin section cols setting (follow-up).
-- Compact widget cards use FlatPack `Heading`, `Text`, `Stack`, `Cluster`, and `AvatarGroup`. Full-card More is a ghost button in the card footer, with the same link and label.
+- The dummy drops the Admin and Root Switchable view overrides that hid FlatPack keyword changes. The host section template is Admin's, with `FlatPack::Grid` `cols: 2`. The host default layout follows core 6.3 and still links `cascade_layers`, `host_chrome`, and `admin_tables`.
+- Admin's section grid is `cols: 3` (3-up from the `lg` breakpoint). The default page column stops at 56rem, so four cards do not fit and three leaves the fourth card alone. `cols: 2` is 2-up from `md`. FlatPack `cols: 4` becomes 4-up at `lg` (1024px), before four columns fit that column, so the dummy does not use it.
+- Widget cards use FlatPack `Heading`, `Text`, `Stack`, `Cluster`, and `AvatarGroup`. The footer ghost button uses the widget link label. Failed runs says View runs. Hungry agents says View agents. Number cards still say More. List rows set `--list-item-padding-x` to 0 so the row text lines up with the card title.
 - The first admin on a workspace uses `bootstrap_owner_access!`. A later grant uses a manager who already holds admin.
-- This gem does not vendor upstream migrations, and the dummy does not copy them into `db/migrate` or `db/schema.rb`. On boot, in development and test, the dummy applies engine migrations newer than the loaded schema from the AI, Accessible, and Logs gems. This gem's own tables are unchanged.
+- This gem does not vendor upstream migrations, and the dummy does not copy them into `db/migrate` or `db/schema.rb`. The dummy does not apply engine migrations at boot and does not turn off `dump_schema_after_migration`. Hosts install the upstream migrations and run `bin/rails db:migrate`. This gem's own tables are unchanged.
 
 ### Upgrade notes
 

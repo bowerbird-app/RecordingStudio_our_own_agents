@@ -241,7 +241,11 @@ class AdminUsageTest < PersistenceTestCase
       assert_equal "Last 4 weeks", tokens.metadata[:period_label]
       assert_equal "page_librarian · 1.2k tokens", hungry.items.first[:text]
       assert_equal "Last 4 weeks", hungry.metadata[:period_label]
+      assert_equal "/admin/screens/registered_agents", hungry.link_to
+      assert_equal "View agents", hungry.link_label
       assert_equal "page_reviewer · failed", failed_widget.items.first[:text]
+      assert_equal "/admin/screens/agent_runs", failed_widget.link_to
+      assert_equal "View runs", failed_widget.link_label
 
       runs_query = RecordingStudioAgents::Admin::RunsScreen.query_value.call(context)
       assert_includes runs_query.map(&:id), linked.id

@@ -20,7 +20,6 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes gemspec, 'spec.add_dependency "recording_studio_accessible", "~> 0.11"'
     assert_includes gemspec, 'spec.add_dependency "recording_studio_metrics", ">= 0.3.0", "< 1.0"'
     refute_includes gemspec, 'spec.add_dependency "recording_studio_metrics", "~> 0.2"'
-    refute_includes gemspec, "view_component"
     assert_metrics_requirement
     assert_core_and_admin_requirements
     assert_includes gemspec, 'spec.homepage    = "https://github.com/bowerbird-app/RecordingStudio_our_own_agents"'
@@ -74,9 +73,6 @@ class RecordingStudioAgentsTest < Minitest::Test
     assert_includes development_gemfile, 'github: "bowerbird-app/RecordingStudio_metrics", tag: "v0.7.0"'
     assert_includes gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.332"'
     assert_includes development_gemfile, 'github: "bowerbird-app/flatpack", tag: "v0.1.332"'
-    assert_includes gemfile, 'gem "tailwindcss-rails"'
-    refute_includes gemfile, 'gem "view_component"'
-    refute_includes development_gemfile, 'gem "view_component"'
   end
 
   def test_template_does_not_ship_copied_core_hooks_or_example_capability

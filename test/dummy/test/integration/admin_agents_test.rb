@@ -69,10 +69,19 @@ class AdminAgentsTest < ActionDispatch::IntegrationTest
     assert_equal "recording_studio/default_layout", RecordingStudioAccessible.configuration.layout
     assert_select "h3", text: "Attempts this period", count: 1
     assert_select "h3", text: "Tokens this period", count: 1
+    assert_includes response.body, "md:grid-cols-2"
+    refute_includes response.body, "lg:grid-cols-3"
+    refute_includes response.body, "lg:grid-cols-4"
+    assert_includes response.body, "--list-item-padding-x: 0"
+    assert_select "a[data-fp-style=ghost]", text: "View runs" do |links|
+      assert_equal [ "/admin/screens/agent_runs" ], links.map { |link| link["href"] }
+    end
+    assert_select "a[data-fp-style=ghost]", text: "View agents" do |links|
+      assert_equal [ "/admin/screens/registered_agents" ], links.map { |link| link["href"] }
+    end
     assert_select "a[data-fp-style=ghost]", text: "More" do |links|
       hrefs = links.map { |link| link["href"] }
-      assert_includes hrefs, "/admin/screens/agent_runs"
-      assert_includes hrefs, "/admin/screens/agent_usage"
+      assert_equal [ "/admin/screens/agent_runs", "/admin/screens/agent_usage" ], hrefs
       links.each do |link|
         assert_equal "More", link.text.squish
       end

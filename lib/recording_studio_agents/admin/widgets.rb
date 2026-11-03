@@ -9,6 +9,8 @@ module RecordingStudioAgents
         info "The last attempts that did not finish. Open Runs if you need to retry from the host."
         hide_change
         hide_period
+        link_to { |context| context.admin_screen_path("agent_runs") }
+        link_label "View runs"
         items do |context|
           Queries.recent_failed_runs(context: context).map do |run|
             {
@@ -69,6 +71,8 @@ module RecordingStudioAgents
         info "Who used the most model-call tokens in the last 4 weeks."
         hide_change
         metadata { { period_label: "Last 4 weeks" } }
+        link_to { |context| context.admin_screen_path("registered_agents") }
+        link_label "View agents"
         items do |context|
           root_ids = Queries.visible_root_ids(context)
           Queries.hungry_agents(root_ids: root_ids, range: Queries.current_period).map do |row|
