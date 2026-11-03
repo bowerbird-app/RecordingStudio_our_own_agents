@@ -103,6 +103,7 @@ class AdminRegistrationTest < Minitest::Test
     names = RecordingStudioAdmin::Period.singleton_class.ancestors.map(&:name)
     refute_includes names, "RecordingStudioAgents::Admin::LastFourWeeksPeriod"
     refute_includes names, "RecordingStudioAgents::Admin::LastFourWeeks"
+    refute RecordingStudioAgents::Admin.const_defined?(:LastFourWeeksPeriod, false)
     assert_equal 27, RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
   end
 
@@ -122,13 +123,9 @@ class AdminRegistrationTest < Minitest::Test
     lookback = RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS
 
     weeks = RecordingStudioAgents::Admin::LastFourWeeks
-    period = RecordingStudioAgents::Admin::LastFourWeeksPeriod
 
+    refute weeks.const_defined?(:LOOKBACK_DAYS, false)
     assert_equal lookback, weeks.lookback_days
-    assert_equal lookback, weeks::LOOKBACK_DAYS
-    assert_equal weeks, period
-    assert_equal lookback, period.lookback_days
-    assert_equal lookback, period::LOOKBACK_DAYS
 
     now = Time.zone.local(2026, 9, 8, 12, 0, 0)
     assert_equal Date.new(2026, 9, 8) - lookback, weeks.current_range(now: now).begin.to_date

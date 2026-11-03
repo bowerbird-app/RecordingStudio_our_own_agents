@@ -7,15 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.9.2] - 2026-11-03
+## [0.10.0] - 2026-11-03
+
+### Breaking
+
+- `RecordingStudioAgents::Admin::LastFourWeeksPeriod` is removed. The old constant was the module prepended onto `RecordingStudioAdmin::Period`, and it defined `from_preset_key`. An alias of `LastFourWeeks` did not keep that behavior. Use `RecordingStudioAdmin::Period` for presets.
+- `LastFourWeeks::LOOKBACK_DAYS` is removed. Call `LastFourWeeks.lookback_days`. It reads `RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS`.
 
 ### Changed
 
-- This gem no longer prepends `RecordingStudioAdmin::Period`. Admin owns `last_4_weeks` (`LAST_4_WEEKS_LOOKBACK_DAYS`). `LastFourWeeks::LOOKBACK_DAYS` and `LastFourWeeks.lookback_days` both read that constant. `LastFourWeeksPeriod` stays as an alias of `LastFourWeeks`.
+- This gem no longer prepends `RecordingStudioAdmin::Period`. Admin owns `last_4_weeks`.
 
 ### Upgrade notes
 
-- No host action and no migration. Runs and Usage by agent still default to Last 4 weeks. The preset math comes from Admin.
+- Replace `LastFourWeeksPeriod` with `RecordingStudioAdmin::Period` for preset windows. Replace `LastFourWeeks::LOOKBACK_DAYS` with `LastFourWeeks.lookback_days`. Runs and Usage by agent still default to Last 4 weeks. There is no migration.
 
 ## [0.9.1] - 2026-11-03
 
@@ -546,8 +551,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.9.2...HEAD
-[0.9.2]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.9.1...v0.9.2
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.10...v0.9.0
 [0.8.10]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...v0.8.10

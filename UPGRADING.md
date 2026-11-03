@@ -1,8 +1,12 @@
 # Upgrading
 
-## 0.9.2
+## 0.10.0
 
-Admin 2.8.1 `Period::LAST_4_WEEKS_LOOKBACK_DAYS` owns Last 4 weeks. This gem no longer prepends `RecordingStudioAdmin::Period`. `LastFourWeeks::LOOKBACK_DAYS` and `lookback_days` both use that constant. `LastFourWeeksPeriod` is still `LastFourWeeks`. There is no migration in this gem.
+**Breaking.** `RecordingStudioAgents::Admin::LastFourWeeksPeriod` is removed. That constant was the module prepended onto `RecordingStudioAdmin::Period`, including `from_preset_key`. It is not an alias of `LastFourWeeks`. Use `RecordingStudioAdmin::Period` for presets.
+
+**Breaking.** `LastFourWeeks::LOOKBACK_DAYS` is removed. Call `LastFourWeeks.lookback_days`, which reads `RecordingStudioAdmin::Period::LAST_4_WEEKS_LOOKBACK_DAYS`.
+
+This gem no longer prepends `RecordingStudioAdmin::Period`. Runs and Usage by agent still default to Last 4 weeks. There is no migration in this gem.
 
 ## 0.9.1
 
