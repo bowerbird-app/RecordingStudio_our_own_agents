@@ -41,6 +41,7 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     resolver = RecordingStudioAdmin.configuration.current_root_recording_resolver
     assert_nil resolver.call(nil)
 
+    load Rails.root.join("db/seeds.rb").to_s
     admin_root = RecordingStudio::Recording.find_by!(recordable: AdminRoot.find_by!(name: "Admin"))
     studio = RecordingStudio::Recording.find_by!(recordable: Workspace.find_by!(name: "Studio Workspace"))
     context = Struct.new(:root_recording).new(admin_root)
