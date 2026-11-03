@@ -8,7 +8,7 @@ The gemspec requires `recording_studio` `>= 6.3.0`, `< 7` and `recording_studio_
 
 `RecordingStudio::UsesDefaultLayout` is gone. Set `config.layout = "recording_studio/default_layout"` on Admin and Accessible.
 
-There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable, then run `bin/rails db:migrate`. The dummy does not copy those migrations into `db/migrate` or `db/schema.rb`, and it does not apply them at boot. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. Accessible 0.24 refuses `grant_access` for a role the manager does not already hold, so the seed starts with `bootstrap_owner_access!`.
+There is no migration in this gem. Hosts still install the upstream migrations from Recording Studio AI, Accessible, Logs, and Root Switchable, then run `bin/rails db:migrate`. The dummy copies the AI, Accessible, and Logs migrations newer than `20261010000014` into `test/dummy/db/migrate` and `test/dummy/db/schema.rb` so a schema load can boot. It does not apply engine migrations at boot. The first admin on an owned root is `RecordingStudioAccessible.bootstrap_owner_access!`. Accessible 0.24 refuses `grant_access` for a role the manager does not already hold, so the seed starts with `bootstrap_owner_access!`.
 
 The dummy section grid is FlatPack `cols: 2` (2-up from the `md` breakpoint). Admin still ships `cols: 3`. The default content column maxes at 56rem, and FlatPack `cols: 4` turns 4-up on at 1024px, before four columns fit that column. The footer ghost button uses the widget link label. Failed runs links to runs. Hungry agents links to agents. Number cards still say More. List rows set `--list-item-padding-x` to 0.
 

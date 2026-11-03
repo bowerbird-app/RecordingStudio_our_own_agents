@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Admin's section grid is `cols: 3` (3-up from the `lg` breakpoint). The default page column stops at 56rem, so four cards do not fit and three leaves the fourth card alone. `cols: 2` is 2-up from `md`. FlatPack `cols: 4` becomes 4-up at `lg` (1024px), before four columns fit that column, so the dummy does not use it.
 - Widget cards use FlatPack `Heading`, `Text`, `Stack`, `Cluster`, and `AvatarGroup`. The footer ghost button uses the widget link label. Failed runs says View runs. Hungry agents says View agents. Number cards still say More. List rows set `--list-item-padding-x` to 0 so the row text lines up with the card title.
 - The first admin on a workspace uses `bootstrap_owner_access!`. A later grant uses a manager who already holds admin.
-- This gem does not vendor upstream migrations, and the dummy does not copy them into `db/migrate` or `db/schema.rb`. The dummy does not apply engine migrations at boot and does not turn off `dump_schema_after_migration`. Hosts install the upstream migrations and run `bin/rails db:migrate`. This gem's own tables are unchanged.
+- This gem does not vendor upstream migrations in its own `db/`. The dummy copies the AI, Accessible, and Logs migrations newer than `20261010000014` into `test/dummy/db/migrate` and records them in `test/dummy/db/schema.rb`. The dummy does not apply engine migrations at boot. Hosts install the upstream migrations and run `bin/rails db:migrate`. This gem's own tables are unchanged.
 
 ### Upgrade notes
 
