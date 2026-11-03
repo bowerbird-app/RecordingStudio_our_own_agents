@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.9.1] - 2026-11-03
+## 0.9.1 - 2026-11-03
 
 ### Changed
 
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Hosts that prepended `AdminScreens::RecordingStudioAIWidgets#runs_scope` should set `config.admin_runs_scope` and delete the prepend. The callable receives the Admin context and returns a `RecordingStudioAI::Run` relation.
 - The dummy autoloads `AdminScreens::RootSection` from `app/admin` with Zeitwerk and calls `RecordingStudioAdmin.register_section`. `register_section` replaces a reloaded class of the same name. The `remove_const` reload is gone.
 
-## [0.9.0] - 2026-11-03
+## 0.9.0 - 2026-11-03
 
 ### Breaking
 
