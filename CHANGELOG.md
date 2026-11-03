@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.9.1 - 2026-11-03
+
+### Changed
+
+- The dummy sets `RecordingStudioAdmin` `config.current_root_recording_resolver` to return nil. Staff screens stay off the switched product workspace. The `ApplicationController` prepend is gone. Admin config is the only owner of that nil root.
+- The dummy sets `RecordingStudioAI` `config.admin_runs_scope` to the staff root plus every workspace root. The `AdminScreens::RecordingStudioAIWidgets` prepend is gone.
+- The dummy home action still does not insert `RecordingStudioAI::Run` or `CustomToolInvocation` rows. The offline provider stays `RecordingStudioAI.register_provider`.
+
+### Upgrade notes
+
+- Hosts that prepended Admin `current_root_recording` to return nil should set `config.current_root_recording_resolver` and delete the prepend.
+- Hosts that prepended `AdminScreens::RecordingStudioAIWidgets#runs_scope` should set `config.admin_runs_scope` and delete the prepend. The callable receives the Admin context and returns a `RecordingStudioAI::Run` relation.
+- The dummy autoloads `AdminScreens::RootSection` from `app/admin` with Zeitwerk and calls `RecordingStudioAdmin.register_section`. `register_section` replaces a reloaded class of the same name. The `remove_const` reload is gone.
+
 ## 0.9.0 - 2026-11-03
 
 ### Breaking

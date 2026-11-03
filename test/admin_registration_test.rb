@@ -5,6 +5,22 @@ require "test_helper"
 class AdminRegistrationTest < Minitest::Test
   include RegistryHelpers
 
+  def test_register_section_twice_keeps_only_the_reloaded_class
+    registry = RecordingStudioAdmin::Registry.new
+    first = Class.new(RecordingStudioAdmin::Section) { key "reload_probe" }
+    second = Class.new(RecordingStudioAdmin::Section) { key "reload_probe" }
+    first.define_singleton_method(:name) { "ReloadProbe::Section" }
+    second.define_singleton_method(:name) { "ReloadProbe::Section" }
+
+    registry.register_section(first)
+    registry.register_section(second)
+
+    using_new_class = registry.sections.values.select { |section| section.equal?(second) }
+    assert_equal [second], using_new_class
+    assert_equal 1, registry.sections.length
+    refute registry.sections.value?(first)
+  end
+
   def test_register_adds_agents_section_screens_and_widgets
     RecordingStudioAgents::Admin.register!
 

@@ -37,6 +37,27 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     refute connection.table_exists?(:recording_studio_access_boundaries)
   end
 
+  test "staff root resolver is nil and model calls include workspace roots" do
+    resolver = RecordingStudioAdmin.configuration.current_root_recording_resolver
+    assert_nil resolver.call(nil)
+
+    load Rails.root.join("db/seeds.rb").to_s
+    admin_root = RecordingStudio::Recording.find_by!(recordable: AdminRoot.find_by!(name: "Admin"))
+    studio = RecordingStudio::Recording.find_by!(recordable: Workspace.find_by!(name: "Studio Workspace"))
+    context = Struct.new(:root_recording).new(admin_root)
+    relation = RecordingStudioAI.configuration.admin_runs_scope.call(context)
+
+    assert_kind_of ActiveRecord::Relation, relation
+    assert_equal RecordingStudioAI::Run, relation.klass
+    root_ids = relation.where_values_hash.fetch("root_recording_id")
+    assert_includes root_ids, admin_root.id
+    assert_includes root_ids, studio.id
+    refute_includes RecordingStudioAdmin::ApplicationController.ancestors.map(&:name),
+                    "RecordingStudioAdminIgnoreProductRoot"
+    refute_includes AdminScreens::RecordingStudioAIWidgets.singleton_class.ancestors.map(&:name),
+                    "RecordingStudioAdminWorkspaceRuns"
+  end
+
   test "dummy seeds use hierarchy idempotently and restore current actor" do
     Current.actor = nil
 
@@ -95,6 +116,8 @@ class RecordingStudioTemplateTest < ActiveSupport::TestCase
     section_keys = AdminRoot.recording_studio_admin_section_keys_for(admin_root, nil, nil)
     assert_equal [ "root", "agents", "recording_studio_ai", "web_search" ], section_keys
     assert_equal AdminScreens::RootSection, RecordingStudioAdmin.section_for("root")
+    section_path = Rails.root.join("app/admin/admin_screens/root_section.rb").to_s
+    assert_equal "AdminScreens::RootSection", Rails.autoloaders.main.cpath_expected_at(section_path)
   end
 
   private

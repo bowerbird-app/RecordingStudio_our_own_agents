@@ -1,5 +1,13 @@
 # Upgrading
 
+## 0.9.1
+
+Staff screens that must ignore the switched product workspace set `RecordingStudioAdmin` `config.current_root_recording_resolver` to a callable that returns nil. Delete any prepend of `RecordingStudioAdmin::ApplicationController#current_root_recording`.
+
+Model-call lists that must include workspace runs set `RecordingStudioAI` `config.admin_runs_scope`. The callable receives the Admin context and returns a `RecordingStudioAI::Run` relation. Delete any prepend of `AdminScreens::RecordingStudioAIWidgets#runs_scope`.
+
+Put host admin sections on the Zeitwerk path and call `RecordingStudioAdmin.register_section`. It replaces a reloaded class of the same name. There is no migration in this gem.
+
 ## 0.9.0
 
 Development and dummy apps pin Recording Studio `v6.3.0` and the core 6 addon set: FlatPack `v0.1.332`, Accessible `v0.24.0`, Admin `v2.8.1`, AI `v0.19.5`, Logs `v0.7.1`, Metrics `v0.7.0`, Trashable `v0.12.0`. The dummy also pins Root Switchable `v0.11.3`, Cache `v0.6.0`, and Web Search `v0.6.0`.
