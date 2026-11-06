@@ -1,5 +1,9 @@
 # Upgrading
 
+## 0.10.1
+
+Development and dummy locks use Rails 8.1.4.1. rack 3.2.8, nokogiri 1.19.7, loofah 2.25.3, rails-html-sanitizer 1.7.2, and dummy net-ssh 7.3.8 are unchanged. Ruby is 3.3.13. There is no migration. Hosts should bump their own Rails lock to 8.1.4.1.
+
 ## 0.10.0
 
 **Breaking.** `RecordingStudioAgents::Admin::LastFourWeeksPeriod` is removed. That constant was the module prepended onto `RecordingStudioAdmin::Period`, including `from_preset_key`. It is not an alias of `LastFourWeeks`. Use `RecordingStudioAdmin::Period` for presets.

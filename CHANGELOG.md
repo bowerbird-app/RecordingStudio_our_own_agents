@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-11-06
+
+### Changed
+
+- Development and dummy locks bump Rails to 8.1.4.1. rack stays at 3.2.8, nokogiri at 1.19.7, loofah at 2.25.3, and rails-html-sanitizer at 1.7.2. Dummy net-ssh stays at 7.3.8.
+- Ruby pin moves from 3.3.12 to 3.3.13.
+
+### Upgrade notes
+
+- No host action and no migration. Hosts should bump their own Rails lock to 8.1.4.1.
+
 ## [0.10.0] - 2026-11-03
 
 This release also includes 0.9.0 and 0.9.1 below (first tagged release since v0.8.10).
@@ -553,7 +564,8 @@ Recording Studio Agents V1. This is a product release, not a template bump.
 
 Template Cloud Agent environment. See git history for the template notes that shipped under this version.
 
-[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.10.1...HEAD
+[0.10.1]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.10...v0.10.0
 [0.8.10]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.9...v0.8.10
 [0.8.9]: https://github.com/bowerbird-app/RecordingStudio_our_own_agents/compare/v0.8.8...v0.8.9
